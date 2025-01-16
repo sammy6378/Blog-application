@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import userRoute from './routes/user.route';
 export const app = express();
 require('dotenv').config();
 
@@ -17,6 +18,10 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions));
+
+//routes
+//api/user
+app.use("/api/user", userRoute);
 
 //test 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
