@@ -48,12 +48,8 @@ export const RegisterUser = catchAsyncErrors(async(req: Request, res: Response, 
                 email: user.email,
             })
 
-<<<<<<< HEAD
 
-            res.status(201).json({success: true, message: `Activation code sent to ${user.email}`});
-=======
             res.status(201).json({success: true, message: `Activation code sent to ${user.email}`, activationToken: activationToken.token});
->>>>>>> 1cba060ef770e6daacd067d83cc39e48a3601960
 
         } catch (error: any) {
             return next(new ErrorHandler(error.message, 400))
