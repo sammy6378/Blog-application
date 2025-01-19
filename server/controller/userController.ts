@@ -48,7 +48,7 @@ export const RegisterUser = catchAsyncErrors(async(req: Request, res: Response, 
                 email: user.email,
             })
 
-            res.status(201).json({success: true, message: `Activation code sent to ${user.email}`});
+            res.status(201).json({success: true, message: `Activation code sent to ${user.email}`, activationToken: activationToken.token});
 
         } catch (error: any) {
             return next(new ErrorHandler(error.message, 400))
@@ -100,3 +100,5 @@ export const ActivateUser = catchAsyncErrors(async(req: Request, res: Response, 
             return next(new ErrorHandler(error.message, 400))
         }
 })
+
+//login
