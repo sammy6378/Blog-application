@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import ejs from 'ejs';
 import path from "path";
 import { sendMail } from "../utils/mail";
+import { sendToken } from "../utils/jwt";
 require('dotenv').config();
 
 
@@ -102,3 +103,37 @@ export const ActivateUser = catchAsyncErrors(async(req: Request, res: Response, 
 })
 
 //login
+interface ILoginUser {
+    password: string,
+    email: string,
+}
+
+export const userLogin = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {password, email} = req.body as ILoginUser;
+        if(!password || !email) {
+            return next(new ErrorHandler("Please provide all the fields", 400));
+        }
+
+        const user = await userModel.findOne({email});
+        if(!user) {
+            return next(new ErrorHandler("email or password is invalid", 400));
+        }
+
+        const passwordCorrect = await user.comparePasswords(password);
+        if(!passwordCorrect) {
+            return next(new ErrorHandler("email or password is invalid", 400));
+        }
+
+        //create cookies
+        try {
+            await sendToken(user, res);
+            
+        } catch (error: any) {
+            return next(new ErrorHandler(error.message, 400));
+        }
+        
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+})
