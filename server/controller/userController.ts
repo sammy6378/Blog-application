@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { catchAsyncErrors } from "../middleware/catchAsyncErrors";
-import userModel from "../models/userModel";
+import userModel, { IUser } from "../models/userModel";
 import ErrorHandler from "../utils/ErrorHandler";
 import jwt from 'jsonwebtoken';
 import ejs from 'ejs';
@@ -74,3 +74,29 @@ const createActivationToken = (user: any): IActivationToken => {
     return {activationCode, token}
 
 }
+
+//Activate user
+export const ActivateUser = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {activation_token, activation_code} = req.body;
+
+        const verifyToken = jwt.verify(activation_token, process.env.ACTIVATION_SECRET as string) as {user: IUser, activationCode: string};
+
+        if(activation_code !== verifyToken.activationCode) {
+            return next(new ErrorHandler("Activation code not valid", 400));
+        };
+
+        const newUser = verifyToken.user;
+        const user = await userModel.create({
+            name: newUser.name,
+            password: newUser.password,
+            email: newUser.email,
+        })
+
+        res.status(201).json({success: true, message: "User created successfully", user});
+
+        
+    }catch (error: any) {
+            return next(new ErrorHandler(error.message, 400))
+        }
+})
