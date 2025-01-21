@@ -10,6 +10,6 @@ route.post('/activate-you', ActivateUser);
 //api/user/login
 route.post('/login', userLogin);
 //api/user/logout
-route.post('/logout', authMiddleware, logoutUser)
+route.post('/logout', authMiddleware, logoutUser);
 
 export default route;
