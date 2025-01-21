@@ -1,5 +1,0 @@
-{
-	"dependencies": {
-		"ioredis": "^5.4.2"
-	}
-}
