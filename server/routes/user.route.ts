@@ -1,5 +1,5 @@
 import express from 'express';
-import { ActivateUser, logoutUser, RegisterUser, userLogin } from '../controller/userController';
+import { ActivateUser, logoutUser, RegisterUser, UpdateAccessToken, userLogin } from '../controller/userController';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
 const route = express.Router();
 
@@ -11,5 +11,7 @@ route.post('/activate-you', ActivateUser);
 route.post('/login', userLogin);
 //api/user/logout
 route.post('/logout', authMiddleware, logoutUser);
+//api/user/update-token
+route.post('/update-token', authMiddleware, UpdateAccessToken);
 
 export default route;
