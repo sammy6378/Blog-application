@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { catchAsyncErrors } from "../middleware/catchAsyncErrors";
 import userModel, { IUser } from "../models/userModel";
 import ErrorHandler from "../utils/ErrorHandler";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import ejs from "ejs";
 import path from "path";
 import { sendMail } from "../utils/mail";
-import { sendToken } from "../utils/jwt";
+import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt";
 import { redis } from "../utils/redis";
 require("dotenv").config();
 
@@ -176,3 +176,51 @@ export const logoutUser = catchAsyncErrors(
     }
   }
 );
+
+//update access-token
+export const UpdateAccessToken = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const refresh_token = req.cookies.refresh_token;
+    if(!refresh_token) {
+      return next(new ErrorHandler("Refresh token not found", 401));
+    }
+
+    const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN as string) as JwtPayload;
+    if(!decoded) {
+      return next(new ErrorHandler("Refresh token not found", 401)) ;
+    }
+
+    //const user = userModel.findById(decoded.id);
+    const session = await redis.get(decoded.id) as string;
+    const user = JSON.parse(session);
+    req.user = user;
+
+    const accessToken =  jwt.sign({id: user._id}, process.env.ACCESS_TOKEN as string, {expiresIn: "5m"});
+    const refreshToken =  jwt.sign({id: user._id}, process.env.REFRESH_TOKEN as string, {expiresIn: "7d"});
+
+    //create new cookies
+    res.cookie("access_token", accessToken, accessTokenOptions);
+    res.cookie("refresh_token", refreshToken, refreshTokenOptions);
+
+    res.status(200).json({success: true, accessToken});
+   
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+})
+
+//get user info
+export const getUserInfo = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?._id;
+    const user = await userModel.findById(userId).select("-password");
+    if(!user) {
+      return next(new ErrorHandler(`user: ${userId} not found`, 404));
+    }
+    
+    res.status(200).json({success: true, user});
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+})
