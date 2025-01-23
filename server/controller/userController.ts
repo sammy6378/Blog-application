@@ -210,4 +210,17 @@ export const UpdateAccessToken = catchAsyncErrors(async(req: Request, res: Respo
 })
 
 //get user info
-
+export const getUserInfo = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?._id;
+    const user = await userModel.findById(userId).select("-password");
+    if(!user) {
+      return next(new ErrorHandler(`user: ${userId} not found`, 404));
+    }
+    
+    res.status(200).json({success: true, user});
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+})
