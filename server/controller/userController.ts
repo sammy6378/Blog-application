@@ -224,3 +224,9 @@ export const getUserInfo = catchAsyncErrors(async(req: Request, res: Response, n
     return next(new ErrorHandler(error.message, 400));
   }
 })
+
+//update user info
+
+//update user password
+
+//update user avatar
