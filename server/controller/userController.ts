@@ -379,12 +379,12 @@ export const updateUserAvatar = catchAsyncErrors(
         );
       }
 
-      if (newAvatar) {
+      if (newAvatar && user) {
         if (user.avatar?.public_id) {
-          await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+          await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
 
           const myCloud = await cloudinary.v2.uploader.upload(newAvatar, {
-            folder: "blog-avatars",
+            folder: "blogAvatars",
           });
 
           user.avatar = {
@@ -393,7 +393,7 @@ export const updateUserAvatar = catchAsyncErrors(
           };
         } else {
           const myCloud = await cloudinary.v2.uploader.upload(newAvatar, {
-            folder: "blog-avatars",
+            folder: "blogAvatars",
           });
 
           user.avatar = {
