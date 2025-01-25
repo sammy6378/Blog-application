@@ -353,13 +353,11 @@ export const updateUserInfo = catchAsyncErrors(
         return next(new ErrorHandler(error.message, 400));
       }
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          newUser,
-          message: `user info updated. Email sent to ${newUser?.email}`,
-        });
+      res.status(200).json({
+        success: true,
+        newUser,
+        message: `user info updated. Email sent to ${newUser?.email}`,
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -405,7 +403,9 @@ export const updateUserAvatar = catchAsyncErrors(
 
       await user.save();
       redis.set(userId, JSON.stringify(user));
-      res.status(200).json({success: true, user, message: "User profile updated"});
+      res
+        .status(200)
+        .json({ success: true, user, message: "User profile updated" });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
