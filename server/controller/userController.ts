@@ -283,13 +283,11 @@ export const updateUserPass = catchAsyncErrors(
       await user?.save();
       redis.set(userId as string, JSON.stringify(user));
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          user,
-          message: "Password updated successfully",
-        });
+      res.status(200).json({
+        success: true,
+        user,
+        message: "Password updated successfully",
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -298,8 +296,8 @@ export const updateUserPass = catchAsyncErrors(
 
 //update user info
 interface IUpdateUser {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
 }
 
 export const updateUserInfo = catchAsyncErrors(
@@ -321,23 +319,40 @@ export const updateUserInfo = catchAsyncErrors(
         return next(new ErrorHandler(`Email: ${email} already exists`, 409));
       }
 
-      const updatedUser: IUpdateUser = { name, email };
+      const updatedUser: IUpdateUser = {};
       if (user && name) updatedUser.name = name;
       if (user && email) updatedUser.email = email;
 
-      const newUser = await userModel.findByIdAndUpdate(
-        userId,
-        {
-          updatedUser,
-        },
-        { new: true, runValidators: true }
-      );
+      const newUser = await userModel.findByIdAndUpdate(userId, updatedUser, {
+        new: true,
+        runValidators: true,
+      });
 
       redis.set(userId, JSON.stringify(newUser));
 
+      const data = {
+        name: user?.name,
+        oldEmail: user.email,
+        newEmail: updatedUser.email,
+      }
+     // console.log(data);
+      const html = await ejs.renderFile(path.join(__dirname, "../mails/update-user-info.ejs"), data);
+
+      try {
+        await sendMail({
+          subject: "Editing User Info",
+          email: updatedUser?.email as string,
+          data,
+          template: "update-user-info.ejs"
+        })
+        
+      } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400));
+      }
+
       res
         .status(200)
-        .json({ success: true, newUser, message: "User info updated" });
+        .json({ success: true, newUser, message: `user info updated. Email sent to ${newUser?.email}` });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
