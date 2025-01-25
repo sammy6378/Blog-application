@@ -225,8 +225,65 @@ export const getUserInfo = catchAsyncErrors(async(req: Request, res: Response, n
   }
 })
 
-//update user info
 
 //update user password
+interface IPassword {
+  oldPassword: string,
+  newPassword: string,
+}
+export const updateUserPass = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {oldPassword, newPassword} = req.body as IPassword;
+    const userId = req.user?._id;
+    const user = await userModel.findById(userId);
+    if(!user) {
+      return next(new ErrorHandler("User not found. Please login", 401));
+    }
+
+    //ensure both fields are provided
+    if(!oldPassword || !newPassword) {
+      return next(new ErrorHandler("Please provide both old and new password", 400));
+    }
+
+    //compare old password with user password
+    const isPasswordCorrect = await user.comparePasswords(oldPassword);
+    if(!isPasswordCorrect) {
+      return next(new ErrorHandler("Old password is incorrect", 400 ));
+    }
+
+    //ensure newpassword is different from old password
+    const newPasswordDifferent = await user.comparePasswords(newPassword);
+    if(newPasswordDifferent) {
+      return next(new ErrorHandler("New Password should be different from old password", 409));
+    }
+
+    user.password = newPassword;
+    await user?.save();
+    redis.set(userId as string, JSON.stringify(user));
+
+    res.status(200).json({success: true, user, message: "Password updated successfully"});
+
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+})
+
+
+//update user info
+export const updateUserInfo = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+})
 
 //update user avatar
+export const updateUserAvatar = catchAsyncErrors(async(req: Request,res: Response, next: NextFunction) => {
+  try {
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+})
