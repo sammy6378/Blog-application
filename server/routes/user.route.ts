@@ -1,5 +1,5 @@
 import express from 'express';
-import { ActivateUser, getUserInfo, logoutUser, RegisterUser, UpdateAccessToken, updateUserInfo, updateUserPass, userLogin } from '../controller/userController';
+import { ActivateUser, getUserInfo, logoutUser, RegisterUser, UpdateAccessToken, updateUserAvatar, updateUserInfo, updateUserPass, userLogin } from '../controller/userController';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
 const route = express.Router();
 
@@ -19,5 +19,7 @@ route.get("/get-user-info", authMiddleware, authorizeRoles("admin"), getUserInfo
 route.put("/update-password", authMiddleware, updateUserPass);
 //api/user/update-info
 route.put("/update-info", authMiddleware, updateUserInfo);
+//api/user/update-avatar
+route.put("/update-avatar", authMiddleware, updateUserAvatar);
 
 export default route;
