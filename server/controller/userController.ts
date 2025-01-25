@@ -370,7 +370,7 @@ export const updateUserInfo = catchAsyncErrors(
 export const updateUserAvatar = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { newAvatar } = req.body;
+      const { avatar } = req.body;
       const userId = req.user?._id as string;
       const user = await userModel.findById(userId);
       if (!user) {
@@ -379,11 +379,11 @@ export const updateUserAvatar = catchAsyncErrors(
         );
       }
 
-      if (newAvatar && user) {
+      if (avatar && user) {
         if (user.avatar?.public_id) {
           await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
 
-          const myCloud = await cloudinary.v2.uploader.upload(newAvatar, {
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
             folder: "blogAvatars",
           });
 
@@ -392,7 +392,7 @@ export const updateUserAvatar = catchAsyncErrors(
             url: myCloud.secure_url,
           };
         } else {
-          const myCloud = await cloudinary.v2.uploader.upload(newAvatar, {
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
             folder: "blogAvatars",
           });
 
