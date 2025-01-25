@@ -1,5 +1,5 @@
 import express from 'express';
-import { ActivateUser, getUserInfo, logoutUser, RegisterUser, UpdateAccessToken, userLogin } from '../controller/userController';
+import { ActivateUser, getUserInfo, logoutUser, RegisterUser, UpdateAccessToken, updateUserPass, userLogin } from '../controller/userController';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
 const route = express.Router();
 
@@ -15,5 +15,7 @@ route.post('/logout', authMiddleware, logoutUser);
 route.post('/update-token', authMiddleware, UpdateAccessToken);
 //api/user/get-user
 route.get("/get-user-info", authMiddleware, authorizeRoles("admin"), getUserInfo);
+//api/user/update-password
+route.put("/update-password", authMiddleware, updateUserPass);
 
 export default route;
