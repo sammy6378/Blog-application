@@ -12,6 +12,7 @@ import {
   sendToken,
 } from "../utils/jwt";
 import { redis } from "../utils/redis";
+import cloudinary from "cloudinary";
 require("dotenv").config();
 
 //Register user
@@ -334,25 +335,31 @@ export const updateUserInfo = catchAsyncErrors(
         name: user?.name,
         oldEmail: user.email,
         newEmail: updatedUser.email,
-      }
-     // console.log(data);
-      const html = await ejs.renderFile(path.join(__dirname, "../mails/update-user-info.ejs"), data);
+      };
+      // console.log(data);
+      const html = await ejs.renderFile(
+        path.join(__dirname, "../mails/update-user-info.ejs"),
+        data
+      );
 
       try {
         await sendMail({
           subject: "Editing User Info",
           email: updatedUser?.email as string,
           data,
-          template: "update-user-info.ejs"
-        })
-        
+          template: "update-user-info.ejs",
+        });
       } catch (error: any) {
         return next(new ErrorHandler(error.message, 400));
       }
 
       res
         .status(200)
-        .json({ success: true, newUser, message: `user info updated. Email sent to ${newUser?.email}` });
+        .json({
+          success: true,
+          newUser,
+          message: `user info updated. Email sent to ${newUser?.email}`,
+        });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -363,6 +370,42 @@ export const updateUserInfo = catchAsyncErrors(
 export const updateUserAvatar = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { newAvatar } = req.body;
+      const userId = req.user?._id as string;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(
+          new ErrorHandler("User not found. Please login again", 404)
+        );
+      }
+
+      if (newAvatar) {
+        if (user.avatar?.public_id) {
+          await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+          const myCloud = await cloudinary.v2.uploader.upload(newAvatar, {
+            folder: "blog-avatars",
+          });
+
+          user.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          };
+        } else {
+          const myCloud = await cloudinary.v2.uploader.upload(newAvatar, {
+            folder: "blog-avatars",
+          });
+
+          user.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          };
+        }
+      }
+
+      await user.save();
+      redis.set(userId, JSON.stringify(user));
+      res.status(200).json({success: true, user, message: "User profile updated"});
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
