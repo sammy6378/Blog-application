@@ -7,10 +7,7 @@ interface Options {
     subject: string,
     email: string,
     template: string,
-    data: {
-        user: {name: string},
-        activationCode: string,
-    }
+    data: Record<string, any>
 }
 
 export const sendMail = async (options: Options) => {
