@@ -44,7 +44,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
 
     password: {
       type: String,
-      required: true,
+      //required: true,
       minLength: [6, "Password should be at least 6 characters"],
     },
 
