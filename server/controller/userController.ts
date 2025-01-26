@@ -251,7 +251,7 @@ export const updateUserPass = catchAsyncErrors(
     try {
       const { oldPassword, newPassword } = req.body as IPassword;
       const userId = req.user?._id;
-      const user = await userModel.findById(userId);
+      const user = await userModel.findById(userId).select("+password");
       if (!user) {
         return next(new ErrorHandler("User not found. Please login", 401));
       }
