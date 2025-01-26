@@ -251,7 +251,7 @@ export const updateUserPass = catchAsyncErrors(
     try {
       const { oldPassword, newPassword } = req.body as IPassword;
       const userId = req.user?._id;
-      const user = await userModel.findById(userId);
+      const user = await userModel.findById(userId).select("+password");
       if (!user) {
         return next(new ErrorHandler("User not found. Please login", 401));
       }
@@ -413,3 +413,41 @@ export const updateUserAvatar = catchAsyncErrors(
 );
 
 //social auth
+//github, google, facebook
+interface ISocialAuth {
+  email: string;
+  name: string;
+  avatar?: string;
+}
+
+export const socialAuth = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, name, avatar } = req.body as ISocialAuth;
+      if(!email || !name) {
+        return next(new ErrorHandler("Email and name should be provided", 400));
+      }
+      const user = (await userModel.findOne({ email })) as IUser;
+      if (!user) {
+        let avatarData = {};
+        if (avatar) {
+          const myCloud = await cloudinary.v2.uploader.upload(avatar);
+          avatarData = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          };
+        }
+        const newUser = await userModel.create({
+          email,
+          name,
+          avatar: avatarData,
+        });
+        sendToken(newUser, res);
+      } else {
+        sendToken(user, res);
+      }
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
