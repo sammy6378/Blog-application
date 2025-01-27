@@ -342,7 +342,8 @@ export const updateUserInfo = catchAsyncErrors(
         data
       );
 
-      try {
+    if(email) {
+       try {
         await sendMail({
           subject: "Editing User Info",
           email: updatedUser?.email as string,
@@ -352,6 +353,8 @@ export const updateUserInfo = catchAsyncErrors(
       } catch (error: any) {
         return next(new ErrorHandler(error.message, 400));
       }
+    }
+     
 
       res.status(200).json({
         success: true,
