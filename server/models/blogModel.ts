@@ -98,36 +98,42 @@ const videoSchema = new Schema<IVideo>({
   links: [Object],
 });
 
-const blogSchema = new Schema<IBlog>({
-  title: {
-    type: String,
-    required: true,
+const blogSchema = new Schema<IBlog>(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    thumbnail: {
+      public_id: String,
+      url: String,
+    },
+    videos: [Object],
+    reviews: [Object],
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    links: [Object],
+    likes: {
+      type: Number,
+      default: 0,
+    },
+    dislikes: {
+      type: Number,
+      default: 0,
+    },
+    comments: [Object],
+    category: String,
+    author: [Object],
+    tags: [Object],
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  thumbnail: {
-    public_id: String,
-    url: String,
-  },
-  videos: [Object],
-  reviews: [Object],
-  rating: {
-    type: Number,
-    default: 0,
-  },
-  links: [Object],
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  dislikes: {
-    type: Number,
-    default: 0,
-  },
-  comments: [Object],
-  category: String,
-  author: [Object],
-  tags: [Object],
-}, {timestamps: true,});
+  { timestamps: true }
+);
+
+const blogModel: Model<IBlog> = mongoose.model("Blog", blogSchema);
+export default blogModel;
