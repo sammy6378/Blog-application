@@ -14,8 +14,8 @@ interface IComment extends Document {
 
 interface IBlogReview extends Document {
     user: IUser,
-    comment: string,
-    commentReplies?: IComment[]
+    review: string,
+    reviewReplies?: IBlogReview[]
 }
 
 interface IVideo extends Document {
@@ -70,8 +70,14 @@ const commentSchema = new Schema<IComment>({
     }
 })
 
+//review schemma
 const reviewSchema = new Schema<IBlogReview>({
-
+    user: Object,
+    review: {
+        type: String,
+        required: true,
+    },
+    reviewReplies: [Object]
 })
 
 const videoSchema = new Schema<IVideo>({
