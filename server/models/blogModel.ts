@@ -48,7 +48,9 @@ interface IBlog extends Document {
     tags: Object
 }
 
-const LinkSchema = new Schema<IBlogLink>({
+//schemas
+//link schema
+const linkSchema = new Schema<IBlogLink>({
     title: String,
     url: {
         required: true, 
@@ -56,8 +58,16 @@ const LinkSchema = new Schema<IBlogLink>({
     }
 })
 
+//comment schema
 const commentSchema = new Schema<IComment>({
-
+    user: {
+        type: Object,
+        comment: {
+            type: String,
+            required: true,
+        },
+        commentReplies: [Object]
+    }
 })
 
 const reviewSchema = new Schema<IBlogReview>({
