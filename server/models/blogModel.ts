@@ -15,7 +15,8 @@ interface IComment extends Document {
 interface IBlogReview extends Document {
   user: IUser;
   review: string;
-  reviewReplies?: IBlogReview[];
+  rating: number,
+  reviewReplies?: IComment[];
 }
 
 interface IVideo extends Document {
@@ -29,9 +30,14 @@ interface IVideo extends Document {
   links: IBlogLink[];
 }
 
+interface ITag extends Document {
+    tag: string
+}
+
 interface IBlog extends Document {
   title: string;
   description: string;
+  body: Text,
   thumbnail: {
     public_id: string;
     url: string;
@@ -45,10 +51,14 @@ interface IBlog extends Document {
   comments: IComment[];
   category: string;
   author: IUser;
-  tags: Object;
+  tags: ITag[];
 }
 
 //schemas
+//tag schema
+const tagSchema = new Schema<ITag>({
+    tag: String,
+})
 //link schema
 const linkSchema = new Schema<IBlogLink>({
   title: String,
@@ -112,13 +122,13 @@ const blogSchema = new Schema<IBlog>(
       public_id: String,
       url: String,
     },
-    videos: [Object],
-    reviews: [Object],
+    videos: [videoSchema],
+    reviews: [reviewSchema],
     rating: {
       type: Number,
       default: 0,
     },
-    links: [Object],
+    links: [linkSchema],
     likes: {
       type: Number,
       default: 0,
@@ -127,10 +137,10 @@ const blogSchema = new Schema<IBlog>(
       type: Number,
       default: 0,
     },
-    comments: [Object],
+    comments: [commentSchema],
     category: String,
-    author: [Object],
-    tags: [Object],
+    author: Object,
+    tags: [tagSchema],
   },
   { timestamps: true }
 );
