@@ -81,7 +81,20 @@ const reviewSchema = new Schema<IBlogReview>({
 })
 
 const videoSchema = new Schema<IVideo>({
-
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    videoUrl:String,
+    videoThumbnail:{
+        type: String,
+        required: true,
+    },
+    links: [Object]
 })
 
 const blogSchema = new Schema<IBlog>({
