@@ -49,7 +49,11 @@ interface IBlog extends Document {
 }
 
 const LinkSchema = new Schema<IBlogLink>({
-
+    title: String,
+    url: {
+        required: true, 
+        type: String
+    }
 })
 
 const commentSchema = new Schema<IComment>({
@@ -65,5 +69,5 @@ const videoSchema = new Schema<IVideo>({
 })
 
 const blogSchema = new Schema<IBlog>({
-    
+
 })
