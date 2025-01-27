@@ -311,8 +311,8 @@ export const updateUserInfo = catchAsyncErrors(
         return next(new ErrorHandler("User not found. Please login", 401));
       }
 
-      if (!name || !email) {
-        return next(new ErrorHandler("Please provide all the inputs", 400));
+      if (!name && !email) {
+        return next(new ErrorHandler("Please provide at least one input", 400));
       }
 
       const isEmailExist = await userModel.findOne({ email });
@@ -342,7 +342,8 @@ export const updateUserInfo = catchAsyncErrors(
         data
       );
 
-      try {
+    if(email) {
+       try {
         await sendMail({
           subject: "Editing User Info",
           email: updatedUser?.email as string,
@@ -352,6 +353,8 @@ export const updateUserInfo = catchAsyncErrors(
       } catch (error: any) {
         return next(new ErrorHandler(error.message, 400));
       }
+    }
+     
 
       res.status(200).json({
         success: true,
@@ -424,7 +427,7 @@ export const socialAuth = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, name, avatar } = req.body as ISocialAuth;
-      if(!email || !name) {
+      if(!email && !name) {
         return next(new ErrorHandler("Email and name should be provided", 400));
       }
       const user = (await userModel.findOne({ email })) as IUser;
