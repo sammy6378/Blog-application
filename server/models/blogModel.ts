@@ -130,4 +130,4 @@ const blogSchema = new Schema<IBlog>({
   category: String,
   author: [Object],
   tags: [Object],
-});
+}, {timestamps: true,});
