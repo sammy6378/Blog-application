@@ -50,7 +50,7 @@ interface IBlog extends Document {
   dislikes: number;
   comments: IComment[];
   category: string;
-  author: Schema.Types.ObjectId,
+  author: IUser,
   tags: ITag[];
 }
 
@@ -143,11 +143,7 @@ const blogSchema = new Schema<IBlog>(
     },
     comments: [commentSchema],
     category: String,
-    author: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
+    author: Object,
     tags: [tagSchema],
   },
   { timestamps: true }

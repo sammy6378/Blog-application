@@ -5,7 +5,7 @@ const route = express.Router();
 
 
 //add blog
-//api/blogs/add
-route.post('/add', authMiddleware, authorizeRoles("admin"), addBlog);
+//api/blogs/create-blog
+route.post('/create-blog', authMiddleware, authorizeRoles("admin"), addBlog);
 
 export default route;
