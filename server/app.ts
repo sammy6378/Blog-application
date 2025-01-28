@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import userRoute from './routes/user.route';
+import blogRoute from './routes/blogs.route'
 export const app = express();
 require('dotenv').config();
 
@@ -22,6 +23,8 @@ app.use(cors(corsOptions));
 //routes
 //api/user
 app.use("/api/user", userRoute);
+//api/blogs
+app.use('/api/blogs', blogRoute);
 
 //test 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
