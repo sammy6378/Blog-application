@@ -89,7 +89,7 @@ export const updateBlog = catchAsyncErrors(
         }
       }
 
-      const updatedBlog = await blogModel.findById(blogId, {
+      const updatedBlog = await blogModel.findByIdAndUpdate(blogId, {
         $set: data,
       }, {new: true, runValidators: true});
 
