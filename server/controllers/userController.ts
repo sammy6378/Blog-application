@@ -434,7 +434,9 @@ export const socialAuth = catchAsyncErrors(
       if (!user) {
         let avatarData = {};
         if (avatar) {
-          const myCloud = await cloudinary.v2.uploader.upload(avatar);
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+            folder: "blogAvatars",
+          });
           avatarData = {
             public_id: myCloud.public_id,
             url: myCloud.secure_url,
