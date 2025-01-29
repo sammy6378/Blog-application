@@ -1,6 +1,6 @@
 import express from 'express';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
-import { addBlog, getBlog, getBlogs, updateBlog } from '../controllers/blogControllers';
+import { addBlog, addBlogComment, addBlogCommentReply, getBlog, getBlogs, updateBlog } from '../controllers/blogControllers';
 const route = express.Router();
 
 
@@ -16,5 +16,11 @@ route.get('/get-blog/:id',authMiddleware,getBlog);
 // get all blogs
 // api/blogs/get-blogs
 route.get('/get-blogs', authMiddleware, getBlogs);
+//add comment to blog
+//api/blogs/add-comment
+route.put('/add-comment', authMiddleware, addBlogComment);
+//add reply to comment
+//api/blogs/add-comment-reply
+route.put('/add-comment-reply', authMiddleware, addBlogCommentReply);
 
 export default route;
