@@ -210,7 +210,7 @@ export const addBlogComment = catchAsyncErrors(async(req: Request, res: Response
 
     try {
       await sendMail({
-        subject: "New Comment",
+        subject: "New Comment😁",
         email: blog.author.email,
         template: "new-comment.ejs",
         data,
