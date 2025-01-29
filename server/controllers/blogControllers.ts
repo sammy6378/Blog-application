@@ -72,7 +72,7 @@ export const updateBlog = catchAsyncErrors(
           await cloudinary.v2.uploader.destroy(blog.thumbnail?.public_id);
 
           const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
-            folder: "Blogs"
+            folder: "Blogs",
           });
           data.thumbnail = {
             public_id: myCloud.public_id,
@@ -89,12 +89,21 @@ export const updateBlog = catchAsyncErrors(
         }
       }
 
-      const updatedBlog = await blogModel.findByIdAndUpdate(blogId, {
-        $set: data,
-      }, {new: true, runValidators: true});
+      const updatedBlog = await blogModel.findByIdAndUpdate(
+        blogId,
+        {
+          $set: data,
+        },
+        { new: true, runValidators: true }
+      );
 
-      res.status(200).json({success: true, updatedBlog, message: "Blog updated successfully"});
-
+      res
+        .status(200)
+        .json({
+          success: true,
+          updatedBlog,
+          message: "Blog updated successfully",
+        });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -102,57 +111,59 @@ export const updateBlog = catchAsyncErrors(
 );
 
 //Get Single Blog
-export const getBlog = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction)=>{
+export const getBlog = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const user = await userModel.findById(userId);
 
- try {
-  const userId = req.user?._id;
-  const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 401));
+      }
 
-  if(!user){
-    return next(new ErrorHandler('User not found',401));
+      // get blog by id
+      const blogId = req.params.id;
+      const blog = await blogModel.findById(blogId);
+
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
+
+      res
+        .status(200)
+        .json({ success: true, blog, message: "Blog returned successfully" });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   }
-
-
-  // get blog by id
-  const blogId = req.params.id;
-  const blog = await blogModel.findById(blogId);
-
-  if(!blog){
-    return next(new ErrorHandler("Blog not found", 404));
-  }
-
-  res.status(200).json({success:true, blog, message: "Blog returned successfully"});
- } catch (error: any) {
-  return next(new ErrorHandler(error.message,500));
- }
-})
+);
 
 //Get All Blogs
-export const getBlogs = catchAsyncErrors(async(req:Request, res: Response, next:NextFunction)=>{
+export const getBlogs = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const user = await userModel.findById(userId);
 
-  try {
-    const userId = req.user?._id;
-    const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 401));
+      }
 
-    if(!user){
-      return next(new ErrorHandler('User not found', 401))
+      // get all blogs
+      const blogs = await blogModel.find();
+
+      if (!blogs) {
+        return next(new ErrorHandler("Blogs not found", 404));
+      }
+
+      res
+        .status(200)
+        .json({ succes: true, blogs, message: "Blogs fetched succefully" });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
     }
-
-    // get all blogs
-    const blogs = await blogModel.find();
-
-    if(!blogs){
-      return next(new ErrorHandler('Blogs not found',404));
-    }
-
-    res.status(200).json({succes:true, blogs, message:'Blogs fetched succefully'})
-    
-  } catch (error:any) {
-    return next(new ErrorHandler(error.message,500));
   }
-
-
-})
+);
 
 //Add Comment to Blog
 
