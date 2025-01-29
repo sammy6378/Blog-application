@@ -202,6 +202,7 @@ export const addBlogComment = catchAsyncErrors(async(req: Request, res: Response
     const data = {
       user: req.user?.email,
       comment: commentData.comment,
+      blogTitle: blog.title,
     }
 
     //send email to admin
