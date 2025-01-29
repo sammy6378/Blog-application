@@ -237,7 +237,7 @@ interface IAddBlogComment {
 
 export const addBlogCommentReply = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.id as string;
+    const userId = req.user?._id as string;
     const user = await userModel.findById(userId);
     const {blogId, reply, commentId} = req.body as IAddBlogComment;
 
