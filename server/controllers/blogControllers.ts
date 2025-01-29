@@ -4,6 +4,9 @@ import ErrorHandler from "../utils/ErrorHandler";
 import cloudinary from "cloudinary";
 import userModel, { IUser } from "../models/userModel";
 import blogModel from "../models/blogModel";
+import path from "path";
+import ejs from 'ejs';
+import { sendMail } from "../utils/mail";
 
 //Add New Blog
 export const addBlog = catchAsyncErrors(
@@ -166,6 +169,63 @@ export const getBlogs = catchAsyncErrors(
 );
 
 //Add Comment to Blog
+interface IAddComment {
+  comment: string,
+  blogId: string,
+}
+export const addBlogComment = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id as string;
+    const user = await userModel.findById(userId);
+    const {comment, blogId} = req.body as IAddComment;
+    if(!user) {
+      return next(new ErrorHandler("User not found", 401));
+    }
+
+    if(!comment || !blogId ) {
+      return next(new ErrorHandler("Please provide all fields", 400));
+    }
+
+    const blog = await blogModel.findById(blogId);
+    if(!blog) {
+      return next(new ErrorHandler("Blog not found", 404));
+    }
+
+    const commentData: any = {
+      user: req.user,
+      comment,
+    }
+
+    blog.comments.push(commentData);
+    await blog?.save();
+
+    const data = {
+      user: req.user?.email,
+      comment: commentData.comment,
+    }
+
+    //send email to admin
+    const html = await ejs.renderFile(path.join(__dirname, 'new-comment.ejs'), data)
+
+    try {
+      await sendMail({
+        subject: "New Comment",
+        email: blog.author.email,
+        template: "new-comment.ejs",
+        data,
+      })
+      
+    }catch (error: any) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+
+    res.status(200).json({success: true, blog, message: "Comment added"});
+
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
 
 //Add Comment Reply
 
