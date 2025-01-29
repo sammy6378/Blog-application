@@ -175,7 +175,7 @@ interface IAddComment {
 }
 export const addBlogComment = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.id as string;
+    const userId = req.user?._id as string;
     const user = await userModel.findById(userId);
     const {comment, blogId} = req.body as IAddComment;
     if(!user) {
@@ -206,14 +206,14 @@ export const addBlogComment = catchAsyncErrors(async(req: Request, res: Response
     }
 
     //send email to admin
-    const html = await ejs.renderFile(path.join(__dirname, 'new-comment.ejs'), data)
+    const html = await ejs.renderFile(path.join(__dirname, '../mails/new-comment.ejs'), data)
 
     try {
       await sendMail({
         subject: "New Comment😁",
         email: blog.author.email,
-        template: "new-comment.ejs",
         data,
+        template: "new-comment.ejs",
       })
       
     }catch (error: any) {
