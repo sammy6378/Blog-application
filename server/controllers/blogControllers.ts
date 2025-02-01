@@ -334,6 +334,8 @@ export const addReview = catchAsyncErrors(
 
       blog.rating = totalRating / blog.reviews.length;
       await blog.save();
+
+      res.status(200).json({success: true, blog})
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
