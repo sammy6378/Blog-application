@@ -230,68 +230,117 @@ export const addBlogComment = catchAsyncErrors(
 
 //Add Comment Reply
 interface IAddBlogComment {
-  blogId: string,
-  reply: string,
-  commentId: string,
+  blogId: string;
+  reply: string;
+  commentId: string;
 }
 
-export const addBlogCommentReply = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.user?._id as string;
-    const user = await userModel.findById(userId);
-    const {blogId, reply, commentId} = req.body as IAddBlogComment;
-
-    if(!blogId || !reply || !commentId) {
-      return next(new ErrorHandler("A field is missing", 400));
-    }
-
-    if(!user) {
-      return next(new ErrorHandler("User not found", 404));
-    }
-
-    const blog = await blogModel.findById(blogId);
-    if(!blog) {
-      return next(new ErrorHandler("Blog not found", 404));
-    }
-
-    const findComment = blog.comments.find((item: any) => item._id.toString() === commentId);
-    if(!findComment) {
-      return next(new ErrorHandler(`Comment with id: ${commentId} not found`, 404));
-    }
-
-    const replyData: any = {
-      user: req.user,
-      comment: reply,
-    }
-
-    findComment.commentReplies?.push(replyData);
-    await blog.save();
-
-    const data = {
-      comment: findComment.comment.slice(0, 10),
-      user: findComment.user.name,
-    }
-
+export const addBlogCommentReply = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await sendMail({
-        data,
-        subject: "Comment Reply",
-        template: 'comment-reply.ejs',
-        email: findComment.user.email,
-      })
+      const userId = req.user?._id as string;
+      const user = await userModel.findById(userId);
+      const { blogId, reply, commentId } = req.body as IAddBlogComment;
+
+      if (!blogId || !reply || !commentId) {
+        return next(new ErrorHandler("A field is missing", 400));
+      }
+
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
+
+      const findComment = blog.comments.find(
+        (item: any) => item._id.toString() === commentId
+      );
+      if (!findComment) {
+        return next(
+          new ErrorHandler(`Comment with id: ${commentId} not found`, 404)
+        );
+      }
+
+      const replyData: any = {
+        user: req.user,
+        comment: reply,
+      };
+
+      findComment.commentReplies?.push(replyData);
+      await blog.save();
+
+      const data = {
+        comment: findComment.comment.slice(0, 10),
+        user: findComment.user.name,
+      };
+
+      try {
+        await sendMail({
+          data,
+          subject: "Comment Reply",
+          template: "comment-reply.ejs",
+          email: findComment.user.email,
+        });
+      } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+
+      res.status(200).json({ success: true, blog, message: "Reply added." });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
-
-    res.status(200).json({success: true, blog, message: "Reply added."});
-  } catch (error: any) {
-    return next(new ErrorHandler(error.message, 500));
   }
-})
+);
 
 //Add Review to Blog
+interface IReview {
+  review: string;
+  rating: number;
+  blogId: string;
+}
+export const addReview = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { review, rating, blogId } = req.body as IReview;
+      if (!review || !rating || !blogId) {
+        return next(new ErrorHandler("Missing fields", 400));
+      }
+      const userId = req.user?.id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+      //find blog
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
 
-//Add Reply to Review
+      const reviewData: any = {
+        user: req.user,
+        rating,
+        review,
+      };
+
+      blog.reviews.push(reviewData);
+
+      let totalRating = 0;
+      blog.reviews.forEach((rev: any) => {
+        totalRating += rev.rating;
+      });
+
+      blog.rating = totalRating / blog.reviews.length;
+      await blog.save();
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//Add Reply to Review --admin
 
 //tags
 

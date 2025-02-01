@@ -85,6 +85,7 @@ const reviewSchema = new Schema<IBlogReview>({
     type: String,
     required: true,
   },
+  rating: Number,
   reviewReplies: [Object],
 });
 
