@@ -1,6 +1,6 @@
 import express from 'express';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
-import { addBlog, addBlogComment, addBlogCommentReply, getBlog, getBlogs, updateBlog } from '../controllers/blogControllers';
+import { addBlog, addBlogComment, addBlogCommentReply, addReview, getBlog, getBlogs, updateBlog } from '../controllers/blogControllers';
 const route = express.Router();
 
 
@@ -22,5 +22,8 @@ route.put('/add-comment', authMiddleware, addBlogComment);
 //add reply to comment
 //api/blogs/add-comment-reply
 route.put('/add-comment-reply', authMiddleware, addBlogCommentReply);
+//add review to blog
+//api/blogs/add-review
+route.put('/add-review', authMiddleware, addReview);
 
 export default route;

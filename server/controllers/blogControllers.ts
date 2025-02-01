@@ -308,7 +308,7 @@ export const addReview = catchAsyncErrors(
       if (!review || !rating || !blogId) {
         return next(new ErrorHandler("Missing fields", 400));
       }
-      const userId = req.user?.id;
+      const userId = req.user?._id;
       const user = await userModel.findById(userId);
       if (!user) {
         return next(new ErrorHandler("User not found", 404));
