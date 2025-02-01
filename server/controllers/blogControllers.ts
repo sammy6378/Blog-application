@@ -308,7 +308,7 @@ export const addReview = catchAsyncErrors(
       if (!review || !rating || !blogId) {
         return next(new ErrorHandler("Missing fields", 400));
       }
-      const userId = req.user?.id;
+      const userId = req.user?._id;
       const user = await userModel.findById(userId);
       if (!user) {
         return next(new ErrorHandler("User not found", 404));
@@ -334,6 +334,8 @@ export const addReview = catchAsyncErrors(
 
       blog.rating = totalRating / blog.reviews.length;
       await blog.save();
+
+      res.status(200).json({success: true, blog})
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -341,6 +343,44 @@ export const addReview = catchAsyncErrors(
 );
 
 //Add Reply to Review --admin
+interface IReviewReply {
+  blogId: string,
+  comment: string,
+  reviewId: string,
+}
+export const addReviewReply = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {blogId, comment, reviewId} = req.body as IReviewReply;
+    if(!blogId || !comment) {
+      return next(new ErrorHandler("Missing data", 400));
+    }
+    const userId = req.user?._id;
+    const user = await userModel.findById(userId);
+    if(!user) {
+      return next(new ErrorHandler("User not found", 404))
+    }
+    const blog = await blogModel.findById(blogId);
+    if(!blog) {
+      return next(new ErrorHandler("Blog not found", 404));
+    }
+
+    const review = blog.reviews.find((rev: any) => rev._id.toString() === reviewId);
+
+    const replyData: any = {
+      user: req.user,
+      comment,
+    }
+
+    review?.reviewReplies?.push(replyData);
+    await blog.save();
+
+    res.status(200).json({success: true, blog});
+    
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
 
 //tags
 
