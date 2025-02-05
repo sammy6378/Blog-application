@@ -3,7 +3,7 @@ import { catchAsyncErrors } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/ErrorHandler";
 import cloudinary from "cloudinary";
 import userModel, { IUser } from "../models/userModel";
-import blogModel from "../models/blogModel";
+import blogModel, { IVideo } from "../models/blogModel";
 import path from "path";
 import ejs from "ejs";
 import { sendMail } from "../utils/mail";
@@ -42,6 +42,39 @@ export const addBlog = catchAsyncErrors(
           return next(new ErrorHandler("Thumbnail upload failed", 500));
         }
       }
+
+      let videoData = [];
+      const videos = data.videos as IVideo[];
+      if (videos && videos.length > 0) {
+        //access a single video
+        for (const video of videos) {
+          if (video.videoThumbnail) {
+            try {
+              const myCloud = await cloudinary.v2.uploader.upload(
+                video.videoThumbnail as any,
+                {
+                  folder: "Blog-Videos",
+                }
+              );
+              videoData.push({
+                ...video,
+                videoThumbnail: {
+                  public_id: myCloud.public_id,
+                  url: myCloud.url,
+                },
+              });
+            } catch (error) {
+              return next(
+                new ErrorHandler("Video thumbnail upload failed", 500)
+              );
+            }
+          } else {
+            videoData.push(video);
+          }
+        }
+      }
+
+      data.videos = videoData;
 
       //add blog author
       data.author = user;
@@ -92,6 +125,37 @@ export const updateBlog = catchAsyncErrors(
         }
       }
 
+      //update videos
+      const videos = data.videos as IVideo[];
+      if (videos && videos.length > 0) {
+        let videoData = [];
+        for (const video of videos) {
+          if (video.videoThumbnail) {
+            const existingVideo = blog.videos.find(v => v._id as string === video._id);
+            if (existingVideo && existingVideo.videoThumbnail.public_id) {
+              // Destroy the existing thumbnail from Cloudinary
+              await cloudinary.v2.uploader.destroy(existingVideo.videoThumbnail.public_id);
+            }
+            try {
+              const myCloud = await cloudinary.v2.uploader.upload(video.videoThumbnail as any, {
+                folder: "Blog-Videos",
+              });
+              videoData.push({
+                ...video,
+                videoThumbnail: {
+                  public_id: myCloud.public_id,
+                  url: myCloud.secure_url,
+                },
+              });
+            } catch (error) {
+              return next(new ErrorHandler("Video thumbnail upload failed", 500));
+            }
+          } else {
+            videoData.push(video);
+          }
+        }
+        data.videos = videoData;
+      }
       const updatedBlog = await blogModel.findByIdAndUpdate(
         blogId,
         {
@@ -335,7 +399,7 @@ export const addReview = catchAsyncErrors(
       blog.rating = totalRating / blog.reviews.length;
       await blog.save();
 
-      res.status(200).json({success: true, blog})
+      res.status(200).json({ success: true, blog });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -344,43 +408,45 @@ export const addReview = catchAsyncErrors(
 
 //Add Reply to Review --admin
 interface IReviewReply {
-  blogId: string,
-  comment: string,
-  reviewId: string,
+  blogId: string;
+  comment: string;
+  reviewId: string;
 }
-export const addReviewReply = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {blogId, comment, reviewId} = req.body as IReviewReply;
-    if(!blogId || !comment) {
-      return next(new ErrorHandler("Missing data", 400));
-    }
-    const userId = req.user?._id;
-    const user = await userModel.findById(userId);
-    if(!user) {
-      return next(new ErrorHandler("User not found", 404))
-    }
-    const blog = await blogModel.findById(blogId);
-    if(!blog) {
-      return next(new ErrorHandler("Blog not found", 404));
-    }
+export const addReviewReply = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { blogId, comment, reviewId } = req.body as IReviewReply;
+      if (!blogId || !comment) {
+        return next(new ErrorHandler("Missing data", 400));
+      }
+      const userId = req.user?._id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
 
-    const review = blog.reviews.find((rev: any) => rev._id.toString() === reviewId);
+      const review = blog.reviews.find(
+        (rev: any) => rev._id.toString() === reviewId
+      );
 
-    const replyData: any = {
-      user: req.user,
-      comment,
+      const replyData: any = {
+        user: req.user,
+        comment,
+      };
+
+      review?.reviewReplies?.push(replyData);
+      await blog.save();
+
+      res.status(200).json({ success: true, blog });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
     }
-
-    review?.reviewReplies?.push(replyData);
-    await blog.save();
-
-    res.status(200).json({success: true, blog});
-    
-    
-  } catch (error: any) {
-    return next(new ErrorHandler(error.message, 500));
   }
-})
+);
 
 //tags
 

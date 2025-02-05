@@ -19,7 +19,7 @@ interface IBlogReview extends Document {
   reviewReplies?: IComment[];
 }
 
-interface IVideo extends Document {
+export interface IVideo extends Document {
   title: string;
   description: string;
   videoUrl: string;
