@@ -18,7 +18,7 @@ export const ErrorMiddleware = async(error: ErrorHandler, req: Request, res: Res
     }
 
     //invalid token error
-    if(error.name === "InvalidTokenError") {
+    if(error.name === "JsonWebTokenError") {
         const message = "Invalid token. Please login again";
         return next(new ErrorHandler(message, 401));
     }
