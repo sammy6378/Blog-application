@@ -43,6 +43,14 @@ export const addBlog = catchAsyncErrors(
         }
       }
 
+      //add tags
+      const tags = data.tags;
+      if (tags && Array.isArray(tags)) {
+        data.tags = tags.map((tag: string) => ({ tag }));
+      } else {
+        return next(new ErrorHandler("Tags must be an array", 400));
+      }
+
       //add blog author
       data.author = user;
 
@@ -382,9 +390,73 @@ export const addReviewReply = catchAsyncErrors(async(req: Request, res: Response
   }
 })
 
-//tags
 
 //add video
+
+interface IVideo {
+  title: string,
+  description: string,
+  videoUrl: string,
+  videoThumbnail:string,
+  blogId: string,
+}
+
+export const addVideo = catchAsyncErrors(async(req:Request, res: Response, next: NextFunction)=>{
+
+ try {
+   const { title, description,videoUrl, videoThumbnail, blogId} = req.body as IVideo;
+ 
+   if(!title || !description || !videoUrl || !videoThumbnail || !blogId){
+     return next(new ErrorHandler("Provide all fields",400));
+   }
+ 
+   const userId = req.user?._id;
+   const user = await userModel.findById(userId);
+   if(!user){
+     return next(new ErrorHandler("user not found",401));
+   }
+ 
+ 
+   const blog = await blogModel.findById(blogId);
+   if (!blog) {
+     return next(new ErrorHandler("Blog not found",401));
+   }
+ 
+   if(videoThumbnail){
+       blog.videos?.map(async (video) => {
+         const Thumbnail = video.videoThumbnail;
+
+         if(Thumbnail){
+           const myCloud = await cloudinary.v2.uploader.upload(videoThumbnail, {
+             folder: 'Videos'
+           });
+           video.videoThumbnail = {
+             public_id: myCloud.public_id,
+             url: myCloud.secure_url,
+           }
+         }
+       })  
+   }
+
+   const videoData ={
+    _id: blogId,
+    title,
+    description,
+    videoUrl,
+    videoThumbnail
+   }
+
+   blog.videos.push(videoData);
+   await blog.save();
+
+   res.status(200).json({success: true, blog, message: "blog video added successfully"});
+
+ } catch (error:any) {
+  return next(new ErrorHandler(error.message, 500));
+ }
+
+
+})
 
 //update video
 
