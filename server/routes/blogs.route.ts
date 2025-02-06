@@ -1,6 +1,6 @@
 import express from 'express';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
-import { addBlog, addBlogComment, addBlogCommentReply, addReview, addReviewReply, getBlog, getBlogs, updateBlog } from '../controllers/blogControllers';
+import { addBlog, addBlogComment, addBlogCommentReply, addReview, addReviewReply, deleteBlog, getBlog, getBlogs, updateBlog } from '../controllers/blogControllers';
 const route = express.Router();
 
 
@@ -28,5 +28,7 @@ route.put('/add-review', authMiddleware, addReview);
 //add review reply
 //api/blogs/add-review-reply
 route.put('/add-review-reply', authMiddleware, authorizeRoles("admin"), addReviewReply);
+//delete blog --- only for admin
+route.delete('/delete-blog:/id', authMiddleware, authorizeRoles("admin"), deleteBlog);
 
 export default route;
