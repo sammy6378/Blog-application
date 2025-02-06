@@ -3,7 +3,7 @@ import { catchAsyncErrors } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/ErrorHandler";
 import cloudinary from "cloudinary";
 import userModel, { IUser } from "../models/userModel";
-import blogModel, { IVideo } from "../models/blogModel";
+import blogModel, { ITag, IVideo } from "../models/blogModel";
 import path from "path";
 import ejs from "ejs";
 import { sendMail } from "../utils/mail";
@@ -291,12 +291,21 @@ export const getBlogs = catchAsyncErrors(
 //add tags
 export const addTag = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
   try {
-    
+    const {tag} = req.body as ITag;
     const userId = req.user?._id;
+    const blogId = req.params.id;
     const user = await userModel.findById(userId);
     if(!user) {
       return next(new ErrorHandler("User not found", 404));
     }
+
+    const blog = await blogModel.findById(blogId);
+    if(!blog) {
+      return next(new ErrorHandler("Blog not found", 404));
+    }
+
+
+
 
 
     

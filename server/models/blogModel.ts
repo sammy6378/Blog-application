@@ -30,7 +30,7 @@ export interface IVideo extends Document {
   links: IBlogLink[];
 }
 
-interface ITag extends Document {
+export interface ITag extends Document {
   tag: string;
 }
 
