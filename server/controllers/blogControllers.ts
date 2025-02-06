@@ -290,9 +290,9 @@ export const getBlogs = catchAsyncErrors(
 export const addTag = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { tag } = req.body as ITag;
+      const { tag, blogId } = req.body;
       const userId = req.user?._id;
-      const blogId = req.params.id;
+      // const blogId = req.params.id;
       const user = await userModel.findById(userId);
       if (!user) {
         return next(new ErrorHandler("User not found", 404));
@@ -314,6 +314,30 @@ export const addTag = catchAsyncErrors(
       res
         .status(200)
         .json({ success: true, tags: blog.tags, message: "Tag added" });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//delete tag
+export const deleteTag = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { blogId, tagId } = req.body;
+      const userId = req.user?._id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
+
+      blog.tags = blog.tags.filter(t => t._id as string !== tagId);
+      await blog.save();
+
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
