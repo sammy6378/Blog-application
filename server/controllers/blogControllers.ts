@@ -125,30 +125,50 @@ export const updateBlog = catchAsyncErrors(
         }
       }
 
-      //update videos
-      const videos = data.videos as IVideo[];
-      if (videos && videos.length > 0) {
-        let videoData = [];
+      //edit video
+      const videoData = [];
+      const videos = data.videos;
+      if (videos) {
         for (const video of videos) {
-          if (video.videoThumbnail) {
-            const existingVideo = blog.videos.find(v => v._id as string === video._id);
-            if (existingVideo && existingVideo.videoThumbnail.public_id) {
-              // Destroy the existing thumbnail from Cloudinary
-              await cloudinary.v2.uploader.destroy(existingVideo.videoThumbnail.public_id);
-            }
-            try {
-              const myCloud = await cloudinary.v2.uploader.upload(video.videoThumbnail as any, {
-                folder: "Blog-Videos",
-              });
+          const videoThumbnail = video.videoThumbnail as any;
+
+          if (videoThumbnail) {
+            //if video exists, remove it from cloudinary
+            const existingVideo = blog.videos.find(
+              (singleVideo) => singleVideo._id === video._id
+            );
+            if (existingVideo) {
+              await cloudinary.v2.uploader.destroy(
+                existingVideo.videoThumbnail.public_id
+              );
+
+              const myCloud = await cloudinary.v2.uploader.upload(
+                videoThumbnail,
+                {
+                  folder: "Blogs",
+                }
+              );
               videoData.push({
                 ...video,
                 videoThumbnail: {
                   public_id: myCloud.public_id,
                   url: myCloud.secure_url,
                 },
-              });
-            } catch (error) {
-              return next(new ErrorHandler("Video thumbnail upload failed", 500));
+              } as IVideo);
+            } else {
+              const myCloud = await cloudinary.v2.uploader.upload(
+                videoThumbnail,
+                {
+                  folder: "Blogs",
+                }
+              );
+              videoData.push({
+                ...video,
+                videoThumbnail: {
+                  public_id: myCloud.public_id,
+                  url: myCloud.secure_url,
+                },
+              } as IVideo);
             }
           } else {
             videoData.push(video);
@@ -174,6 +194,44 @@ export const updateBlog = catchAsyncErrors(
     }
   }
 );
+
+
+//deleting blog --- only for admin
+export const deleteBlog = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const blogId = req.params.id;
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
+
+      //delete blog thumbnail from cloudinary
+      if (blog.thumbnail.public_id) {
+        await cloudinary.v2.uploader.destroy(blog.thumbnail.public_id);
+      }
+
+      //delete video thumbnail from cloudinary
+      for (const video of blog.videos) {
+        if (video.videoThumbnail.public_id) {
+          await cloudinary.v2.uploader.destroy(
+            video?.videoThumbnail.public_id as string
+          );
+        }
+      }
+
+      //delete blog from DB
+      await blogModel.deleteOne({ _id: blogId });
+
+      res
+        .status(200)
+        .json({ success: true, message: `Deleted blog: ${blogId}` });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
 
 //Get Single Blog
 export const getBlog = catchAsyncErrors(
