@@ -195,7 +195,6 @@ export const updateBlog = catchAsyncErrors(
   }
 );
 
-
 //deleting blog --- only for admin
 export const deleteBlog = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -231,7 +230,6 @@ export const deleteBlog = catchAsyncErrors(
     }
   }
 );
-
 
 //Get Single Blog
 export const getBlog = catchAsyncErrors(
@@ -288,31 +286,39 @@ export const getBlogs = catchAsyncErrors(
   }
 );
 
-//add tags
-export const addTag = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {tag} = req.body as ITag;
-    const userId = req.user?._id;
-    const blogId = req.params.id;
-    const user = await userModel.findById(userId);
-    if(!user) {
-      return next(new ErrorHandler("User not found", 404));
+//add tags ---only for admin
+export const addTag = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { tag } = req.body as ITag;
+      const userId = req.user?._id;
+      const blogId = req.params.id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
+
+      //check if tag is provided
+      if (!tag) {
+        return next(new ErrorHandler("Tag is required", 400));
+      }
+
+      blog.tags.push({ tag } as ITag);
+      await blog.save();
+
+      res
+        .status(200)
+        .json({ success: true, tags: blog.tags, message: "Tag added" });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
     }
-
-    const blog = await blogModel.findById(blogId);
-    if(!blog) {
-      return next(new ErrorHandler("Blog not found", 404));
-    }
-
-
-
-
-
-    
-  } catch (error: any) {
-    return next(new ErrorHandler(error.message, 500));
   }
-})
+);
 
 //Add Comment to Blog
 interface IAddComment {
