@@ -562,9 +562,9 @@ export const addReviewReply = catchAsyncErrors(
   }
 );
 
-//add tags
-//update tags
-//delete tags
+//add tags --done
+//update tags --no need--
+//delete tags --done
 
 //add video --done
 
