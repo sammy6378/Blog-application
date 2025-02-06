@@ -19,7 +19,7 @@ interface IBlogReview extends Document {
   reviewReplies?: IComment[];
 }
 
-interface IVideo extends Document {
+export interface IVideo extends Document {
   title: string;
   description: string;
   videoUrl: string;
@@ -30,7 +30,7 @@ interface IVideo extends Document {
   links: IBlogLink[];
 }
 
-interface ITag extends Document {
+export interface ITag extends Document {
   tag: string;
 }
 
