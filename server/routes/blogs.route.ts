@@ -31,6 +31,6 @@ route.put('/add-review-reply', authMiddleware, authorizeRoles("admin"), addRevie
 //delete blog --- only for admin
 route.delete('/delete-blog:/id', authMiddleware, authorizeRoles("admin"), deleteBlog);
 //add tag --- only for admin
-route.post('/add-tag', authMiddleware, authorizeRoles("admin"), addTag);
+route.put('/add-tag', authMiddleware, authorizeRoles("admin"), addTag);
 
 export default route;
