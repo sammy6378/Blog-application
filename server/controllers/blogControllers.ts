@@ -288,6 +288,23 @@ export const getBlogs = catchAsyncErrors(
   }
 );
 
+//add tags
+export const addTag = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    
+    const userId = req.user?._id;
+    const user = await userModel.findById(userId);
+    if(!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+
+
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
+
 //Add Comment to Blog
 interface IAddComment {
   comment: string;
