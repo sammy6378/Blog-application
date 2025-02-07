@@ -5,6 +5,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import ejs from "ejs";
 import path from "path";
+import validator from "validator";
 import { sendMail } from "../utils/mail";
 import {
   accessTokenOptions,
@@ -29,6 +30,23 @@ export const RegisterUser = catchAsyncErrors(
       const { name, email, password } = req.body as IRegisterUser;
       if (!name || !email || !password) {
         return next(new ErrorHandler("Please provide all the inputs", 400));
+      }
+
+      //validate email
+      const isValidEmail = validator.isEmail(email);
+      if (!isValidEmail) {
+        return next(new ErrorHandler("Incorrect email format", 400));
+      }
+
+      //validate password
+      const isValidPassword = validator.isStrongPassword(password);
+      if (!isValidPassword) {
+        return next(
+          new ErrorHandler(
+            "Password should be at least 8 characters, have at least one uppercase letter, one numerical value and one special character",
+            400
+          )
+        );
       }
 
       const isEmailExist = await userModel.findOne({ email });
@@ -342,19 +360,18 @@ export const updateUserInfo = catchAsyncErrors(
         data
       );
 
-    if(email) {
-       try {
-        await sendMail({
-          subject: "Editing User Info",
-          email: updatedUser?.email as string,
-          data,
-          template: "update-user-info.ejs",
-        });
-      } catch (error: any) {
-        return next(new ErrorHandler(error.message, 400));
+      if (email) {
+        try {
+          await sendMail({
+            subject: "Editing User Info",
+            email: updatedUser?.email as string,
+            data,
+            template: "update-user-info.ejs",
+          });
+        } catch (error: any) {
+          return next(new ErrorHandler(error.message, 400));
+        }
       }
-    }
-     
 
       res.status(200).json({
         success: true,
@@ -427,7 +444,7 @@ export const socialAuth = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, name, avatar } = req.body as ISocialAuth;
-      if(!email && !name) {
+      if (!email && !name) {
         return next(new ErrorHandler("Email and name should be provided", 400));
       }
       const user = (await userModel.findOne({ email })) as IUser;
