@@ -246,8 +246,10 @@ export const UpdateAccessToken = catchAsyncErrors(
 export const getUserInfo = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?._id;
-      const user = await userModel.findById(userId).select("-password");
+      const userId = req.user?._id as string;
+     // const user = await userModel.findById(userId).select("-password");
+     const redisUser = await redis.get(userId) as string;
+     const user = await JSON.parse(redisUser);
       if (!user) {
         return next(new ErrorHandler(`user: ${userId} not found`, 404));
       }
