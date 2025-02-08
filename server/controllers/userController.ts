@@ -300,6 +300,9 @@ export const updateUserPass = catchAsyncErrors(
 
       user.password = newPassword;
       await user?.save();
+      // Clear the tokens for user to login again
+      res.cookie("access_token", "", { maxAge: 1 });
+      res.cookie("refresh_token", "", { maxAge: 1 });
       redis.set(userId as string, JSON.stringify(user));
 
       res.status(200).json({
