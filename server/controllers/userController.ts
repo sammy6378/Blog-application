@@ -573,3 +573,20 @@ export const DeleteUserAccount_Admin = catchAsyncErrors(async(req: Request, res:
     return next(new ErrorHandler(error.message, 500));
   }
 })
+
+//delete user --- user delete account
+export const DeleteMyAccount = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await userModel.findById(req.user?._id);
+    if(!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+
+    await userModel.findByIdAndDelete(req.user?._id);
+    await redis.del(req.user?._id as string);
+    res.status(200).json({success: true, message: "We are sad to see you go :("});
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
