@@ -530,3 +530,24 @@ export const UpdateUserRole = catchAsyncErrors(
     }
   }
 );
+
+//get all users --- only for admin
+export const GetAllUsers = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      const allUsers = await userModel
+        .find()
+        .select("-password")
+        .sort({ createdAt: -1 });
+      res.status(200).json({ success: true, allUsers });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
