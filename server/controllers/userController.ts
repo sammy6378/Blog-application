@@ -305,6 +305,22 @@ export const updateUserPass = catchAsyncErrors(
       res.cookie("refresh_token", "", { maxAge: 1 });
       redis.set(userId as string, JSON.stringify(user));
 
+      const data = {
+        email: user.email,
+      };
+
+      const html = await ejs.renderFile(
+        path.join(__dirname, "../mails/update-password.ejs"),
+        data
+      );
+
+      await sendMail({
+        email: user.email,
+        template: "update-password.ejs",
+        subject: "User Password Updated",
+        data,
+      });
+
       res.status(200).json({
         success: true,
         user,
