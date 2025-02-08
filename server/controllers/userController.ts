@@ -300,6 +300,9 @@ export const updateUserPass = catchAsyncErrors(
 
       user.password = newPassword;
       await user?.save();
+      // Clear the tokens for user to login again
+      res.cookie("access_token", "", { maxAge: 1 });
+      res.cookie("refresh_token", "", { maxAge: 1 });
       redis.set(userId as string, JSON.stringify(user));
 
       res.status(200).json({
@@ -329,30 +332,34 @@ export const updateUserInfo = catchAsyncErrors(
         return next(new ErrorHandler("User not found. Please login", 401));
       }
 
+      const oldEmail = user.email;
+
       if (!name && !email) {
         return next(new ErrorHandler("Please provide at least one input", 400));
       }
 
-      const isEmailExist = await userModel.findOne({ email });
-      if (isEmailExist) {
-        return next(new ErrorHandler(`Email: ${email} already exists`, 409));
+      if (email) {
+        const isEmailExist = await userModel.findOne({ email });
+        if (isEmailExist) {
+          return next(new ErrorHandler(`Email: ${email} already exists`, 409));
+        }
+        user.email = email;
+        // Clear the tokens
+        res.cookie("access_token", "", { maxAge: 1 });
+        res.cookie("refresh_token", "", { maxAge: 1 });
       }
 
-      const updatedUser: IUpdateUser = {};
-      if (user && name) updatedUser.name = name;
-      if (user && email) updatedUser.email = email;
+      
+      if (user && name) user.name = name;
 
-      const newUser = await userModel.findByIdAndUpdate(userId, updatedUser, {
-        new: true,
-        runValidators: true,
-      });
+      await user.save();
 
-      redis.set(userId, JSON.stringify(newUser));
+      redis.set(userId, JSON.stringify(user));
 
       const data = {
         name: user?.name,
-        oldEmail: user.email,
-        newEmail: updatedUser.email,
+        oldEmail,
+        newEmail: user.email,
       };
       // console.log(data);
       const html = await ejs.renderFile(
@@ -364,7 +371,7 @@ export const updateUserInfo = catchAsyncErrors(
         try {
           await sendMail({
             subject: "Editing User Info",
-            email: updatedUser?.email as string,
+            email: user?.email as string,
             data,
             template: "update-user-info.ejs",
           });
@@ -375,8 +382,8 @@ export const updateUserInfo = catchAsyncErrors(
 
       res.status(200).json({
         success: true,
-        newUser,
-        message: `user info updated. Email sent to ${newUser?.email}`,
+        user,
+        message: `user info updated. Email sent to ${user?.email}`,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
