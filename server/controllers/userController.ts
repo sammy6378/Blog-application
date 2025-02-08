@@ -551,3 +551,25 @@ export const GetAllUsers = catchAsyncErrors(
     }
   }
 );
+
+//delete user --- only for admin
+export const DeleteUserAccount_Admin = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {userId} = req.body;
+    const targetedUser = await userModel.findById(userId);
+    if(!targetedUser) {
+      return next(new ErrorHandler("UserId not found", 404));
+    }
+    const user = await userModel.findById(req.user?._id);
+    if(!user) {
+      return next(new ErrorHandler("User not found", 404))
+    }
+
+    await userModel.findByIdAndDelete(userId);
+    await redis.del(userId);
+    res.status(200).json({success: true, message: "User deleted successfully"});
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
