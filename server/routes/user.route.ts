@@ -1,5 +1,5 @@
 import express from 'express';
-import { ActivateUser, getUserInfo, logoutUser, RegisterUser, socialAuth, UpdateAccessToken, updateUserAvatar, updateUserInfo, updateUserPass, userLogin } from '../controllers/userController';
+import { ActivateUser, getUserInfo, logoutUser, RegisterUser, socialAuth, UpdateAccessToken, updateUserAvatar, updateUserInfo, updateUserPass, UpdateUserRole, userLogin } from '../controllers/userController';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
 const route = express.Router();
 
@@ -23,5 +23,7 @@ route.put("/update-info", authMiddleware, updateUserInfo);
 route.put("/update-avatar", authMiddleware, updateUserAvatar);
 //api/user/social-auth
 route.post('/social-auth', socialAuth);
+//api/user/update-role
+route.put('/update-role', authMiddleware, authorizeRoles("admin"), UpdateUserRole);
 
 export default route;
