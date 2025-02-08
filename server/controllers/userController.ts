@@ -498,3 +498,35 @@ export const socialAuth = catchAsyncErrors(
     }
   }
 );
+
+//update other user's role --- only for admin
+export const UpdateUserRole = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { role, email } = req.body;
+      if (!role || !email) {
+        return next(new ErrorHandler("Role and email are required", 400));
+      }
+      //check email in DB
+      const getUser = await userModel.findOne({ email });
+      if (!getUser) {
+        return next(new ErrorHandler("Email not found", 404));
+      }
+
+      const updatedUser = await userModel.findOneAndUpdate(
+        { email },
+        {
+          role,
+        },
+        { new: true }
+      );
+
+      //update the role on redis
+      await redis.set(getUser._id as string, JSON.stringify(getUser));
+
+      res.status(200).json({ success: true, updatedUser });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
