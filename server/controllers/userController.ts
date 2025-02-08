@@ -246,8 +246,10 @@ export const UpdateAccessToken = catchAsyncErrors(
 export const getUserInfo = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?._id;
-      const user = await userModel.findById(userId).select("-password");
+      const userId = req.user?._id as string;
+      // const user = await userModel.findById(userId).select("-password");
+      const redisUser = (await redis.get(userId)) as string;
+      const user = await JSON.parse(redisUser);
       if (!user) {
         return next(new ErrorHandler(`user: ${userId} not found`, 404));
       }
@@ -305,6 +307,22 @@ export const updateUserPass = catchAsyncErrors(
       res.cookie("refresh_token", "", { maxAge: 1 });
       redis.set(userId as string, JSON.stringify(user));
 
+      const data = {
+        email: user.email,
+      };
+
+      const html = await ejs.renderFile(
+        path.join(__dirname, "../mails/update-password.ejs"),
+        data
+      );
+
+      await sendMail({
+        email: user.email,
+        template: "update-password.ejs",
+        subject: "User Password Updated",
+        data,
+      });
+
       res.status(200).json({
         success: true,
         user,
@@ -349,7 +367,6 @@ export const updateUserInfo = catchAsyncErrors(
         res.cookie("refresh_token", "", { maxAge: 1 });
       }
 
-      
       if (user && name) user.name = name;
 
       await user.save();
@@ -477,6 +494,104 @@ export const socialAuth = catchAsyncErrors(
       }
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+//update other user's role --- only for admin
+export const UpdateUserRole = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { role, email } = req.body;
+      if (!role || !email) {
+        return next(new ErrorHandler("Role and email are required", 400));
+      }
+      //check email in DB
+      const getUser = await userModel.findOne({ email });
+      if (!getUser) {
+        return next(new ErrorHandler("Email not found", 404));
+      }
+
+      const updatedUser = await userModel.findOneAndUpdate(
+        { email },
+        {
+          role,
+        },
+        { new: true }
+      );
+
+      //update the role on redis
+      await redis.set(getUser._id as string, JSON.stringify(getUser));
+
+      res.status(200).json({ success: true, updatedUser });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//get all users --- only for admin
+export const GetAllUsers = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      const allUsers = await userModel
+        .find()
+        .select("-password")
+        .sort({ createdAt: -1 });
+      res.status(200).json({ success: true, allUsers });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//delete user --- only for admin
+export const DeleteUserAccount_Admin = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId } = req.body;
+      const targetedUser = await userModel.findById(userId);
+      if (!targetedUser) {
+        return next(new ErrorHandler("UserId not found", 404));
+      }
+      const user = await userModel.findById(req.user?._id);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      await userModel.findByIdAndDelete(userId);
+      await redis.del(userId);
+      res
+        .status(200)
+        .json({ success: true, message: "User deleted successfully" });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//delete user --- user delete account
+export const DeleteMyAccount = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await userModel.findById(req.user?._id);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      await userModel.findByIdAndDelete(req.user?._id);
+      await redis.del(req.user?._id as string);
+      res
+        .status(200)
+        .json({ success: true, message: "We are sad to see you go :(" });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
     }
   }
 );
