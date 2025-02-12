@@ -189,7 +189,8 @@ const blogSchema = new Schema<IBlog>(
     category: String,
     author: Object,
     tags: [tagSchema],
-    likeInfo: [],
+    likeInfo: [likeInfoSchema],
+    dislikeInfo: [dislikeInfoSchema]
   },
   { timestamps: true }
 );
