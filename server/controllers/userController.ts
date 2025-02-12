@@ -521,7 +521,7 @@ export const UpdateUserRole = catchAsyncErrors(
       );
 
       //update the role on redis
-      await redis.set(getUser._id as string, JSON.stringify(getUser));
+      await redis.set(getUser._id as string, JSON.stringify(updatedUser));
 
       res.status(200).json({ success: true, updatedUser });
     } catch (error: any) {

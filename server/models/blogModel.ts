@@ -34,7 +34,39 @@ export interface ITag extends Document {
   tag: string;
 }
 
-interface IBlog extends Document {
+/* interface ILikeInfo {
+ user: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User"
+ },
+ blog: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Blog"
+ }
+}
+interface IDisikeInfo {
+ user: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User"
+ },
+ blog: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Blog"
+ }
+} */
+
+interface ILikeInfo {
+  userId: string;
+  blogId: string;
+}
+
+interface IDislikeInfo {
+  userId: string;
+  blogId: string;
+}
+
+export interface IBlog extends Document {
+  blog: { userId: any; blogId: any; };
   title: string;
   description: string;
   body: string;
@@ -52,6 +84,8 @@ interface IBlog extends Document {
   category: string;
   author: IUser;
   tags: ITag[];
+  likeInfo: ILikeInfo[];
+  dislikeInfo: IDislikeInfo[];
 }
 
 //schemas
@@ -107,6 +141,18 @@ const videoSchema = new Schema<IVideo>({
   links: [Object],
 });
 
+//like info schema
+const likeInfoSchema = new Schema<ILikeInfo>({
+  userId: String,
+  blogId: String,
+});
+
+//dislike info schema
+const dislikeInfoSchema = new Schema<IDislikeInfo>({
+  userId: String,
+  blogId: String,
+});
+
 const blogSchema = new Schema<IBlog>(
   {
     title: {
@@ -144,6 +190,8 @@ const blogSchema = new Schema<IBlog>(
     category: String,
     author: Object,
     tags: [tagSchema],
+    likeInfo: [likeInfoSchema],
+    dislikeInfo: [dislikeInfoSchema]
   },
   { timestamps: true }
 );
