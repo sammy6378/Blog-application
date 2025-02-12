@@ -666,8 +666,8 @@ export const BlogDislikes = catchAsyncErrors(
     }
   }
 );
-//links
-export const BlogLinks = catchAsyncErrors(async(req: Request,res: Response, next: NextFunction) => {
+//add links
+export const AddLinks = catchAsyncErrors(async(req: Request,res: Response, next: NextFunction) => {
   try {
     const {links, blogId} = req.body;
     if(!Array.isArray(links)) {
@@ -689,7 +689,7 @@ export const BlogLinks = catchAsyncErrors(async(req: Request,res: Response, next
     }
 
     const updatedBlog = await blogModel.findByIdAndUpdate(blogId, {
-      link: linkData,
+      links: linkData,
     }, {new: true});
     res.status(200).json({success: true, updatedBlog});
     
