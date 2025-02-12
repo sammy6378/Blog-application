@@ -3,7 +3,7 @@ import { catchAsyncErrors } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/ErrorHandler";
 import cloudinary from "cloudinary";
 import userModel, { IUser } from "../models/userModel";
-import blogModel, { ITag, IVideo } from "../models/blogModel";
+import blogModel, { IBlog, ITag, IVideo } from "../models/blogModel";
 import path from "path";
 import ejs from "ejs";
 import { sendMail } from "../utils/mail";
@@ -335,9 +335,8 @@ export const deleteTag = catchAsyncErrors(
         return next(new ErrorHandler("Blog not found", 404));
       }
 
-      blog.tags = blog.tags.filter(t => t._id as string !== tagId);
+      blog.tags = blog.tags.filter((t) => (t._id as string) !== tagId);
       await blog.save();
-
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -563,13 +562,44 @@ export const addReviewReply = catchAsyncErrors(
 );
 
 //likes
-export const BlogLikes = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
-  try {
-    
-  } catch (error: any) {
-    return next(new ErrorHandler(error.message, 500));
+export const BlogLikes = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId, blogId } = req.body;
+      if (!userId || !blogId) {
+        return next(new ErrorHandler("Like user and blog not found", 404));
+      }
+
+      //check for user
+      const user = await userModel.findById(req.user?._id as string);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      const blog = (await blogModel.findById(blogId)) as IBlog;
+
+      const newLikeInfo = {
+        userId,
+        blogId,
+      };
+
+      const existingLike = blog.likeInfo.find((like) => like.userId === userId);
+      if (existingLike) {
+        blog.likeInfo = blog.likeInfo.filter((like) => like.userId !== userId);
+        blog.likes = blog.likeInfo.length > 1 ? blog.likeInfo.length - 1 : 0;
+      } else {
+        blog.likeInfo.push(newLikeInfo);
+        blog.likes = blog.likeInfo.length;
+      }
+
+      await blog.save();
+
+      res.status(200).json({ success: true, blog });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   }
-})
+);
 //dislikes
 //links
 

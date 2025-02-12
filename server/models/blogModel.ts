@@ -65,7 +65,8 @@ interface IDislikeInfo {
   blogId: string;
 }
 
-interface IBlog extends Document {
+export interface IBlog extends Document {
+  blog: { userId: any; blogId: any; };
   title: string;
   description: string;
   body: string;
