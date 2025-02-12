@@ -584,10 +584,16 @@ export const BlogLikes = catchAsyncErrors(
       };
 
       const existingLike = blog.likeInfo.find((like) => like.userId === userId);
+      const existingDislike = blog.dislikeInfo.find((dislike) => dislike.userId === userId);
       if (existingLike) {
         blog.likeInfo = blog.likeInfo.filter((like) => like.userId !== userId);
         blog.likes = blog.likeInfo.length > 1 ? blog.likeInfo.length - 1 : 0;
-      } else {
+      }
+      else if(existingDislike) {
+        blog.dislikeInfo = blog.dislikeInfo.filter((dislike) => dislike.userId !== userId);
+        blog.dislikes = blog.dislikeInfo.length > 1 ? blog.dislikeInfo.length - 1 : 0;
+      }
+       else {
         blog.likeInfo.push(newLikeInfo);
         blog.likes = blog.likeInfo.length;
       }
