@@ -674,7 +674,7 @@ export const AddLinks = catchAsyncErrors(async(req: Request,res: Response, next:
       return next(new ErrorHandler("Links must be array", 400));
     }
 
-    const linkData = links.map((link) => ({
+    const linkData: any = links.map((link) => ({
       title: link.title,
       url: link.url,
     }))
@@ -683,15 +683,15 @@ export const AddLinks = catchAsyncErrors(async(req: Request,res: Response, next:
     if(!user) {
       return next(new ErrorHandler("User not found", 404));
     }
-    const blog = await blogModel.findById(blogId);
+    const blog = await blogModel.findById(blogId) as IBlog;
     if(!blog) {
       return next(new ErrorHandler("Blog not found", 404));
     }
 
-    const updatedBlog = await blogModel.findByIdAndUpdate(blogId, {
-      links: linkData,
-    }, {new: true});
-    res.status(200).json({success: true, updatedBlog});
+    blog.links = linkData;
+    await blog.save();
+   
+    res.status(200).json({success: true, blog});
     
   } catch (error: any) {
     return next(new ErrorHandler(error.message, 500));
