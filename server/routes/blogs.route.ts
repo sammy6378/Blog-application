@@ -39,7 +39,7 @@ route.put('/like', authMiddleware, BlogLikes);
 //blog dislikes
 route.put('/dislike', authMiddleware, BlogDislikes);
 //add links
-route.put('/add-links', authMiddleware, authorizeRoles("admin"), AddLinks);
+route.post('/add-links', authMiddleware, authorizeRoles("admin"), AddLinks);
 //update links
 route.put('/add-links', authMiddleware, authorizeRoles("admin"), UpdateLinks);
 
