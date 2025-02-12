@@ -1,6 +1,6 @@
 import express from 'express';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
-import { addBlog, addBlogComment, addBlogCommentReply, AddLinks, addReview, addReviewReply, addTag, BlogDislikes, BlogLikes, deleteBlog, deleteTag, getBlog, getBlogs, updateBlog } from '../controllers/blogControllers';
+import { addBlog, addBlogComment, addBlogCommentReply, AddLinks, addReview, addReviewReply, addTag, BlogDislikes, BlogLikes, deleteBlog, deleteTag, getBlog, getBlogs, updateBlog, UpdateLinks } from '../controllers/blogControllers';
 const route = express.Router();
 
 
@@ -40,5 +40,7 @@ route.put('/like', authMiddleware, BlogLikes);
 route.put('/dislike', authMiddleware, BlogDislikes);
 //add links
 route.put('/add-links', authMiddleware, authorizeRoles("admin"), AddLinks);
+//update links
+route.put('/add-links', authMiddleware, authorizeRoles("admin"), UpdateLinks);
 
 export default route;
