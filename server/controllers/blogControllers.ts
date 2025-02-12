@@ -563,6 +563,13 @@ export const addReviewReply = catchAsyncErrors(
 );
 
 //likes
+export const BlogLikes = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
 //dislikes
 //links
 
