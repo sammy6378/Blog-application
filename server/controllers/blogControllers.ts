@@ -584,9 +584,22 @@ export const BlogLikes = catchAsyncErrors(
       };
 
       const existingLike = blog.likeInfo.find((like) => like.userId === userId);
+      const existingDislike = blog.dislikeInfo.find(
+        (dislike) => dislike.userId === userId
+      );
       if (existingLike) {
         blog.likeInfo = blog.likeInfo.filter((like) => like.userId !== userId);
         blog.likes = blog.likeInfo.length > 1 ? blog.likeInfo.length - 1 : 0;
+      } else if (existingDislike) {
+        //remove dislike
+        blog.dislikeInfo = blog.dislikeInfo.filter(
+          (dislike) => dislike.userId !== userId
+        );
+        blog.dislikes =
+          blog.dislikeInfo.length > 1 ? blog.dislikeInfo.length - 1 : 0;
+        //add like
+        blog.likeInfo.push(newLikeInfo);
+        blog.likes = blog.likeInfo.length;
       } else {
         blog.likeInfo.push(newLikeInfo);
         blog.likes = blog.likeInfo.length;
@@ -600,7 +613,59 @@ export const BlogLikes = catchAsyncErrors(
     }
   }
 );
+
 //dislikes
+export const BlogDislikes = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId, blogId } = req.body;
+      if (!userId || !blogId) {
+        return next(new ErrorHandler("Like user and blog not found", 404));
+      }
+
+      //check for user
+      const user = await userModel.findById(req.user?._id as string);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      const blog = (await blogModel.findById(blogId)) as IBlog;
+
+      const newdislikeInfo = {
+        userId,
+        blogId,
+      };
+
+      const existingDislike = blog.dislikeInfo.find(
+        (dislike) => dislike.userId === userId
+      );
+      const existingLike = blog.likeInfo.find((like) => like.userId === userId);
+      if (existingDislike) {
+        blog.dislikeInfo = blog.dislikeInfo.filter(
+          (dislike) => dislike.userId !== userId
+        );
+        blog.dislikes =
+          blog.dislikeInfo.length > 1 ? blog.dislikeInfo.length - 1 : 0;
+      } else if (existingLike) {
+        //remove like
+        blog.likeInfo = blog.likeInfo.filter((like) => like.userId !== userId);
+        blog.likes = blog.likeInfo.length > 1 ? blog.likeInfo.length - 1 : 0;
+        //increment dislike
+        blog.dislikeInfo.push(newdislikeInfo);
+        blog.dislikes = blog.dislikeInfo.length;
+      } else {
+        blog.dislikeInfo.push(newdislikeInfo);
+        blog.dislikes = blog.dislikeInfo.length;
+      }
+
+      await blog.save();
+
+      res.status(200).json({ success: true, blog });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
 //links
 
 //add tags --done
