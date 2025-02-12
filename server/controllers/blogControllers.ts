@@ -584,16 +584,23 @@ export const BlogLikes = catchAsyncErrors(
       };
 
       const existingLike = blog.likeInfo.find((like) => like.userId === userId);
-      const existingDislike = blog.dislikeInfo.find((dislike) => dislike.userId === userId);
+      const existingDislike = blog.dislikeInfo.find(
+        (dislike) => dislike.userId === userId
+      );
       if (existingLike) {
         blog.likeInfo = blog.likeInfo.filter((like) => like.userId !== userId);
         blog.likes = blog.likeInfo.length > 1 ? blog.likeInfo.length - 1 : 0;
-      }
-      else if(existingDislike) {
-        blog.dislikeInfo = blog.dislikeInfo.filter((dislike) => dislike.userId !== userId);
-        blog.dislikes = blog.dislikeInfo.length > 1 ? blog.dislikeInfo.length - 1 : 0;
-      }
-       else {
+      } else if (existingDislike) {
+        //remove dislike
+        blog.dislikeInfo = blog.dislikeInfo.filter(
+          (dislike) => dislike.userId !== userId
+        );
+        blog.dislikes =
+          blog.dislikeInfo.length > 1 ? blog.dislikeInfo.length - 1 : 0;
+        //add like
+        blog.likeInfo.push(newLikeInfo);
+        blog.likes = blog.likeInfo.length;
+      } else {
         blog.likeInfo.push(newLikeInfo);
         blog.likes = blog.likeInfo.length;
       }
@@ -606,7 +613,6 @@ export const BlogLikes = catchAsyncErrors(
     }
   }
 );
-
 
 //dislikes
 export const BlogDislikes = catchAsyncErrors(
@@ -630,16 +636,24 @@ export const BlogDislikes = catchAsyncErrors(
         blogId,
       };
 
-      const existingDislike = blog.dislikeInfo.find((dislike) => dislike.userId === userId);
+      const existingDislike = blog.dislikeInfo.find(
+        (dislike) => dislike.userId === userId
+      );
       const existingLike = blog.likeInfo.find((like) => like.userId === userId);
       if (existingDislike) {
-        blog.dislikeInfo = blog.dislikeInfo.filter((dislike) => dislike.userId !== userId);
-        blog.dislikes = blog.dislikeInfo.length > 1 ? blog.dislikeInfo.length - 1 : 0;
-      } else if(existingLike) {
+        blog.dislikeInfo = blog.dislikeInfo.filter(
+          (dislike) => dislike.userId !== userId
+        );
+        blog.dislikes =
+          blog.dislikeInfo.length > 1 ? blog.dislikeInfo.length - 1 : 0;
+      } else if (existingLike) {
+        //remove like
         blog.likeInfo = blog.likeInfo.filter((like) => like.userId !== userId);
         blog.likes = blog.likeInfo.length > 1 ? blog.likeInfo.length - 1 : 0;
-      }
-       else {
+        //increment dislike
+        blog.dislikeInfo.push(newdislikeInfo);
+        blog.dislikes = blog.dislikeInfo.length;
+      } else {
         blog.dislikeInfo.push(newdislikeInfo);
         blog.dislikes = blog.dislikeInfo.length;
       }
