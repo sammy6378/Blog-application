@@ -74,18 +74,6 @@ export const addBlog = catchAsyncErrors(
         }
       }
 
-
-      // add links
-      const links = data.links;
-      if (links && Array.isArray(links)) {
-        const linkData = links.map(link => ({
-          title: link.title,
-          url: link.url
-        }));
-        data.links = linkData;
-      }
-
-
       data.videos = videoData;
 
       //add blog author
