@@ -1,4 +1,4 @@
-# Dark Mode
+# Client Styling
 - **Dark Mode** -#000
 - **Light Mode** - #fff
 - **Text Colors** - *Dark Mode* - (#37a39a)
