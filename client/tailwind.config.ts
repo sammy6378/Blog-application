@@ -15,6 +15,10 @@ export default {
         green: "var(--green)",
         crimson: "var(--crimson)"
       },
+      fontFamily: {
+        "poppins": "var(--poppins)",
+        "josefin": "var(--josefin)"
+      }
     },
   },
   plugins: [],

@@ -2,6 +2,6 @@
 
 export default function Home() {
   return (
-    <div>Home</div>
+    <div className="font-poppins font-bold">Home</div>
   )
 }
