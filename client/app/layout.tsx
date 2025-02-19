@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import "./globals.css";
 import { Poppins, Josefin_Sans } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
+import Navbar from "@/components/Navbar";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -27,12 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning>
+    <html className={`${poppins.variable} ${josefin.variable}` } suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
-      <body className={`${poppins.variable} ${josefin.variable}` }>
+      <body className={`dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white duration-300 bg-repeat h-screen`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Navbar />
           <main>{children}</main>
         </ThemeProvider>
       </body>
