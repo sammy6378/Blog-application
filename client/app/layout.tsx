@@ -22,6 +22,9 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html>
+      <head>
+        <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
+      </head>
       <body className={`${poppins.variable} ${josefin.variable}`}>
         <main>{children}</main>
       </body>
