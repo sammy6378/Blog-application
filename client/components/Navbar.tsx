@@ -37,7 +37,7 @@ export default function Navbar() {
             width={100}
             height={100}
             alt="logo"
-            className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px]"
+            className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px] max-200px:max-w-[20px] max-200px:max-h-[20px]"
           />
         </Link>
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
@@ -75,20 +75,20 @@ export default function Navbar() {
             {theme === "light" ? (
               <Moon
                 onClick={() => setTheme("dark")}
-                className="cursor-pointer text-black dark:text-white hover:text-slate-800"
+                className="cursor-pointer text-black dark:text-white hover:text-slate-800 max-200px:w-[15px] max-200px:h-[15px] "
                 fill="black"
               />
             ) : (
               <Sun
                 onClick={() => setTheme("light")}
-                className="cursor-pointer hover:text-slate-300 dark:text-white text-black"
+                className="cursor-pointer hover:text-slate-300 dark:text-white text-black max-200px:w-[15px] max-200px:h-[15px]"
                 fill="black"
               />
             )}
 
             {bar ? (
               <X
-                className="cursor-pointer z-[100] dark:text-black text-white"
+                className="cursor-pointer z-[100] dark:text-black text-white max-200px:w-[15px] max-200px:h-[15px]"
                 size={24}
                 onClick={() => setBar(!bar)}
               />

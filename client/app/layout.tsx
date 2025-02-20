@@ -49,7 +49,7 @@ export default function RootLayout({
         />
       </head> */}
       <body
-        className={`dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white duration-300 bg-no-repeat min-h-screen`}
+        className={`dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white duration-300 bg-no-repeat min-h-screen w-full`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <>
