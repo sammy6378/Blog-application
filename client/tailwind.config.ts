@@ -19,6 +19,14 @@ export default {
         poppins: "var(--poppins)",
         josefin: "var(--josefin)",
       },
+      screens: {
+        "700": "700px",
+        "800": "800px",
+        "500": "500px",
+        "400": "400px",
+        "300px": "300px",
+        "200px": "200px"
+      }
     },
   },
   plugins: [],
