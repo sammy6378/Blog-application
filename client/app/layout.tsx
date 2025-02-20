@@ -28,14 +28,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className={`${poppins.variable} ${josefin.variable}` } suppressHydrationWarning>
-      <head>
+    <html
+      className={`${poppins.variable} ${josefin.variable}`}
+      suppressHydrationWarning
+    >
+{/*       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-      </head>
-      <body className={`dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white duration-300 bg-repeat h-screen`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme') || 
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.classList.add(theme);
+        } catch (e) {}
+      })();
+      `,
+          }}
+        />
+      </head> */}
+      <body
+        className={`dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white duration-300 bg-no-repeat min-h-screen w-full dark:text-white text-black`}
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navbar />
-          <main>{children}</main>
+          <>
+            <Navbar />
+            <main>{children}</main>
+          </>
         </ThemeProvider>
       </body>
     </html>
