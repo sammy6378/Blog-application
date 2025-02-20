@@ -5,6 +5,7 @@ import { ChevronDown, Sun, Moon, Menu, X } from "lucide-react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import OutsideClickHandler from 'react-outside-click-handler'
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -26,6 +27,7 @@ export default function Navbar() {
           />
         </Link>
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
+            <OutsideClickHandler onOutsideClick={() => setBar(false)}>
           <ul className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:z-50 max-700:pt-4 max-700:h-[200px] max-200px:text-sm ${bar ? "max-700:block" : "max-700:hidden"}`}>
             <li className="max-700:mt-2 max-700:mb-2">
               <Link
@@ -51,7 +53,7 @@ export default function Navbar() {
               Login
             </button>
           </ul>
-
+</OutsideClickHandler>
           <div className="flex gap-4 items-center">
             {/* switch modes */}
             {theme === "light" ? (
