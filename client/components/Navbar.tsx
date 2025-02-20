@@ -28,6 +28,34 @@ export default function Navbar() {
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
+  const categories = [
+    {
+        id: 1,
+        category: "Trending",
+        link: '/trending'
+    },
+    {
+        id: 2,
+        category: "Tech",
+        link: '/tech'
+    },
+    {
+        id: 3,
+        category: "Entertainment",
+        link: '/entertainment'
+    },
+    {
+        id: 4,
+        category: "Education",
+        link: '/education'
+    },
+    {
+        id: 5,
+        category: "Politics",
+        link: '/politics'
+    }
+  ]
+
   return (
     <nav
       className={`w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 mb-1 border-b h-[80px] font-poppins sticky top-0 bg-opacity-[95%] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200"}`}
@@ -55,9 +83,16 @@ export default function Navbar() {
                   Home
                 </Link>
               </li>
-              <li className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5">
-                <span>Category</span>
-                <ChevronDown className="" size={15} />
+              <li className="relative">
+                <div className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5"> <span>Category</span>
+                <ChevronDown className="" size={15} /></div>
+
+                <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2">
+                    {categories.map((category, index) => (
+                        <Link href={category.link} key={index} className="hover:text-crimson dark:hover:text-green transition text-white dark:text-black px-2 py-1.5">{category.category}</Link>
+                    ))}
+                </section>
+               
               </li>
               <li className="max-700:mb-5">
                 <Link
