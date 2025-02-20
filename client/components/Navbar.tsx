@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, Sun, Moon, Menu, X } from "lucide-react";
+import { ChevronDown,ChevronUp, Sun, Moon, Menu, X } from "lucide-react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [bar, setBar] = useState(false);
   const [active, setActive] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   useEffect(() => {
     if (window !== undefined) {
@@ -30,31 +31,31 @@ export default function Navbar() {
 
   const categories = [
     {
-        id: 1,
-        category: "Trending",
-        link: '/trending'
+      id: 1,
+      category: "Trending",
+      link: "/trending",
     },
     {
-        id: 2,
-        category: "Tech",
-        link: '/tech'
+      id: 2,
+      category: "Tech",
+      link: "/tech",
     },
     {
-        id: 3,
-        category: "Entertainment",
-        link: '/entertainment'
+      id: 3,
+      category: "Entertainment",
+      link: "/entertainment",
     },
     {
-        id: 4,
-        category: "Education",
-        link: '/education'
+      id: 4,
+      category: "Education",
+      link: "/education",
     },
     {
-        id: 5,
-        category: "Politics",
-        link: '/politics'
-    }
-  ]
+      id: 5,
+      category: "Politics",
+      link: "/politics",
+    },
+  ];
 
   return (
     <nav
@@ -84,15 +85,32 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="relative">
-                <div className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5"> <span>Category</span>
-                <ChevronDown className="" size={15} /></div>
-
-                <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2">
-                    {categories.map((category, index) => (
-                        <Link href={category.link} key={index} className="hover:text-crimson dark:hover:text-green transition text-white dark:text-black px-2 py-1.5">{category.category}</Link>
-                    ))}
-                </section>
-               
+                <div
+                  className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5"
+                  onClick={() => setCategoryOpen(!categoryOpen)}
+                >
+                  {" "}
+                  <span>Category</span>
+                  {categoryOpen ? (<ChevronUp className="" size={15} />) : (<ChevronDown className="" size={15} />)}
+                  
+                </div>
+                <OutsideClickHandler
+                  onOutsideClick={() => setCategoryOpen(false)}
+                >
+                  {categoryOpen && (
+                    <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2">
+                      {categories.map((category, index) => (
+                        <Link
+                          href={category.link}
+                          key={index}
+                          className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5"
+                        >
+                          {category.category}
+                        </Link>
+                      ))}
+                    </section>
+                  )}
+                </OutsideClickHandler>
               </li>
               <li className="max-700:mb-5">
                 <Link
@@ -131,7 +149,7 @@ export default function Navbar() {
               />
             ) : (
               <span
-                className="cursor-pointer z-[100] dark:text-white 700:hidden"
+                className="cursor-pointer z-[100] dark:text-white text-black 700:hidden"
                 onClick={() => setBar(!bar)}
               >
                 <HiOutlineMenuAlt3 size={24} />
