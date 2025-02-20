@@ -90,13 +90,13 @@ export default function Navbar() {
 
             {bar ? (
               <X
-                className="cursor-pointer z-[100] dark:text-black text-white max-200px:w-[15px] max-200px:h-[15px]"
+                className="cursor-pointer z-[100] dark:text-black text-white max-200px:w-[15px] max-200px:h-[15px] 700:hidden"
                 size={24}
                 onClick={() => setBar(!bar)}
               />
             ) : (
               <span
-                className="cursor-pointer z-[100] dark:text-white"
+                className="cursor-pointer z-[100] dark:text-white 700:hidden"
                 onClick={() => setBar(!bar)}
               >
                 <HiOutlineMenuAlt3 size={24} />
