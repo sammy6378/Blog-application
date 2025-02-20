@@ -11,11 +11,25 @@ export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [bar, setBar] = useState(false);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    if (window !== undefined) {
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 80) {
+          setActive(true);
+        } else {
+          setActive(false);
+        }
+      });
+    }
+  }, []);
+
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
   return (
-    <nav className="w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 shadow mb-1 border-b h-[80px] font-poppins">
+    <nav className={`w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 mb-1 border-b h-[80px] font-poppins sticky top-0 bg-opacity-[95%] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200" }`}>
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
         <Link href={"/"}>
           <Image
