@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* layer components */
+.input-container {
+    @apply w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white transition-all;
+  }
+  
+  .input-error {
+    @apply border-2 border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-400;
+  }
+  
+  .input-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-white mb-1;
+  }
+  
+  .error-message {
+    @apply text-red-500 text-sm mt-1;
+  }
+  
+  .submit-button {
+    @apply w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg hover:opacity-90;
+  }
+  
