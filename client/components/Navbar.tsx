@@ -156,9 +156,9 @@ export default function Navbar() {
               </span>
             )}
 
-            <button className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden">
+            <Link href={'/user/login'} className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden">
               Login
-            </button>
+            </Link>
           </div>
         </div>
       </section>
