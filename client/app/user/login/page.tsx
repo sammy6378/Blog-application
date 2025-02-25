@@ -84,7 +84,7 @@ const  Login = () => {
                 Google
             </button>
         </div>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mt-4">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mt-4 pb-2">
             Don't have an account? <Link href="/user/register" className="text-purple-500 hover:underline">Sign Up</Link>
             </p>
       </div>
