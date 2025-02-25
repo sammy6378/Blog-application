@@ -6,6 +6,7 @@ import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
+import {useRouter} from 'next/navigation'
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [bar, setBar] = useState(false);
   const [active, setActive] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (window !== undefined) {
@@ -120,7 +122,7 @@ export default function Navbar() {
                   Contact Us
                 </Link>
               </li>
-              <button className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden ">
+              <button onClick={() => router.push('/user/login')} className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden ">
                 Login
               </button>
             </ul>
@@ -156,9 +158,9 @@ export default function Navbar() {
               </span>
             )}
 
-            <Link href={'/user/login'} className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden">
+            <button onClick={() => router.push('/user/login')} className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden">
               Login
-            </Link>
+            </button>
           </div>
         </div>
       </section>
