@@ -68,10 +68,10 @@ const  Login = () => {
           </button>
         </form>
 
-        <div className="flex items-center justify-center gap-3 mt-3">
-            <hr className="w-full h-px bg-black dark:bg-gray-200"></hr>
+        <div className="w-full flex items-center justify-center gap-3 mb-3 mt-4">
+            <hr className="w-full h-px bg-gray-400 dark:bg-gray-900"></hr>
             <span className="text-sm text-gray-600 dark:text-gray-300">OR</span>
-            <div className="flex-grow h-px bg-black dark:bg-gray-100"></div>
+            <hr className="w-full h-px bg-gray-400 dark:bg-gray-900"></hr>
         </div>
 
         <div className="w-full mt-4 flex flex-col justify-between gap-3 md:flex-row">
