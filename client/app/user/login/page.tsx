@@ -26,14 +26,14 @@ const  Login = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen dark:bg-gray-900 bg-white rounded shadow-md transition duration-500">
-        <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg p-6 max-w-md w-full rounded-xl">
-            <h2 className="text-3xl font-bold text-purple-900 dark:text-white mb-6">Sign In</h2>
+        <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg p-6 max-500:p-2 max-w-md w-full rounded-xl max-500:mx-2">
+            <h2 className="text-3xl max-500:text-2xl max-300px:text-lg font-bold text-purple-900 dark:text-white mb-6">Sign In</h2>
 
         <form className="w-full space-y-4" onSubmit={handleSubmit}>
 
             {/*email field */}
           <div>
-          <label htmlFor="email" className="input-label">Email</label>
+          <label htmlFor="email" className="input-label">Email:</label>
             <input
               type="email"
               placeholder="Enter your Email"
@@ -48,7 +48,7 @@ const  Login = () => {
 
             {/* password field */}
           <div>
-            <label htmlFor="password" className="input-label">Password</label>
+            <label htmlFor="password" className="input-label">Password:</label>
             <input
               type="password"
               placeholder="Password"
@@ -63,15 +63,15 @@ const  Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-md font-semibold hover:bg-purple-700 transition duration-300">
+            className="w-full bg-purple-600 text-white py-3 max-500:py-2 rounded-md font-semibold hover:bg-purple-700 transition duration-300">
             Sign In
           </button>
         </form>
 
         <div className="flex items-center justify-center gap-3 mt-3">
-            <div className="flex-grow h-px bg-black dark:bg-gray-600"></div>
+            <hr className="w-full h-px bg-black dark:bg-gray-200"></hr>
             <span className="text-sm text-gray-600 dark:text-gray-300">OR</span>
-            <div className="flex-grow h-px bg-black dark:bg-gray-600"></div>
+            <div className="flex-grow h-px bg-black dark:bg-gray-100"></div>
         </div>
 
         <div className="w-full mt-4 flex flex-col justify-between gap-3 md:flex-row">
