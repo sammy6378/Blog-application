@@ -5,7 +5,7 @@
 
 /* layer components */
 .input-container {
-    @apply w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white transition-all;
+    @apply w-full p-3 max-500:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white transition-all;
   }
   
   .input-error {
