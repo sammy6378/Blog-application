@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import { validateRegisterSchema } from "@/components/utils/validate";
 import { useRouter } from "next/navigation";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 interface FormData {
   name: string;
@@ -16,8 +17,9 @@ interface FormData {
 
 const Register = () => {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const onSubmit = (values: FormData) => {
-    console.log(values)
+    console.log(values);
     router.push("/user/activate-user");
   };
 
@@ -73,18 +75,21 @@ const Register = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="input-label">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Password"
-              id="password"
-              onBlur={handleBlur}
-              value={values.password}
-              onChange={handleChange}
-              className={`input-container ${errors.password && touched.password ? "input-error" : ""}`}
-            />
+            <div className="relative">
+              <label htmlFor="password" className="input-label">
+                Password
+              </label>
+              <input
+                type={`${showPassword ? "text" : "password"}`}
+                placeholder="Password"
+                id="password"
+                onBlur={handleBlur}
+                value={values.password}
+                onChange={handleChange}
+                className={`input-container ${errors.password && touched.password ? "input-error" : ""}`}
+              />
+              {showPassword ? <span className="absolute top-[54%] right-2 text-gray-400 cursor-pointer" onClick={() => setShowPassword(!showPassword)}><FaEyeSlash /></span> : <span className="absolute top-[54%] right-2 text-gray-400 cursor-pointer" onClick={() => setShowPassword(!showPassword)}><FaEye /></span>}
+            </div>
             {errors.password && touched.password && (
               <div className="error-message">{errors.password}</div>
             )}
