@@ -14,11 +14,6 @@ interface FormData {
 }
 
 const Register = () => {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     const onSubmit = (values: FormData) => {
         console.log('Form Submitted', values);
@@ -30,7 +25,6 @@ const Register = () => {
         onSubmit,
     });
 
-    if (!mounted) return null;
 
     return (
         <div className="flex justify-center items-center min-h-screen dark:bg-gray-900 bg-white rounded shadow-md transition duration-500">
