@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFormik } from "formik";
 import { validateRegisterSchema } from "@/components/utils/validate";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   name: string;
@@ -14,8 +15,10 @@ interface FormData {
 }
 
 const Register = () => {
+  const router = useRouter();
   const onSubmit = (values: FormData) => {
-    console.log("Form Submitted", values);
+    console.log(values)
+    router.push("/user/activate-user");
   };
 
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
