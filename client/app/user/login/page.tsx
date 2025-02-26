@@ -7,6 +7,9 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import { ValidateLoginSchema } from "@/components/utils/validate";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {X} from 'lucide-react'
+import OutsideClickHandler from "react-outside-click-handler";
+import { useRouter } from "next/navigation";
 
 interface formData {
   email: string;
@@ -18,6 +21,7 @@ const onSubmit = (values: formData) => {
 };
 
 const Login = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
@@ -29,10 +33,12 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen dark:bg-gray-900 bg-white rounded shadow-md transition duration-500">
-      <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg p-6 max-500:p-2 max-w-md w-full rounded-xl max-500:mx-2">
+      <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg p-6 max-md:py-2 max-500:p-2 max-w-md w-full rounded-xl max-500:mx-2 relative">
         <h2 className="text-3xl max-500:text-2xl max-300px:text-lg font-bold text-purple-900 dark:text-white mb-6">
           Sign In
         </h2>
+
+        <X className="absolute top-2 right-2 text-gray-900 dark:text-white cursor-pointer" onClick={() => router.back()} />
 
         <form className="w-full space-y-4" onSubmit={handleSubmit}>
           {/*email field */}
@@ -69,7 +75,21 @@ const Login = () => {
                 onChange={handleChange}
                 className={`input-container ${errors.password && touched.password ? "input-error" : ""}`}
               />
-               {showPassword ? <span className="absolute top-[54%] right-2 text-gray-400 cursor-pointer" onClick={() => setShowPassword(!showPassword)}><FaEyeSlash /></span> : <span className="absolute top-[54%] right-2 text-gray-400 cursor-pointer" onClick={() => setShowPassword(!showPassword)}><FaEye /></span>}
+              {showPassword ? (
+                <span
+                  className="absolute top-[54%] right-2 text-gray-400 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FaEyeSlash />
+                </span>
+              ) : (
+                <span
+                  className="absolute top-[54%] right-2 text-gray-400 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FaEye />
+                </span>
+              )}
             </div>
             {errors.password && touched.password && (
               <div className="error-message">{errors.password}</div>
@@ -121,7 +141,7 @@ const Login = () => {
             Sign Up
           </Link>
         </p>
-      </div>
+      </div>{" "}
     </div>
   );
 };

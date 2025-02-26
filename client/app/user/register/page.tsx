@@ -7,7 +7,9 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import { validateRegisterSchema } from "@/components/utils/validate";
 import { useRouter } from "next/navigation";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import {X} from 'lucide-react'
+import OutsideClickHandler from "react-outside-click-handler";
 
 interface FormData {
   name: string;
@@ -31,16 +33,17 @@ const Register = () => {
     });
 
   return (
-    <div className="flex justify-center items-center min-h-screen dark:bg-gray-900 bg-white rounded shadow-md transition duration-500">
-      <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg p-6 max-w-md w-full rounded-xl max-500:mx-2 max-500:p-2">
-        <h2 className="text-3xl max-500:text-2xl max-300px:text-lg font-bold text-purple-900 dark:text-white mb-6">
+    <div className="flex justify-center items-center min-h-screen dark:bg-gray-900 bg-white rounded shadow-md transition duration-500 ">
+      <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg p-6 max-w-md w-full rounded-xl max-md:mx-2 max-md:py-2 max-500:p-2 relative">
+        <h2 className="text-3xl max-md:text-2xl max-300px:text-lg font-bold text-purple-900 dark:text-white mb-5">
           Sign Up
         </h2>
-
-        <form className="w-full space-y-4" onSubmit={handleSubmit}>
+        <X className="absolute top-2 right-2 text-gray-900 dark:text-white cursor-pointer" onClick={() => router.back()} />
+ 
+        <form className="w-full space-y-3" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="name" className="input-label">
-              Name
+              Name:
             </label>
             <input
               type="text"
@@ -58,7 +61,7 @@ const Register = () => {
 
           <div>
             <label htmlFor="email" className="input-label">
-              Email
+              Email:
             </label>
             <input
               type="email"
@@ -77,7 +80,7 @@ const Register = () => {
           <div>
             <div className="relative">
               <label htmlFor="password" className="input-label">
-                Password
+                Password:
               </label>
               <input
                 type={`${showPassword ? "text" : "password"}`}
@@ -88,7 +91,21 @@ const Register = () => {
                 onChange={handleChange}
                 className={`input-container ${errors.password && touched.password ? "input-error" : ""}`}
               />
-              {showPassword ? <span className="absolute top-[54%] right-2 text-gray-400 cursor-pointer" onClick={() => setShowPassword(!showPassword)}><FaEyeSlash /></span> : <span className="absolute top-[54%] right-2 text-gray-400 cursor-pointer" onClick={() => setShowPassword(!showPassword)}><FaEye /></span>}
+              {showPassword ? (
+                <span
+                  className="absolute top-[54%] right-2 text-gray-400 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FaEyeSlash />
+                </span>
+              ) : (
+                <span
+                  className="absolute top-[54%] right-2 text-gray-400 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FaEye />
+                </span>
+              )}
             </div>
             {errors.password && touched.password && (
               <div className="error-message">{errors.password}</div>
@@ -99,7 +116,7 @@ const Register = () => {
             Sign Up
           </button>
         </form>
-
+        
         <div className="w-full flex items-center justify-center gap-3 mb-3 mt-4">
           <hr className="w-full h-px bg-gray-400 dark:bg-gray-900"></hr>
           <span className="text-sm text-gray-600 dark:text-gray-300">OR</span>
