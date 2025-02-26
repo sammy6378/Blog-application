@@ -37,16 +37,16 @@ export default function Verification() {
     setInvalidError(false);
     const testValue = /^\d{0,4}$/;
     /* make this work */
-    if (!testValue.test(value)) {
+   /*  if (!testValue.test(value)) {
       return;
-    }
+    } */
     const newVerifyNumber = { ...verifyNumber, [index]: value };
     setVerifyNumber(newVerifyNumber);
 
     if (value === "" && index > 0) {
       inputRefs[index - 1].current?.focus();
     } else if (value.length === 1 && index < 3) {
-      inputRefs[index + 1].current?.focus;
+      inputRefs[index + 1].current?.focus();
     }
   };
   return (

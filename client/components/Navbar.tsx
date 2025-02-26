@@ -17,6 +17,8 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     if (window !== undefined) {
       window.addEventListener("scroll", () => {
@@ -29,7 +31,6 @@ export default function Navbar() {
     }
   }, []);
 
-  useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
   const categories = [
@@ -82,7 +83,7 @@ export default function Navbar() {
               <li className="max-700:mt-2 max-700:mb-2">
                 <Link
                   href={"/"}
-                  className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === '/' && "text-crimson dark:text-green"}`}
+                  className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`}
                 >
                   Home
                 </Link>
@@ -121,7 +122,7 @@ export default function Navbar() {
               <li className="max-700:mb-5">
                 <Link
                   href={"/contact"}
-                  className={`hover:text-crimson dark:hover:text-green transition ${pathname === '/contact' && "text-crimson dark:text-green"}`}
+                  className={`hover:text-crimson dark:hover:text-green transition ${pathname === "/contact" && "text-crimson dark:text-green"}`}
                 >
                   Contact Us
                 </Link>
