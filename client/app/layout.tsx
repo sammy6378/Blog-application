@@ -32,7 +32,7 @@ export default function RootLayout({
       className={`${poppins.variable} ${josefin.variable}`}
       suppressHydrationWarning
     >
-{/*       <head>
+      <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script
           dangerouslySetInnerHTML={{
@@ -47,7 +47,7 @@ export default function RootLayout({
       `,
           }}
         />
-      </head> */}
+      </head> 
       <body
         className={`dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white duration-300 bg-no-repeat min-h-screen w-full dark:text-white text-black`}
       >

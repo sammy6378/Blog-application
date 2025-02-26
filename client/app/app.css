@@ -5,22 +5,65 @@
 
 /* layer components */
 .input-container {
-    @apply w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white transition-all;
+  @apply w-full p-3 max-500:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white transition-all;
+}
+
+.input-error {
+  @apply border-2 border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-400;
+}
+
+.input-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-white mb-1;
+}
+
+.error-message {
+  @apply text-red-500 text-sm mt-1;
+}
+
+.submit-button {
+  @apply w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg hover:opacity-90;
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
   }
-  
-  .input-error {
-    @apply border-2 border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-400;
+
+  20% {
+    transform: translateX(-2px);
   }
-  
-  .input-label {
-    @apply block text-sm font-medium text-gray-700 dark:text-white mb-1;
+
+  40% {
+    transform: translateX(2px)
   }
-  
-  .error-message {
-    @apply text-red-500 text-sm mt-1;
+
+  60% {
+    transform: translateX(-2px)
   }
-  
-  .submit-button {
-    @apply w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg hover:opacity-90;
+
+  80% {
+    transform: translateX(2px);
   }
-  
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* remove arrows in input:number */
+/* chrome, safari, edge, opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0
+}
+
+/* Firefox */
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}

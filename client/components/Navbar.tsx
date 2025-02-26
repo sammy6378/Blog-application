@@ -1,12 +1,12 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown,ChevronUp, Sun, Moon, Menu, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Sun, Moon, Menu, X } from "lucide-react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
-import {useRouter} from 'next/navigation'
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -15,6 +15,7 @@ export default function Navbar() {
   const [active, setActive] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (window !== undefined) {
@@ -61,7 +62,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 mb-1 border-b h-[80px] font-poppins sticky top-0 bg-opacity-[95%] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200"}`}
+      className={`w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 mb-1 border-b h-[80px] font-poppins sticky top-0 bg-opacity-[95%] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200"} ${(pathname === "/user/login" || pathname === "/user/register" || pathname === "/user/activate-user") && "hidden"}`}
     >
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
         <Link href={"/"}>
@@ -81,7 +82,7 @@ export default function Navbar() {
               <li className="max-700:mt-2 max-700:mb-2">
                 <Link
                   href={"/"}
-                  className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black`}
+                  className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === '/' && "text-crimson dark:text-green"}`}
                 >
                   Home
                 </Link>
@@ -93,8 +94,11 @@ export default function Navbar() {
                 >
                   {" "}
                   <span>Category</span>
-                  {categoryOpen ? (<ChevronUp className="" size={15} />) : (<ChevronDown className="" size={15} />)}
-                  
+                  {categoryOpen ? (
+                    <ChevronUp className="" size={15} />
+                  ) : (
+                    <ChevronDown className="" size={15} />
+                  )}
                 </div>
                 <OutsideClickHandler
                   onOutsideClick={() => setCategoryOpen(false)}
@@ -117,12 +121,15 @@ export default function Navbar() {
               <li className="max-700:mb-5">
                 <Link
                   href={"/contact"}
-                  className={`hover:text-crimson dark:hover:text-green transition`}
+                  className={`hover:text-crimson dark:hover:text-green transition ${pathname === '/contact' && "text-crimson dark:text-green"}`}
                 >
                   Contact Us
                 </Link>
               </li>
-              <button onClick={() => router.push('/user/login')} className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden ">
+              <button
+                onClick={() => router.push("/user/login")}
+                className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
+              >
                 Login
               </button>
             </ul>
@@ -158,7 +165,10 @@ export default function Navbar() {
               </span>
             )}
 
-            <button onClick={() => router.push('/user/login')} className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden">
+            <button
+              onClick={() => router.push("/user/login")}
+              className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden"
+            >
               Login
             </button>
           </div>
