@@ -34,7 +34,7 @@ export default function RootLayout({
     >
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <script
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `
       (function() {
@@ -46,7 +46,7 @@ export default function RootLayout({
       })();
       `,
           }}
-        />
+        /> */}
       </head> 
       <body
         className={`dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white duration-300 bg-no-repeat min-h-screen w-full dark:text-white text-black`}
