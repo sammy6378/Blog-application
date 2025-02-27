@@ -47,6 +47,9 @@ export default function Verification() {
       inputRefs[index - 1].current?.focus();
     } else if (value.length === 1 && index < 3) {
       inputRefs[index + 1].current?.focus();
+    } else if(value.length === 1 && index === 3) {
+      verificationHandler();
+      inputRefs[index].current?.blur()
     }
   };
   return (
@@ -65,7 +68,7 @@ export default function Verification() {
             <input
               type="number"
               key={key}
-              className={`w-[50px] h-[50px] max-500:w-[40px] max-500:h-[40px] bg-transparent border-[3px] text-black dark:text-white rounded-[10px] p-4 flex justify-center items-center text-[28px] focus:border-purple-700 focus:border ${invalidError ? "shake border-red-500" : "dark:border-white border-[#0000004a]"}`}
+              className={`w-[50px] h-[50px] max-500:w-[40px] max-500:h-[40px] bg-transparent border-[3px] text-black dark:text-white rounded-[10px] grid place-items-center text-[28px] focus:border-purple-700 focus:border ${invalidError ? "shake border-red-500" : "dark:border-white border-[#0000004a]"}`}
               ref={inputRefs[index]}
               value={verifyNumber[key as keyof verifyNumber]}
               onChange={(e) => handleInputChange(index, e.target.value)}

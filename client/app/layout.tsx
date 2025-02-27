@@ -4,6 +4,7 @@ import { Poppins, Josefin_Sans } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import ProviderFunction from "@/components/context/AppContext";
+import {Toaster} from 'react-hot-toast';
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -57,6 +58,7 @@ export default function RootLayout({
             <>
               <Navbar />
               <main>{children}</main>
+              <Toaster />
             </>
           </ThemeProvider>
         </ProviderFunction>
