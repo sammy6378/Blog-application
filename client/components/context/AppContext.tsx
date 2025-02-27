@@ -22,7 +22,7 @@ export default function ProviderFunction({
   children: React.ReactNode;
 }) {
   const [token, setToken] = useState("");
-  const url = "http://localhost:8001";
+  const url = "http://localhost:8000";
 
   return (
     <AppContext.Provider value={{ url, token, setToken }}>
