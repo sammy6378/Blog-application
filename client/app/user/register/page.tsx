@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {X} from 'lucide-react'
 import OutsideClickHandler from "react-outside-click-handler";
+import { authRegister } from "@/components/services/authService";
+import toast from "react-hot-toast";
 
 interface FormData {
   name: string;
@@ -21,8 +23,13 @@ const Register = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const onSubmit = (values: FormData) => {
-    console.log(values);
-    router.push("/user/activate-user");
+    if(values){
+      authRegister(values);
+      toast.success("Registration successfully");
+      router.push("/user/activate-user");
+    }else{
+      toast.error("Registration failed");
+    }
   };
 
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
