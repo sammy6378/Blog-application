@@ -140,7 +140,7 @@ const Register = () => {
             )}
           </div>
 
-          <button type="submit" className={`submit-button max-500:py-2 ${loading ? "bg-purple-500 cursor-not-allowed" : ""}`} disabled={loading}>
+          <button type="submit" className={`submit-button max-500:py-2 ${loading ? "bg-purple-500/60 cursor-not-allowed" : ""}`} disabled={loading}>
             {!loading ? "Sign Up" : "Signing up..."}
           </button>
         </form>

@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import "../../app.css";
+import axios from "axios";
+import { useContextFunc } from "@/components/context/AppContext";
 
 interface verifyNumber {
   "0": string;
@@ -14,6 +16,7 @@ interface verifyNumber {
 }
 
 export default function Verification() {
+  const { url, activationToken } = useContextFunc();
   const router = useRouter();
   const [invalidError, setInvalidError] = useState(false);
   const inputRefs = [
@@ -29,15 +32,42 @@ export default function Verification() {
     3: "",
   });
 
+
   const verificationHandler = async () => {
-    setInvalidError(true);
+    const activation_code = Object.values(verifyNumber).join("");
+    const newUrl = url + "/api/user/activate-you";
+    try {
+      const response = await axios.post(newUrl, {
+        activation_token: activationToken,
+        activation_code,
+      });
+      if (response.data.success) {
+        router.push("/user/login");
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+        setInvalidError(true);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      console.log(error.message);
+    }
+    // setInvalidError(true);
   };
 
   const handleInputChange = (index: number, value: string) => {
     setInvalidError(false);
     const testValue = /^\d{0,4}$/;
     /* make this work */
-   /*  if (!testValue.test(value)) {
+    /*  if (!testValue.test(value)) {
       return;
     } */
     const newVerifyNumber = { ...verifyNumber, [index]: value };
@@ -47,9 +77,9 @@ export default function Verification() {
       inputRefs[index - 1].current?.focus();
     } else if (value.length === 1 && index < 3) {
       inputRefs[index + 1].current?.focus();
-    } else if(value.length === 1 && index === 3) {
+    } else if (value.length === 1 && index === 3) {
       verificationHandler();
-      inputRefs[index].current?.blur()
+      inputRefs[index].current?.blur();
     }
   };
   return (
