@@ -14,9 +14,16 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 //cors
+const allowedOrigin = process.env.NODE_ENV === 'production'
+  ? process.env.FRONTEND_URL // Deployed frontend URL
+  : 'http://localhost:3000'; // Local development URL
+
 const corsOptions = {
-    origin: process.env.ORIGIN,
-}
+    origin: allowedOrigin,  // Allow frontend
+    credentials: true,  // Allow cookies, sessions
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+};
 
 app.use(cors(corsOptions));
 
