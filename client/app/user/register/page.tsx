@@ -10,8 +10,9 @@ import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {X} from 'lucide-react'
 import OutsideClickHandler from "react-outside-click-handler";
-import { authRegister } from "@/components/services/authService";
-import toast from "react-hot-toast";
+import axios from 'axios';
+import { useContextFunc } from "@/components/context/AppContext";
+import {toast} from 'react-hot-toast'
 
 interface FormData {
   name: string;
@@ -20,15 +21,34 @@ interface FormData {
 }
 
 const Register = () => {
+  const {url, setActivationToken, activationToken} = useContextFunc();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const onSubmit = (values: FormData) => {
-    if(values){
-      authRegister(values);
-      toast.success("Registration successfully");
-      router.push("/user/activate-user");
-    }else{
-      toast.error("Registration failed");
+  const [loading, setloading] = useState(false);
+  //submit function
+  const onSubmit = async (values: FormData) => {
+    setloading(true);
+    const newUrl = url + "/api/user/register";
+    try {
+      const response = await axios.post(newUrl, values);
+      if(response.data.success) {
+        router.push('/user/activate-user');
+        toast.success(response.data.message);
+        setActivationToken(response.data.activationToken);
+       // console.log(response.data.activationToken);
+      } else {
+        toast.error(response.data.message);
+      }
+
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+      console.log(error.message);
+    } finally {
+      setloading(false);
     }
   };
 
@@ -119,8 +139,8 @@ const Register = () => {
             )}
           </div>
 
-          <button type="submit" className="submit-button max-500:py-2">
-            Sign Up
+          <button type="submit" className={`submit-button max-500:py-2 ${loading ? "bg-purple-500/60 cursor-not-allowed" : ""}`} disabled={loading}>
+            {!loading ? "Sign Up" : "Signing up..."}
           </button>
         </form>
         
