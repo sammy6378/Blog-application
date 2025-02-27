@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {X} from 'lucide-react'
 import OutsideClickHandler from "react-outside-click-handler";
+import axios from 'axios';
 
 interface FormData {
   name: string;
