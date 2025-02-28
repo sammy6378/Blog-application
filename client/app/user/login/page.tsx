@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../../app.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,17 +8,14 @@ import { useFormik } from "formik";
 import { ValidateLoginSchema } from "@/components/utils/validate";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {X} from 'lucide-react'
-import OutsideClickHandler from "react-outside-click-handler";
 import { useRouter } from "next/navigation";
 import { authLogin } from "@/components/services/authService";
-import toast from "react-hot-toast";
-import { AxiosError } from "axios";
+
 
 interface formData {
   email: string;
   password: string;
 }
-
 
 
 const Login = () => {
@@ -32,10 +29,10 @@ const Login = () => {
     try{
       const response = await authLogin(values);
       setErrorMessage(response.message);
-      router.push("/user/activate-user");
+      router.push("/user/dashboard");
     }catch(error){
       if(error instanceof Error){
-        setErrorMessage(error.message || "An unexpected error occurred. Please try again.");
+        setErrorMessage(error.message || "An unexpected error occurred.");
       }else{
         setErrorMessage("An unexpected error occurred");
       }  
