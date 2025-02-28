@@ -48,9 +48,9 @@ export const authLogin = async (userData:loginData) =>{
 
 
 // user/activate-user
-export const activateUser = async (token:string) =>{
+export const activateUser = async (activation_code: string, activation_token: string) =>{
     try {
-        const response = await createApi.get(`/user/activate-user/${token}`);
+        const response = await createApi.post(`/user/activate-you`, {activation_code,activation_token});
         return response.data;
         
     } catch (error) {
