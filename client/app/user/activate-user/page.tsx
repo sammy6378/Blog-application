@@ -78,8 +78,8 @@ export default function Verification() {
     } else if (value.length === 1 && index < 3) {
       inputRefs[index + 1].current?.focus();
     } else if (value.length === 1 && index === 3) {
-      verificationHandler();
       inputRefs[index].current?.blur();
+      verificationHandler();
     }
   };
   return (

@@ -10,19 +10,30 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {X} from 'lucide-react'
 import OutsideClickHandler from "react-outside-click-handler";
 import { useRouter } from "next/navigation";
+import axios from 'axios';
+import { useContextFunc } from "@/components/context/AppContext";
 
 interface formData {
   email: string;
   password: string;
 }
 
-const onSubmit = (values: formData) => {
-  console.log("Form Submitted", values);
-};
 
 const Login = () => {
+  const {url} = useContextFunc();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+
+  const onSubmit = async (values: formData) => {
+    const newUrl = url + "/api/user/login";
+    try {
+      const response = await axios.post(newUrl, values, {withCredentials: true});
+      
+    } catch (error: any) {
+      
+    }
+    
+  };
 
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
     useFormik({

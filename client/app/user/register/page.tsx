@@ -21,7 +21,7 @@ interface FormData {
 }
 
 const Register = () => {
-  const {url, setActivationToken, activationToken} = useContextFunc();
+  const {url, setActivationToken, } = useContextFunc();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setloading] = useState(false);

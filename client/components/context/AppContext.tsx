@@ -24,6 +24,7 @@ export default function ProviderFunction({
   children: React.ReactNode;
 }) {
   const [accessToken, setAccessToken] = useState("");
+  
   const [activationToken,setActivationToken] = useState(null);
   const url = "http://localhost:8000";
 
