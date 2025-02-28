@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../../app.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,10 +9,9 @@ import { validateRegisterSchema } from "@/components/utils/validate";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import {X} from 'lucide-react'
-import OutsideClickHandler from "react-outside-click-handler";
-import axios from 'axios';
 import { useContextFunc } from "@/components/context/AppContext";
 import {toast} from 'react-hot-toast'
+import { authRegister } from "@/components/services/authService";
 
 interface FormData {
   name: string;
@@ -21,33 +20,30 @@ interface FormData {
 }
 
 const Register = () => {
-  const {url, setActivationToken, activationToken} = useContextFunc();
+  const {setActivationToken, activationToken} = useContextFunc();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setloading] = useState(false);
   //submit function
   const onSubmit = async (values: FormData) => {
     setloading(true);
-    const newUrl = url + "/api/user/register";
     try {
-      const response = await axios.post(newUrl, values);
-      if(response.data.success) {
+      const response = await authRegister(values);
+      if(response){
+        setActivationToken(response.activationToken); 
         router.push('/user/activate-user');
-        toast.success(response.data.message);
-        setActivationToken(response.data.activationToken);
-       // console.log(response.data.activationToken);
-      } else {
-        toast.error(response.data.message);
+        toast.success(response.message);
+      }else{
+        toast.error(response.message);
       }
-
-    } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("An unexpected error occurred.");
+      
+    } catch (error) {
+      if(error instanceof Error){
+        toast.error(error.message);
+      }else{
+        toast.error("An unexpected error occurred");
       }
-      console.log(error.message);
-    } finally {
+    }finally{
       setloading(false);
     }
   };
