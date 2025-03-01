@@ -42,9 +42,7 @@ export default function Verification() {
     }
 
     try {
-      console.log("Activation Code:", activation_code);
       console.log("numbers", verifyNumber)
-      console.log("Activation Token:", activationToken);
       const response = await activateUser(activation_code, activationToken);
       
       if (response) {
