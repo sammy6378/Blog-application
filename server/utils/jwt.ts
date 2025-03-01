@@ -39,5 +39,5 @@ export const sendToken = async (user: IUser, res: Response) => {
 
   res.cookie("access_token", access_token, accessTokenOptions);
   res.cookie("refresh_token", refresh_token, refreshTokenOptions);
-  res.json({ success: true, user, accessToken: access_token });
+  res.json({ success: true, user, accessToken: access_token, message: "Login successful" });
 };

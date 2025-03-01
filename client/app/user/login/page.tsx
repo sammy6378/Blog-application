@@ -9,6 +9,7 @@ import { ValidateLoginSchema } from "@/components/utils/validate";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {toast} from 'react-hot-toast';
 
 import { authLogin } from "@/components/services/authService";
 
@@ -27,8 +28,12 @@ const Login = () => {
     setIsLoading(true);
     try {
       const response = await authLogin(values);
-      setErrorMessage(response.message);
-      router.push("/");
+      if (response) {
+        router.push("/");
+        toast.success(response.message);
+      } else {
+        setErrorMessage(response.message);
+      }
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message || "An unexpected error occurred.");
