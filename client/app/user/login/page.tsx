@@ -28,7 +28,7 @@ const Login = () => {
     try {
       const response = await authLogin(values);
       setErrorMessage(response.message);
-      router.push("/user/dashboard");
+      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message || "An unexpected error occurred.");
