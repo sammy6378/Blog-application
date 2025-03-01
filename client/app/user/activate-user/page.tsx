@@ -33,34 +33,33 @@ export default function Verification() {
     3: "",
   });
 
-
   const verificationHandler = async () => {
     const activation_code = Object.values(verifyNumber).join("");
-    if(!activationToken){
+    if (!activationToken) {
       setInvalidError(true);
       return;
     }
 
     try {
-      console.log("numbers", verifyNumber)
+      console.log("numbers", verifyNumber);
       const response = await activateUser(activation_code, activationToken);
-      
+
       if (response) {
         router.push("/user/login");
         toast.success(response.message);
       } else {
         toast.error(response.message);
+        setInvalidError(true);
       }
     } catch (error: any) {
       if (error.response) {
         toast.error(error.response.message);
-        setInvalidError(true);
       } else {
         toast.error("An unexpected error occurred.");
       }
       console.log(error.message);
+      setInvalidError(true);
     }
-    // setInvalidError(true);
   };
 
   const handleInputChange = (index: number, value: string) => {
