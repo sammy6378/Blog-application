@@ -9,11 +9,10 @@ import {
 } from "react";
 
 interface IContext {
-  url: string;
   accessToken: string;
   setAccessToken: Dispatch<SetStateAction<string>>;
-  activationToken: null,
-  setActivationToken: Dispatch<SetStateAction<null>>;
+  activationToken: string | null,
+  setActivationToken: Dispatch<SetStateAction<string | null>>;
 }
 
 export const AppContext = createContext<IContext | undefined>(undefined);
@@ -24,11 +23,10 @@ export default function ProviderFunction({
   children: React.ReactNode;
 }) {
   const [accessToken, setAccessToken] = useState("");
-  const [activationToken,setActivationToken] = useState(null);
-  const url = "http://localhost:8000";
+  const [activationToken, setActivationToken] = useState<string | null>(null);
 
   return (
-    <AppContext.Provider value={{ url, accessToken, setAccessToken, activationToken, setActivationToken }}>
+    <AppContext.Provider value={{accessToken, setAccessToken, activationToken, setActivationToken }}>
       {children}
     </AppContext.Provider>
   );
