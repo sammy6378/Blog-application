@@ -52,10 +52,10 @@ export default function Verification() {
         setInvalidError(true);
       }
     } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error("An unexpected error occurred");
       }
       console.log(error.message);
       setInvalidError(true);
@@ -76,9 +76,13 @@ export default function Verification() {
       inputRefs[index - 1].current?.focus();
     } else if (value.length === 1 && index < 3) {
       inputRefs[index + 1].current?.focus();
-    } else if (value.length === 1 && index === 3) {
+    } else if (
+      value.length === 1 &&
+      Object.values(verifyNumber).every((num) => num !== "")
+    ) {
       inputRefs[index].current?.blur();
-      //verificationHandler();
+
+      verificationHandler();
     }
   };
   return (
