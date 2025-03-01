@@ -33,36 +33,33 @@ export default function Verification() {
     3: "",
   });
 
-
   const verificationHandler = async () => {
     const activation_code = Object.values(verifyNumber).join("");
-    if(!activationToken){
+    if (!activationToken) {
       setInvalidError(true);
       return;
     }
 
     try {
-      console.log("Activation Code:", activation_code);
-      console.log("numbers", verifyNumber)
-      console.log("Activation Token:", activationToken);
+      console.log("numbers", verifyNumber);
       const response = await activateUser(activation_code, activationToken);
-      
+
       if (response) {
         router.push("/user/login");
         toast.success(response.message);
       } else {
         toast.error(response.message);
+        setInvalidError(true);
       }
     } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response.message);
-        setInvalidError(true);
+      if (error instanceof Error) {
+        toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error("An unexpected error occurred");
       }
       console.log(error.message);
+      setInvalidError(true);
     }
-    // setInvalidError(true);
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -79,8 +76,12 @@ export default function Verification() {
       inputRefs[index - 1].current?.focus();
     } else if (value.length === 1 && index < 3) {
       inputRefs[index + 1].current?.focus();
-    } else if (value.length === 1 && index === 3) {
+    } else if (
+      value.length === 1 &&
+      Object.values(verifyNumber).every((num) => num !== "")
+    ) {
       inputRefs[index].current?.blur();
+
       verificationHandler();
     }
   };
