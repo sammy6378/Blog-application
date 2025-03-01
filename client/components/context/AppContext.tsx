@@ -23,6 +23,7 @@ export default function ProviderFunction({
   children: React.ReactNode;
 }) {
   const [accessToken, setAccessToken] = useState("");
+
   const [activationToken, setActivationToken] = useState<string | null>(null);
 
   return (

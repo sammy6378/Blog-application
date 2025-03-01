@@ -9,8 +9,9 @@ import { ValidateLoginSchema } from "@/components/utils/validate";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {X} from 'lucide-react'
 import { useRouter } from "next/navigation";
-import { authLogin } from "@/components/services/authService";
 
+import { authLogin } from "@/components/services/authService";
+        
 
 interface formData {
   email: string;
@@ -19,6 +20,7 @@ interface formData {
 
 
 const Login = () => {
+  const {url} = useContextFunc();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [Isloading , setIsLoading] = useState(false);
@@ -39,6 +41,17 @@ const Login = () => {
     }finally{
       setIsLoading(false);
     }
+  };
+
+  const onSubmit = async (values: formData) => {
+    const newUrl = url + "/api/user/login";
+    try {
+      const response = await axios.post(newUrl, values, {withCredentials: true});
+      
+    } catch (error: any) {
+      
+    }
+    
   };
 
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
