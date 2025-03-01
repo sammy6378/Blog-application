@@ -5,8 +5,8 @@ import { useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import "../../app.css";
-import axios from "axios";
 import { useContextFunc } from "@/components/context/AppContext";
+import { activateUser } from "@/components/services/authService";
 
 interface verifyNumber {
   "0": string;
@@ -16,7 +16,8 @@ interface verifyNumber {
 }
 
 export default function Verification() {
-  const { url, activationToken } = useContextFunc();
+  const { activationToken } = useContextFunc();
+
   const router = useRouter();
   const [invalidError, setInvalidError] = useState(false);
   const inputRefs = [
@@ -35,25 +36,26 @@ export default function Verification() {
 
   const verificationHandler = async () => {
     const activation_code = Object.values(verifyNumber).join("");
-    const newUrl = url + "/api/user/activate-you";
+    if(!activationToken){
+      setInvalidError(true);
+      return;
+    }
+
     try {
-      const response = await axios.post(newUrl, {
-        activation_token: activationToken,
-        activation_code,
-      });
-      if (response.data.success) {
+      console.log("Activation Code:", activation_code);
+      console.log("numbers", verifyNumber)
+      console.log("Activation Token:", activationToken);
+      const response = await activateUser(activation_code, activationToken);
+      
+      if (response) {
         router.push("/user/login");
-        toast.success(response.data.message);
+        toast.success(response.message);
       } else {
-        toast.error(response.data.message);
+        toast.error(response.message);
       }
     } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.message);
+      if (error.response) {
+        toast.error(error.response.message);
         setInvalidError(true);
       } else {
         toast.error("An unexpected error occurred.");

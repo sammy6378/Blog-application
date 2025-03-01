@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../../app.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,10 +8,10 @@ import { useFormik } from "formik";
 import { ValidateLoginSchema } from "@/components/utils/validate";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {X} from 'lucide-react'
-import OutsideClickHandler from "react-outside-click-handler";
 import { useRouter } from "next/navigation";
-import axios from 'axios';
-import { useContextFunc } from "@/components/context/AppContext";
+
+import { authLogin } from "@/components/services/authService";
+        
 
 interface formData {
   email: string;
@@ -23,6 +23,25 @@ const Login = () => {
   const {url} = useContextFunc();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [Isloading , setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onSubmit = async(values: formData) => {
+    setIsLoading(true);
+    try{
+      const response = await authLogin(values);
+      setErrorMessage(response.message);
+      router.push("/user/dashboard");
+    }catch(error){
+      if(error instanceof Error){
+        setErrorMessage(error.message || "An unexpected error occurred.");
+      }else{
+        setErrorMessage("An unexpected error occurred");
+      }  
+    }finally{
+      setIsLoading(false);
+    }
+  };
 
   const onSubmit = async (values: formData) => {
     const newUrl = url + "/api/user/login";
@@ -48,7 +67,11 @@ const Login = () => {
         <h2 className="text-3xl max-500:text-2xl max-300px:text-lg font-bold text-purple-900 dark:text-white mb-6">
           Sign In
         </h2>
-
+        {
+          errorMessage && (
+            <p className="w-full bg-red-400 px-4 py-2 rounded-md mb-2 text-sm">{errorMessage}</p>
+          )
+        }
         <X className="absolute top-2 right-2 text-gray-900 dark:text-white cursor-pointer" onClick={() => router.back()} />
 
         <form className="w-full space-y-4" onSubmit={handleSubmit}>
@@ -109,9 +132,10 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white py-3 max-500:py-2 rounded-md font-semibold hover:bg-purple-700 transition duration-300"
+            disabled={Isloading}
+            className={`w-full bg-purple-600 ${Isloading ? "bg-purple-700" : "" } text-white py-3 max-500:py-2 rounded-md font-semibold hover:bg-purple-700 transition duration-300`}
           >
-            Sign In
+           {Isloading  ? "Signing you in..." : "Sign In"}
           </button>
         </form>
 
