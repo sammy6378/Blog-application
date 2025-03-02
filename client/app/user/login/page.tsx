@@ -28,9 +28,10 @@ const Login = () => {
     setIsLoading(true);
     try {
       const response = await authLogin(values);
-      if (response) {
+      if (response.success) {
         router.push("/");
         toast.success(response.message);
+        console.log(response);
       } else {
         setErrorMessage(response.message);
       }

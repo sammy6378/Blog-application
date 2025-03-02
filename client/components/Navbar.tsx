@@ -71,6 +71,7 @@ export default function Navbar() {
             src={"/favicon.svg"}
             width={100}
             height={100}
+            priority
             alt="logo"
             className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px] max-200px:max-w-[20px] max-200px:max-h-[20px]"
           />
