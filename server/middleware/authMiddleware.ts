@@ -12,7 +12,7 @@ export const authMiddleware = catchAsyncErrors(async(req: Request, res: Response
     try {
         const access_token = req.cookies.access_token;
         if(!access_token) {
-            return next(new ErrorHandler("Token not found", 401));
+            return next(new ErrorHandler("Session not found. Please log in again...", 401));
         }
 
         const decoded = jwt.verify(access_token, process.env.ACCESS_TOKEN as string) as JwtPayload;
@@ -23,7 +23,7 @@ export const authMiddleware = catchAsyncErrors(async(req: Request, res: Response
        // const user = await userModel.findById(decoded.id);
        const user = await redis.get(decoded.id);
        if(!user) {
-        return next(new ErrorHandler("User session not found", 404));
+        return next(new ErrorHandler("User session not found. Please log in", 404));
        }
 
        req.user = JSON.parse(user);
