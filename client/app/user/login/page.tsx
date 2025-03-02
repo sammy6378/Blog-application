@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import {toast} from 'react-hot-toast';
 
 import { authLogin } from "@/components/services/authService";
+import { useContextFunc } from "@/components/context/AppContext";
 
 interface formData {
   email: string;
@@ -23,6 +24,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [Isloading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const {setAccessToken} = useContextFunc();
 
   const onSubmit = async (values: formData) => {
     setIsLoading(true);
@@ -31,7 +33,7 @@ const Login = () => {
       if (response.success) {
         router.push("/");
         toast.success(response.message);
-        console.log(response);
+        setAccessToken(response.accessToken);
       } else {
         setErrorMessage(response.message);
       }
