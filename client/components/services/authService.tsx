@@ -61,3 +61,17 @@ export const activateUser = async (
     }
   }
 };
+
+//logout user
+export const logoutUser = async() => {
+    try {
+        const response = await createApi.post("/user/logout", {}, {withCredentials: true});
+        return response.data;
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            throw new Error(error.response?.data.message || "Logout failed");
+        } else {
+            throw new Error("An unexpected error occurred")
+        }
+    }    
+}

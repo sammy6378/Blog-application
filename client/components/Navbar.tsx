@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import { usePathname, useRouter } from "next/navigation";
+import { useContextFunc } from "./context/AppContext";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -16,6 +17,7 @@ export default function Navbar() {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { accessToken, handleLogout } = useContextFunc();
 
   useEffect(() => setMounted(true), []);
 
@@ -128,12 +130,21 @@ export default function Navbar() {
                   Contact Us
                 </Link>
               </li>
-              <button
-                onClick={() => router.push("/user/login")}
-                className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
-              >
-                Login
-              </button>
+              {accessToken ? (
+                <button
+                  onClick={handleLogout}
+                  className="hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
+                >
+                  Logout
+                </button>
+              ) : (
+                <button
+                  onClick={() => router.push("/user/login")}
+                  className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
+                >
+                  Login
+                </button>
+              )}
             </ul>
           </OutsideClickHandler>
           <div className="flex gap-4 items-center">
@@ -167,12 +178,21 @@ export default function Navbar() {
               </span>
             )}
 
-            <button
-              onClick={() => router.push("/user/login")}
-              className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden"
-            >
-              Login
-            </button>
+            {accessToken ? (
+              <button
+                onClick={handleLogout}
+                className="hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 max-700:hidden "
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push("/user/login")}
+                className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden"
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       </section>
