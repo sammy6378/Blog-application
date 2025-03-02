@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import createApi from "../utils/api";
+import createApi from "../utils/axiosApi";
 
 interface RegisterUserData {
   name: string;
@@ -29,7 +29,9 @@ export const authRegister = async (data: RegisterUserData) => {
 // user/login
 export const authLogin = async (userData: loginData) => {
   try {
-    const response = await createApi.post("/user/login", userData, {withCredentials: true});
+    const response = await createApi.post("/user/login", userData, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -63,15 +65,19 @@ export const activateUser = async (
 };
 
 //logout user
-export const logoutUser = async() => {
-    try {
-        const response = await createApi.post("/user/logout", {}, {withCredentials: true});
-        return response.data;
-    } catch (error) {
-        if (error instanceof AxiosError) {
-            throw new Error(error.response?.data.message || "Logout failed");
-        } else {
-            throw new Error("An unexpected error occurred")
-        }
-    }    
-}
+export const logoutUser = async () => {
+  try {
+    const response = await createApi.post(
+      "/user/logout",
+      {},
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw error;
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};

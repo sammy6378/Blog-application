@@ -11,6 +11,8 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 import { logoutUser } from "../services/authService";
+import axiosProtectedApi from "../utils/axiosProtectedApi";
+import { AxiosError } from "axios";
 
 interface IContext {
   accessToken: string | null;
@@ -59,12 +61,22 @@ export default function ProviderFunction({
         redirectToLogin();
       } else {
         toast.success(response.message);
+        //redirectToLogin();
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
+    } catch (error: any) {
+      if (error instanceof AxiosError) {
+        console.log(error.response?.status);
+        if(error.response?.status === 401) {
+          toast.error("Session expired. Redirecting to login...");
+        setAccessToken(null);
+        localStorage.removeItem("access_token");
+        redirectToLogin();
+        }
+        
+
       } else {
         toast.error("oops... error occurred on logout");
+        console.log(error.response.status)
       }
     }
   };

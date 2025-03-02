@@ -36,7 +36,7 @@ const Login = () => {
         router.push(redirectUrl);
         toast.success(response.message);
         setAccessToken(response.accessToken);
-        console.log(response.accessToken)
+       // console.log(response.accessToken)
         localStorage.setItem("access_token", response.accessToken);
       } else {
         setErrorMessage(response.message);
