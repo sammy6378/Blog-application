@@ -9,8 +9,8 @@ import {
 } from "react";
 
 interface IContext {
-  accessToken: string;
-  setAccessToken: Dispatch<SetStateAction<string>>;
+  accessToken: string | null;
+  setAccessToken: Dispatch<SetStateAction<string | null>>;
   activationToken: string | null,
   setActivationToken: Dispatch<SetStateAction<string | null>>;
 }
@@ -22,7 +22,7 @@ export default function ProviderFunction({
 }: {
   children: React.ReactNode;
 }) {
-  const [accessToken, setAccessToken] = useState("");
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [activationToken, setActivationToken] = useState<string | null>(null);
 
   return (
