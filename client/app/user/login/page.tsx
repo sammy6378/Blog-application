@@ -9,7 +9,7 @@ import { ValidateLoginSchema } from "@/components/utils/validate";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {toast} from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 import { authLogin } from "@/components/services/authService";
 import { useContextFunc } from "@/components/context/AppContext";
@@ -25,17 +25,19 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [Isloading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const {setAccessToken} = useContextFunc();
+  const { accessToken, setAccessToken } = useContextFunc();
 
   const onSubmit = async (values: formData) => {
     setIsLoading(true);
     try {
       const response = await authLogin(values);
       if (response.success) {
-        const redirectUrl = new URLSearchParams(window.location.search).get("redirect") || "/";
+        const redirectUrl =
+          new URLSearchParams(window.location.search).get("redirect") || "/";
         router.push(redirectUrl);
         toast.success(response.message);
         setAccessToken(response.accessToken);
+        localStorage.setItem("access_token", accessToken as string);
       } else {
         setErrorMessage(response.message);
       }

@@ -1,10 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   createContext,
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -22,8 +24,22 @@ export default function ProviderFunction({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [activationToken, setActivationToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const access_token = localStorage.getItem("access_token");
+    if(access_token) {
+      setAccessToken(access_token);
+    }
+  }, [])
+
+  //redirect to login when accessing a feature that requires authentication
+  const redirectToLogin = () => {
+    const loginUrl = window.location.origin + "/user/login";
+    router.push(`${loginUrl}?redirect=${encodeURIComponent(window.location.href)}`)
+  }
 
   return (
     <AppContext.Provider value={{accessToken, setAccessToken, activationToken, setActivationToken }}>
