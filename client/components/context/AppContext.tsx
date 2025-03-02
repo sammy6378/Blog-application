@@ -31,12 +31,14 @@ export default function ProviderFunction({
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [activationToken, setActivationToken] = useState<string | null>(null);
 
+  //check access token on mount
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       setAccessToken(access_token);
-    }
+    } 
   }, []);
+
 
   //redirect to login when accessing a feature that requires authentication
   const redirectToLogin = () => {
