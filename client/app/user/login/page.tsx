@@ -13,6 +13,7 @@ import {toast} from 'react-hot-toast';
 
 import { authLogin } from "@/components/services/authService";
 import { useContextFunc } from "@/components/context/AppContext";
+import { URLSearchParams } from "url";
 
 interface formData {
   email: string;
@@ -31,7 +32,8 @@ const Login = () => {
     try {
       const response = await authLogin(values);
       if (response.success) {
-        router.push("/");
+        const redirectUrl = new URLSearchParams(window.location.search).get("redirect") || "/";
+        router.push(redirectUrl);
         toast.success(response.message);
         setAccessToken(response.accessToken);
       } else {
