@@ -13,7 +13,6 @@ import { toast } from "react-hot-toast";
 
 import { authLogin } from "@/components/services/authService";
 import { useContextFunc } from "@/components/context/AppContext";
-import { URLSearchParams } from "url";
 
 interface formData {
   email: string;

@@ -29,7 +29,7 @@ export const authRegister = async (data: RegisterUserData) => {
 // user/login
 export const authLogin = async (userData: loginData) => {
   try {
-    const response = await createApi.post("/user/login", userData);
+    const response = await createApi.post("/user/login", userData, {withCredentials: true});
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
