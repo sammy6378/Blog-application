@@ -81,3 +81,30 @@ export const logoutUser = async () => {
     }
   }
 };
+
+//refresh token
+export const refreshToken = async() => {
+  try {
+    
+  } catch (error) {
+    if(error instanceof AxiosError) {
+      throw new Error(error.response?.data.message || "Refreshing token failed")
+    }
+    else {
+      throw new Error("oops... error refreshing token")
+    }
+  }
+}
+
+//get-user
+export const getUser = async() => {
+  try {
+    
+  } catch (error) {
+    if(error instanceof AxiosError) {
+      throw new Error(error.response?.data.message || "oops...failed to fetch user");
+    } else {
+      throw new Error("Error occurred fetching user");
+    }
+  }
+}
