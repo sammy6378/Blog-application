@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { logoutUser } from "../services/authService";
+import { logoutUser, updateAccessToken } from "../services/authService";
 import axiosProtectedApi from "../utils/axiosProtectedApi";
 import { AxiosError } from "axios";
 
@@ -38,9 +38,30 @@ export default function ProviderFunction({
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       setAccessToken(access_token);
-    } 
+      updateAccessTokenFunc();
+    }
   }, []);
 
+  //call update access token service
+  const updateAccessTokenFunc = async () => {
+    try {
+      const response = await updateAccessToken();
+      if (response.success) {
+        //console.log(response);
+        setAccessToken(response.accessToken);
+      } else {
+        setAccessToken(localStorage.getItem("access_token"));
+      }
+    } catch (error: any) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          return;
+        }
+      } else {
+        console.log("failed to update access token");
+      }
+    }
+  };
 
   //redirect to login when accessing a feature that requires authentication
   const redirectToLogin = () => {
@@ -66,17 +87,15 @@ export default function ProviderFunction({
     } catch (error: any) {
       if (error instanceof AxiosError) {
         console.log(error.response?.status);
-        if(error.response?.status === 401) {
+        if (error.response?.status === 401) {
           toast.error("Session expired. Redirecting to login...");
-        setAccessToken(null);
-        localStorage.removeItem("access_token");
-        redirectToLogin();
+          setAccessToken(null);
+          localStorage.removeItem("access_token");
+          redirectToLogin();
         }
-        
-
       } else {
         toast.error("oops... error occurred on logout");
-        console.log(error.response.status)
+        console.log(error.response.status);
       }
     }
   };

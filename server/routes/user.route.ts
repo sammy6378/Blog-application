@@ -13,7 +13,7 @@ route.post('/login', userLogin);
 route.post('/logout', authMiddleware, logoutUser);
 //api/user/update-token
 route.post('/update-token', authMiddleware, UpdateAccessToken);
-//api/user/get-user
+//api/user/get-user-info
 route.get("/get-user-info", authMiddleware, authorizeRoles("admin"), getUserInfo);
 //api/user/update-password
 route.put("/update-password", authMiddleware, updateUserPass);

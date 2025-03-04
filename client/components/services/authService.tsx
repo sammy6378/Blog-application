@@ -82,13 +82,14 @@ export const logoutUser = async () => {
   }
 };
 
-//refresh token
-export const refreshToken = async() => {
+//update access token
+export const updateAccessToken = async() => {
   try {
-    
+    const response = await createApi.post("/user/update-token", {}, {withCredentials: true});
+    return response.data;
   } catch (error) {
     if(error instanceof AxiosError) {
-      throw new Error(error.response?.data.message || "Refreshing token failed")
+      throw error;
     }
     else {
       throw new Error("oops... error refreshing token")
@@ -96,10 +97,11 @@ export const refreshToken = async() => {
   }
 }
 
-//get-user
-export const getUser = async() => {
+//get-user-info
+export const getUserInfo = async() => {
   try {
-    
+    const response = await createApi.get('/user/get-user-info', {withCredentials: true});
+    return response.data;
   } catch (error) {
     if(error instanceof AxiosError) {
       throw new Error(error.response?.data.message || "oops...failed to fetch user");
