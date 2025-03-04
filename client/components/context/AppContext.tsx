@@ -77,7 +77,7 @@ export default function ProviderFunction({
       const response = await getUserInfo();
       if(response.success) {
         setUserInfo(response.user);
-        console.log(response);
+       // console.log(response);
         localStorage.setItem("user", JSON.stringify(response.user));
         setUserInfo(response.user);
       } else {
@@ -111,6 +111,9 @@ export default function ProviderFunction({
       if (response.success) {
         setAccessToken(null);
         localStorage.removeItem("access_token");
+        setUserInfo({});
+        localStorage.removeItem("user");
+        localStorage.removeItem("access_token");
         toast.success(response.message);
         redirectToLogin();
       } else {
@@ -123,7 +126,6 @@ export default function ProviderFunction({
         if (error.response?.status === 401) {
           toast.error("Session expired. Redirecting to login...");
           setAccessToken(null);
-          localStorage.removeItem("access_token");
           redirectToLogin();
         }
       } else {
