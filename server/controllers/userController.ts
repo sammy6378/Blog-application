@@ -242,14 +242,34 @@ export const UpdateAccessToken = catchAsyncErrors(
   }
 );
 
-//get user info
-export const getUserInfo = catchAsyncErrors(
+//get user info---admin
+export const getUserInfoAdmin = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?._id as string;
       // const user = await userModel.findById(userId).select("-password");
       const redisUser = (await redis.get(userId)) as string;
       const user = await JSON.parse(redisUser);
+      if (!user) {
+        return next(new ErrorHandler(`user: ${userId} not found`, 404));
+      }
+
+      res.status(200).json({ success: true, user });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+
+//get user info---user
+export const getUserInfoUser = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id as string;
+       const user = await userModel.findById(userId).select("-password");
+      /* const redisUser = (await redis.get(userId)) as string;
+      const user = await JSON.parse(redisUser); */
       if (!user) {
         return next(new ErrorHandler(`user: ${userId} not found`, 404));
       }

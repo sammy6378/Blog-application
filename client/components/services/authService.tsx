@@ -81,3 +81,32 @@ export const logoutUser = async () => {
     }
   }
 };
+
+//update access token
+export const updateAccessToken = async() => {
+  try {
+    const response = await createApi.post("/user/update-token", {}, {withCredentials: true});
+    return response.data;
+  } catch (error) {
+    if(error instanceof AxiosError) {
+      throw error;
+    }
+    else {
+      throw new Error("oops... error refreshing token")
+    }
+  }
+}
+
+//get-user-info
+export const getUserInfo = async() => {
+  try {
+    const response = await createApi.get('/user/get-user-info-user', {withCredentials: true});
+    return response.data;
+  } catch (error) {
+    if(error instanceof AxiosError) {
+      throw error;
+    } else {
+      throw new Error("Error occurred fetching user");
+    }
+  }
+}

@@ -24,7 +24,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [Isloading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { accessToken, setAccessToken } = useContextFunc();
+  const { accessToken, setAccessToken, setUserInfo } = useContextFunc();
 
   const onSubmit = async (values: formData) => {
     setIsLoading(true);
@@ -38,6 +38,8 @@ const Login = () => {
         setAccessToken(response.accessToken);
        // console.log(response.accessToken)
         localStorage.setItem("access_token", response.accessToken);
+        localStorage.setItem("user", JSON.stringify(response.user));
+        setUserInfo(response.user);
       } else {
         setErrorMessage(response.message);
       }
