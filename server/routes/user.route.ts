@@ -13,11 +13,11 @@ route.post('/login', userLogin);
 route.post('/logout', authMiddleware, logoutUser);
 //api/user/update-token
 route.post('/update-token', authMiddleware, UpdateAccessToken);
-//api/user/get-user-info --- By admin
+//api/user/get-user-info-admin --- By admin
 route.get("/get-user-info-admin", authMiddleware, authorizeRoles("admin"), getUserInfoAdmin);
 
-//api/user/get-user-info --- By user
-route.get("/get-user-info-user", authMiddleware, authorizeRoles("admin"), getUserInfoUser);
+//api/user/get-user-info-user --- By user
+route.get("/get-user-info-user", authMiddleware, authorizeRoles("user"), getUserInfoUser);
 //api/user/update-password
 route.put("/update-password", authMiddleware, updateUserPass);
 //api/user/update-info

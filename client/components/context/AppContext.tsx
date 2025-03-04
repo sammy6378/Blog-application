@@ -20,6 +20,8 @@ interface IContext {
   activationToken: string | null;
   setActivationToken: Dispatch<SetStateAction<string | null>>;
   handleLogout: () => void;
+  userInfo: object,
+  setUserInfo: Dispatch<SetStateAction<object>>
 }
 
 export const AppContext = createContext<IContext | undefined>(undefined);
@@ -76,7 +78,7 @@ export default function ProviderFunction({
       if(response.success) {
         setUserInfo(response.user);
         console.log(response);
-        localStorage.setItem("user", response.user);
+        localStorage.setItem("user", JSON.stringify(response.user));
         setUserInfo(response.user);
       } else {
         console.log(response.message);
@@ -84,7 +86,7 @@ export default function ProviderFunction({
     } catch (error) {
       if(error instanceof AxiosError) {
         if(error.response?.status === 401) {
-          return;
+         return;
         } else {
           console.log(error.response?.data.message);
         }
@@ -139,6 +141,8 @@ export default function ProviderFunction({
         activationToken,
         setActivationToken,
         handleLogout,
+        userInfo,
+        setUserInfo
       }}
     >
       {children}
