@@ -1,5 +1,5 @@
 import express from 'express';
-import { ActivateUser, DeleteMyAccount, DeleteUserAccount_Admin, GetAllUsers, getUserInfo, logoutUser, RegisterUser, socialAuth, UpdateAccessToken, updateUserAvatar, updateUserInfo, updateUserPass, UpdateUserRole, userLogin } from '../controllers/userController';
+import { ActivateUser, DeleteMyAccount, DeleteUserAccount_Admin, GetAllUsers, getUserInfoAdmin, getUserInfoUser, logoutUser, RegisterUser, socialAuth, UpdateAccessToken, updateUserAvatar, updateUserInfo, updateUserPass, UpdateUserRole, userLogin } from '../controllers/userController';
 import { authMiddleware, authorizeRoles } from '../middleware/authMiddleware';
 const route = express.Router();
 
@@ -13,8 +13,11 @@ route.post('/login', userLogin);
 route.post('/logout', authMiddleware, logoutUser);
 //api/user/update-token
 route.post('/update-token', authMiddleware, UpdateAccessToken);
-//api/user/get-user-info
-route.get("/get-user-info", authMiddleware, authorizeRoles("admin"), getUserInfo);
+//api/user/get-user-info --- By admin
+route.get("/get-user-info-admin", authMiddleware, authorizeRoles("admin"), getUserInfoAdmin);
+
+//api/user/get-user-info --- By user
+route.get("/get-user-info-user", authMiddleware, authorizeRoles("admin"), getUserInfoUser);
 //api/user/update-password
 route.put("/update-password", authMiddleware, updateUserPass);
 //api/user/update-info

@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { logoutUser, updateAccessToken } from "../services/authService";
+import { getUserInfo, logoutUser, updateAccessToken } from "../services/authService";
 import axiosProtectedApi from "../utils/axiosProtectedApi";
 import { AxiosError } from "axios";
 
@@ -32,6 +32,7 @@ export default function ProviderFunction({
   const router = useRouter();
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [activationToken, setActivationToken] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState({});
 
   //check access token on mount
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function ProviderFunction({
     if (access_token) {
       setAccessToken(access_token);
       updateAccessTokenFunc();
+      fetchUserInfo();
     }
   }, []);
 
@@ -49,6 +51,7 @@ export default function ProviderFunction({
       if (response.success) {
         //console.log(response);
         setAccessToken(response.accessToken);
+        localStorage.setItem("access_token", response.accessToken);
       } else {
         setAccessToken(localStorage.getItem("access_token"));
       }
@@ -57,11 +60,39 @@ export default function ProviderFunction({
         if (error.response?.status === 401) {
           return;
         }
+        else {
+          console.log(error.response?.data.message);
+        }
       } else {
         console.log("failed to update access token");
       }
     }
   };
+
+  //fetch user
+  const fetchUserInfo = async() => {
+    try {
+      const response = await getUserInfo();
+      if(response.success) {
+        setUserInfo(response.user);
+        console.log(response);
+        localStorage.setItem("user", response.user);
+        setUserInfo(response.user);
+      } else {
+        console.log(response.message);
+      }
+    } catch (error) {
+      if(error instanceof AxiosError) {
+        if(error.response?.status === 401) {
+          return;
+        } else {
+          console.log(error.response?.data.message);
+        }
+      } else {
+        console.log("oops...failed to fetch user");
+      }
+    }
+  }
 
   //redirect to login when accessing a feature that requires authentication
   const redirectToLogin = () => {

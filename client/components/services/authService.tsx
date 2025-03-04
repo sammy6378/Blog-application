@@ -100,11 +100,11 @@ export const updateAccessToken = async() => {
 //get-user-info
 export const getUserInfo = async() => {
   try {
-    const response = await createApi.get('/user/get-user-info', {withCredentials: true});
+    const response = await createApi.get('/user/get-user-info-user', {withCredentials: true});
     return response.data;
   } catch (error) {
     if(error instanceof AxiosError) {
-      throw new Error(error.response?.data.message || "oops...failed to fetch user");
+      throw error;
     } else {
       throw new Error("Error occurred fetching user");
     }
