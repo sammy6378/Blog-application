@@ -5,6 +5,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import ProviderFunction from "@/components/context/AppContext";
 import {Toaster} from 'react-hot-toast';
+import AuthSession from "@/components/utils/SessionProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -55,11 +56,11 @@ export default function RootLayout({
       >
         <ProviderFunction>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <>
+            <AuthSession>
               <Navbar />
               <main>{children}</main>
               <Toaster />
-            </>
+            </AuthSession>
           </ThemeProvider>
         </ProviderFunction>
       </body>
