@@ -20,8 +20,20 @@ interface IContext {
   activationToken: string | null;
   setActivationToken: Dispatch<SetStateAction<string | null>>;
   handleLogout: () => void;
-  userInfo: object,
-  setUserInfo: Dispatch<SetStateAction<object>>
+  userInfo: IUserInfo | null,
+  setUserInfo: Dispatch<SetStateAction<IUserInfo | null>>
+}
+
+interface IUserInfo {
+  avatar: {
+    public_id: string,
+    url: string,
+  },
+  name: string,
+  email: string,
+  role: string,
+  isVerified: boolean
+  
 }
 
 export const AppContext = createContext<IContext | undefined>(undefined);
@@ -34,15 +46,14 @@ export default function ProviderFunction({
   const router = useRouter();
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [activationToken, setActivationToken] = useState<string | null>(null);
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 
   //check access token on mount
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       setAccessToken(access_token);
-      updateAccessTokenFunc();
-      fetchUserInfo();
+      updateAccessTokenFunc().then(() => fetchUserInfo())    
     }
   }, []);
 
@@ -76,10 +87,12 @@ export default function ProviderFunction({
     try {
       const response = await getUserInfo();
       if(response.success) {
-        setUserInfo(response.user);
        // console.log(response);
         localStorage.setItem("user", JSON.stringify(response.user));
-        setUserInfo(response.user);
+        const user_info = localStorage.getItem("user");
+        if (user_info) {
+          setUserInfo(JSON.parse(user_info));
+        }
       } else {
         console.log(response.message);
       }
@@ -111,7 +124,7 @@ export default function ProviderFunction({
       if (response.success) {
         setAccessToken(null);
         localStorage.removeItem("access_token");
-        setUserInfo({});
+        setUserInfo(null);
         localStorage.removeItem("user");
         localStorage.removeItem("access_token");
         toast.success(response.message);
