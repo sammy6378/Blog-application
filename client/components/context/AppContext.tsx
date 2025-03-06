@@ -58,7 +58,6 @@ export default function ProviderFunction({
     }
   }, []);
 
-  useAxiosInterceptor();
 
   //call update access token service
   const updateAccessTokenFunc = async () => {
@@ -151,6 +150,8 @@ export default function ProviderFunction({
       }
     }
   };
+
+  useAxiosInterceptor(setUserInfo, setAccessToken);
 
   return (
     <AppContext.Provider

@@ -1,11 +1,12 @@
+"use client"
 import axios from "axios";
 import Router from "next/router";
 import toast from "react-hot-toast";
 import { useContextFunc } from "../context/AppContext";
 import { useEffect } from "react";
 
-export const useAxiosInterceptor = () => {
-  const { setUserInfo, setAccessToken } = useContextFunc();
+export const useAxiosInterceptor = (setUserInfo: (val: any) => void, setAccessToken: (val: any) => void) => {
+  //const { setUserInfo, setAccessToken } = useContextFunc();
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
@@ -14,6 +15,8 @@ export const useAxiosInterceptor = () => {
         if (error.response && error.response.status === 401) {
           setUserInfo(null);
           setAccessToken(null);
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("user");
         }
         return Promise.reject(error);
       }
