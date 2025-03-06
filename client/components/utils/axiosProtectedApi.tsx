@@ -4,8 +4,7 @@ import Router from "next/router";
 import toast from "react-hot-toast";
 import { useContextFunc } from "../context/AppContext";
 import { useEffect } from "react";
-
-export const useAxiosInterceptor = (setUserInfo: (val: any) => void, setAccessToken: (val: any) => void) => {
+ const useAxiosInterceptor = (setUserInfo: (val: any) => void, setAccessToken: (val: any) => void) => {
   //const { setUserInfo, setAccessToken } = useContextFunc();
 
   useEffect(() => {

@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { getUserInfo, logoutUser, updateAccessToken } from "../services/authService";
 import { AxiosError } from "axios";
 import { signOut } from "next-auth/react";
-import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
+//import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
 
 interface IContext {
   accessToken: string | null;
@@ -153,7 +153,7 @@ export default function ProviderFunction({
     }
   };
 
-  useAxiosInterceptor(setUserInfo, setAccessToken);
+  //useAxiosInterceptor(setUserInfo, setAccessToken);
 
   return (
     <AppContext.Provider

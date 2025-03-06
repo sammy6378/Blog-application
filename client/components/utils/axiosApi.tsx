@@ -10,21 +10,12 @@ const createApi = axios.create({
     }
 });
 
-//axios interceptor for protected routes
-const axiosProtectedApi = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000/api",
-    withCredentials: true,
-  });
-  
-  //Attach the interceptor only to this instance.
-  axiosProtectedApi.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response && error.response.status === 401) {
-        
-      }
-      return Promise.reject(error);
+createApi.interceptors.response.use((response) => response, (error) => {
+    if(error.response && error.response.status === 401) {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user")
     }
-  );
+    return Promise.reject(error);
+})
 
 export default createApi;
