@@ -11,9 +11,9 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 import { getUserInfo, logoutUser, updateAccessToken } from "../services/authService";
-import axiosProtectedApi from "../utils/axiosProtectedApi";
 import { AxiosError } from "axios";
 import { signOut } from "next-auth/react";
+import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
 
 interface IContext {
   accessToken: string | null;
@@ -57,6 +57,8 @@ export default function ProviderFunction({
       updateAccessTokenFunc().then(() => fetchUserInfo())    
     }
   }, []);
+
+  useAxiosInterceptor();
 
   //call update access token service
   const updateAccessTokenFunc = async () => {
