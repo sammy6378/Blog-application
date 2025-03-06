@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { getUserInfo, logoutUser, updateAccessToken } from "../services/authService";
 import axiosProtectedApi from "../utils/axiosProtectedApi";
 import { AxiosError } from "axios";
+import { signOut } from "next-auth/react";
 
 interface IContext {
   accessToken: string | null;
@@ -128,6 +129,7 @@ export default function ProviderFunction({
         localStorage.removeItem("user");
         localStorage.removeItem("access_token");
         toast.success(response.message);
+        signOut();
         redirectToLogin();
       } else {
         toast.success(response.message);

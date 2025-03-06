@@ -83,30 +83,58 @@ export const logoutUser = async () => {
 };
 
 //update access token
-export const updateAccessToken = async() => {
+export const updateAccessToken = async () => {
   try {
-    const response = await createApi.post("/user/update-token", {}, {withCredentials: true});
+    const response = await createApi.post(
+      "/user/update-token",
+      {},
+      { withCredentials: true }
+    );
     return response.data;
   } catch (error) {
-    if(error instanceof AxiosError) {
+    if (error instanceof AxiosError) {
       throw error;
-    }
-    else {
-      throw new Error("oops... error refreshing token")
+    } else {
+      throw new Error("oops... error refreshing token");
     }
   }
-}
+};
 
 //get-user-info
-export const getUserInfo = async() => {
+export const getUserInfo = async () => {
   try {
-    const response = await createApi.get('/user/get-user-info-user', {withCredentials: true});
+    const response = await createApi.get("/user/get-user-info-user", {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
-    if(error instanceof AxiosError) {
+    if (error instanceof AxiosError) {
       throw error;
     } else {
       throw new Error("Error occurred fetching user");
     }
   }
-}
+};
+
+//social-auth
+export const socialAuth = async (data: {
+  name: string;
+  email: string;
+  image?: string;
+}) => {
+  try {
+    const response = await createApi.post("/user/social-auth", data, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data.message ||
+          "oopss... error signing in with social auth"
+      );
+    } else {
+      throw new Error("Error signing in with social auth");
+    }
+  }
+};
