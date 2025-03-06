@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import { usePathname, useRouter } from "next/navigation";
 import { useContextFunc } from "./context/AppContext";
+const profile = "/profile.webp";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -15,9 +16,10 @@ export default function Navbar() {
   const [bar, setBar] = useState(false);
   const [active, setActive] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { accessToken, handleLogout } = useContextFunc();
+  const { accessToken, handleLogout, userInfo } = useContextFunc();
 
   useEffect(() => setMounted(true), []);
 
@@ -108,7 +110,7 @@ export default function Navbar() {
                   onOutsideClick={() => setCategoryOpen(false)}
                 >
                   {categoryOpen && (
-                    <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2">
+                    <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2 z-30">
                       {categories.map((category, index) => (
                         <Link
                           href={category.link}
@@ -131,12 +133,53 @@ export default function Navbar() {
                 </Link>
               </li>
               {accessToken ? (
-                <button
-                  onClick={handleLogout}
-                  className="hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
-                >
-                  Logout
-                </button>
+                /*  */
+                <div className="relative 700:hidden">
+                  <div
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-end"
+                  >
+                    <Image
+                      src={userInfo?.avatar ? userInfo.avatar?.url : profile}
+                      alt="avatar"
+                      width={30}
+                      height={30}
+                      className="w-[30px] h-[30px] rounded-full object-cover"
+                      unoptimized
+                    />
+                    {profileOpen ? (
+                      <ChevronUp
+                        className="cursor-pointer text-gray-500"
+                        size={15}
+                      />
+                    ) : (
+                      <ChevronDown
+                        className="cursor-pointer text-gray-500"
+                        size={15}
+                      />
+                    )}
+                  </div>
+                  <OutsideClickHandler
+                    onOutsideClick={() => setProfileOpen(false)}
+                  >
+                    {profileOpen && (
+                      <div className="z-20 absolute bg-gray-900 dark:bg-white p-2 rounded shadow space-y-3">
+                        <Link
+                          href={"/profile"}
+                          className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5"
+                        >
+                          View Profile
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="mx-2 hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                  </OutsideClickHandler>
+                </div>
               ) : (
                 <button
                   onClick={() => router.push("/user/login")}

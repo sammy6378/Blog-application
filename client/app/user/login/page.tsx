@@ -39,7 +39,11 @@ const Login = () => {
        // console.log(response.accessToken)
         localStorage.setItem("access_token", response.accessToken);
         localStorage.setItem("user", JSON.stringify(response.user));
-        setUserInfo(response.user);
+        const user_info = localStorage.getItem("user");
+        if (user_info) {
+          setUserInfo(JSON.parse(user_info));
+        }
+       
       } else {
         setErrorMessage(response.message);
       }
