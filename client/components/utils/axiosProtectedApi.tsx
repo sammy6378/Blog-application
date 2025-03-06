@@ -24,7 +24,7 @@ export const useAxiosInterceptor = (setUserInfo: (val: any) => void, setAccessTo
     return () => {
       axios.interceptors.response.eject(interceptor);
     };
-  }, [setUserInfo, setAccessToken]);
+  }, []);
 };
 
 /* //axios interceptor for protected routes

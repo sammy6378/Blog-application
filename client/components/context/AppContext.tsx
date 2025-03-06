@@ -143,6 +143,8 @@ export default function ProviderFunction({
           toast.error("Session expired. Redirecting to login...");
           setAccessToken(null);
           redirectToLogin();
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("user");
         }
       } else {
         toast.error("oops... error occurred on logout");
