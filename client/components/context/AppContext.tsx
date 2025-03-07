@@ -10,9 +10,13 @@ import {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { getUserInfo, logoutUser, updateAccessToken } from "../services/authService";
+import {
+  getUserInfo,
+  logoutUser,
+  updateAccessToken,
+} from "../services/authService";
 import { AxiosError } from "axios";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 //import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
 
 interface IContext {
@@ -21,20 +25,19 @@ interface IContext {
   activationToken: string | null;
   setActivationToken: Dispatch<SetStateAction<string | null>>;
   handleLogout: () => void;
-  userInfo: IUserInfo | null,
-  setUserInfo: Dispatch<SetStateAction<IUserInfo | null>>
+  userInfo: IUserInfo | null;
+  setUserInfo: Dispatch<SetStateAction<IUserInfo | null>>;
 }
 
 interface IUserInfo {
   avatar: {
-    public_id: string,
-    url: string,
-  },
-  name: string,
-  email: string,
-  role: string,
-  isVerified: boolean
-  
+    public_id: string;
+    url: string;
+  };
+  name: string;
+  email: string;
+  role: string;
+  isVerified: boolean;
 }
 
 export const AppContext = createContext<IContext | undefined>(undefined);
@@ -54,10 +57,9 @@ export default function ProviderFunction({
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       setAccessToken(access_token);
-      updateAccessTokenFunc().then(() => fetchUserInfo())    
+      updateAccessTokenFunc().then(() => fetchUserInfo());
     }
   }, []);
-
 
   //call update access token service
   const updateAccessTokenFunc = async () => {
@@ -74,8 +76,7 @@ export default function ProviderFunction({
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           return;
-        }
-        else {
+        } else {
           console.log(error.response?.data.message);
         }
       } else {
@@ -85,11 +86,11 @@ export default function ProviderFunction({
   };
 
   //fetch user
-  const fetchUserInfo = async() => {
+  const fetchUserInfo = async () => {
     try {
       const response = await getUserInfo();
-      if(response.success) {
-       // console.log(response);
+      if (response.success) {
+        // console.log(response);
         localStorage.setItem("user", JSON.stringify(response.user));
         const user_info = localStorage.getItem("user");
         if (user_info) {
@@ -99,9 +100,9 @@ export default function ProviderFunction({
         console.log(response.message);
       }
     } catch (error) {
-      if(error instanceof AxiosError) {
-        if(error.response?.status === 401) {
-         return;
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          return;
         } else {
           console.log(error.response?.data.message);
         }
@@ -109,7 +110,7 @@ export default function ProviderFunction({
         console.log("oops...failed to fetch user");
       }
     }
-  }
+  };
 
   //redirect to login when accessing a feature that requires authentication
   const redirectToLogin = () => {
@@ -130,7 +131,8 @@ export default function ProviderFunction({
         localStorage.removeItem("user");
         localStorage.removeItem("access_token");
         toast.success(response.message);
-        signOut();
+        //signout without redirecting to home page, which conflicts with redirectToLogin
+        await signOut({ redirect: false });
         redirectToLogin();
       } else {
         toast.success(response.message);
@@ -164,7 +166,7 @@ export default function ProviderFunction({
         setActivationToken,
         handleLogout,
         userInfo,
-        setUserInfo
+        setUserInfo,
       }}
     >
       {children}
