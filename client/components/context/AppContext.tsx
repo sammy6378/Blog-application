@@ -11,8 +11,9 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 import { getUserInfo, logoutUser, updateAccessToken } from "../services/authService";
-import axiosProtectedApi from "../utils/axiosProtectedApi";
 import { AxiosError } from "axios";
+import { signOut } from "next-auth/react";
+//import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
 
 interface IContext {
   accessToken: string | null;
@@ -56,6 +57,7 @@ export default function ProviderFunction({
       updateAccessTokenFunc().then(() => fetchUserInfo())    
     }
   }, []);
+
 
   //call update access token service
   const updateAccessTokenFunc = async () => {
@@ -128,6 +130,7 @@ export default function ProviderFunction({
         localStorage.removeItem("user");
         localStorage.removeItem("access_token");
         toast.success(response.message);
+        signOut();
         redirectToLogin();
       } else {
         toast.success(response.message);
@@ -140,6 +143,8 @@ export default function ProviderFunction({
           toast.error("Session expired. Redirecting to login...");
           setAccessToken(null);
           redirectToLogin();
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("user");
         }
       } else {
         toast.error("oops... error occurred on logout");
@@ -147,6 +152,8 @@ export default function ProviderFunction({
       }
     }
   };
+
+  //useAxiosInterceptor(setUserInfo, setAccessToken);
 
   return (
     <AppContext.Provider
