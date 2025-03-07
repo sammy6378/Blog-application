@@ -38,7 +38,7 @@ const Login = () => {
           const response = await socialAuth({
             name: data.user?.name as string,
             email: data.user?.email as string,
-            image: data.user?.image as string,
+            avatar: data.user?.image as string,
           });
   
           if (response.success) {
@@ -51,6 +51,7 @@ const Login = () => {
             localStorage.setItem("access_token", response.accessToken);
             localStorage.setItem("user", JSON.stringify(response.user));
             setUserInfo(response.user);
+            console.log(response.user)
           } else {
             setErrorMessage(response.message);
           }

@@ -117,13 +117,13 @@ export const getUserInfo = async () => {
 };
 
 //social-auth
-export const socialAuth = async (data: {
+export const socialAuth = async (userData: {
   name: string;
   email: string;
-  image?: string;
+  avatar: string;
 }) => {
   try {
-    const response = await createApi.post("/user/social-auth", data, {
+    const response = await createApi.post("/user/social-auth", userData, {
       withCredentials: true,
     });
     return response.data;
