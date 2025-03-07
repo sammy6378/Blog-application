@@ -240,10 +240,17 @@ export default function Navbar() {
                     className="w-[30px] h-[30px] rounded-full object-cover"
                     unoptimized
                   />
-                  <ChevronDown
-                    className="cursor-pointer text-gray-500"
-                    size={15}
-                  />
+                  {profileOpenLarge ? (
+                    <ChevronUp
+                      className="cursor-pointer text-gray-500"
+                      size={15}
+                    />
+                  ) : (
+                    <ChevronDown
+                      className="cursor-pointer text-gray-500"
+                      size={15}
+                    />
+                  )}
                 </div>
 
                 {profileOpenLarge && (
