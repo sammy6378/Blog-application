@@ -91,7 +91,7 @@ export default function Navbar() {
               <li className="max-700:mt-2 max-700:mb-2">
                 <Link
                   href={"/"}
-                  className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`}
+                  className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`} onClick={() => setBar(false)}
                 >
                   Home
                 </Link>
@@ -130,7 +130,7 @@ export default function Navbar() {
               <li className="max-700:mb-5">
                 <Link
                   href={"/contact"}
-                  className={`hover:text-crimson dark:hover:text-green transition ${pathname === "/contact" && "text-crimson dark:text-green"}`}
+                  className={`hover:text-crimson dark:hover:text-green transition ${pathname === "/contact" && "text-crimson dark:text-green"}`} onClick={() => setBar(false)}
                 >
                   Contact Us
                 </Link>
@@ -171,7 +171,7 @@ export default function Navbar() {
                       <div className="z-20 absolute bg-gray-900 dark:bg-white p-2 rounded shadow space-y-3">
                         <Link
                           href={"/profile"}
-                          className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5"
+                          className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5" onClick={() => setBar(false)}
                         >
                           View Profile
                         </Link>
@@ -260,7 +260,7 @@ export default function Navbar() {
                     <div className="z-20 absolute bg-gray-900 dark:bg-white p-2 rounded shadow space-y-3 w-[120px] right-0 mt-2">
                       <Link
                         href={"/profile"}
-                        className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5 whitespace-nowrap"
+                        className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5 whitespace-nowrap" onClick={() => setProfileOpenLarge(false)}
                       >
                         View Profile
                       </Link>
