@@ -58,6 +58,7 @@ export default function ProviderFunction({
     if (access_token) {
       setAccessToken(access_token);
       updateAccessTokenFunc().then(() => fetchUserInfo());
+      console.log(`usser: ${userInfo}`)
     }
   }, []);
 
@@ -95,6 +96,7 @@ export default function ProviderFunction({
         const user_info = localStorage.getItem("user");
         if (user_info) {
           setUserInfo(JSON.parse(user_info));
+          console.log(user_info);
         }
       } else {
         console.log(response.message);

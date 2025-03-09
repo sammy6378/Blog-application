@@ -86,7 +86,7 @@ export default function Navbar() {
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
             <ul
-              className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:z-50 max-700:pt-4 max-700:h-[200px] max-200px:text-sm ${bar ? "max-700:block" : "max-700:hidden"}`}
+              className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:z-50 max-700:pt-4 max-700:h-[200px] max-200px:text-sm z-50 ${bar ? "max-700:block" : "max-700:hidden"}`}
             >
               <li className="max-700:mt-2 max-700:mb-2">
                 <Link
@@ -113,7 +113,7 @@ export default function Navbar() {
                   onOutsideClick={() => setCategoryOpen(false)}
                 >
                   {categoryOpen && (
-                    <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2 z-30">
+                    <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2 z-50">
                       {categories.map((category, index) => (
                         <Link
                           href={category.link}
@@ -168,7 +168,7 @@ export default function Navbar() {
                     onOutsideClick={() => setProfileOpenSmall(false)}
                   >
                     {profileOpenSmall && (
-                      <div className="z-20 absolute bg-gray-900 dark:bg-white p-2 rounded shadow space-y-3">
+                      <div className="z-50 absolute bg-gray-900 dark:bg-white p-2 rounded shadow space-y-3">
                         <Link
                           href={"/profile"}
                           className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5" onClick={() => setBar(false)}
