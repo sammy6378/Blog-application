@@ -35,7 +35,7 @@ export default function Profile() {
             unoptimized
             priority
           />
-          <FaCamera className="absolute bottom-0 right-0 cursor-pointer" />
+          <FaCamera className="absolute bottom-0 right-0 cursor-pointer" onClick={() => router.push('profile/update-image')} />
         </section>
         {/* name and email */}
         <section className="mt-8 flex flex-col gap-2 dark:shadow border border-slate-500 dark:border-slate-300 rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4">
