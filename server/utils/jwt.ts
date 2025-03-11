@@ -11,7 +11,7 @@ interface TokenOptions {
   sameSite?: "strict" | "lax" | "none";
 }
 
-const accessTokenExpires = parseInt(process.env.ACCESS_TOKEN_EXPIRES || "5");
+const accessTokenExpires = parseInt(process.env.ACCESS_TOKEN_EXPIRES || "60");
 const refreshTokenExpires = parseInt(process.env.ACCESS_TOKEN_EXPIRES || "7");
 
 export const accessTokenOptions: TokenOptions = {

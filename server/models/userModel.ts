@@ -86,7 +86,7 @@ userSchema.methods.comparePasswords = async function(password: string) {
 
 //sign access token
 userSchema.methods.signAccessToken = function(): string {
-  return jwt.sign({id: this.id}, process.env.ACCESS_TOKEN as string, {expiresIn: "5m"})
+  return jwt.sign({id: this.id}, process.env.ACCESS_TOKEN as string, {expiresIn: "60m"})
 }
 //sign refresh token
 userSchema.methods.signRefreshToken = function(): string {
