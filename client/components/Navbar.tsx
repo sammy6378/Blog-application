@@ -113,7 +113,7 @@ export default function Navbar() {
                   onOutsideClick={() => setCategoryOpen(false)}
                 >
                   {categoryOpen && (
-                    <section className="absolute top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2 z-50">
+                    <section className="absolute z-[100] top-[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2 lg:z-[100]">
                       {categories.map((category, index) => (
                         <Link
                           href={category.link}
