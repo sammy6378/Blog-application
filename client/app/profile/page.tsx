@@ -6,10 +6,22 @@ import { useContextFunc } from "@/components/context/AppContext";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { VscWarning } from "react-icons/vsc";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
-  const { userInfo } = useContextFunc();
+  const { userInfo, loadingContext, accessToken } = useContextFunc();
   const { data } = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if(!loadingContext && accessToken === null) {
+        router.push('/user/login');
+    }
+  }, [accessToken, loadingContext])
+
+  if(loadingContext) {
+    return <div>Loading...</div>
+  }
   return (
     <section className="w-full max-h-screen flex items-center justify-center ">
       <div className="bg-gray-800 -z-[10] text-white dark:text-gray-900 dark:bg-white h-1/2 w-[600px] max-w-[90%] flex flex-col items-center justify-center p-3 mt-4 rounded-md shadow">
