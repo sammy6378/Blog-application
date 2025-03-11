@@ -27,6 +27,7 @@ interface IContext {
   handleLogout: () => void;
   userInfo: IUserInfo | null;
   setUserInfo: Dispatch<SetStateAction<IUserInfo | null>>;
+  loadingContext: boolean,
 }
 
 interface IUserInfo {
@@ -51,6 +52,7 @@ export default function ProviderFunction({
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [activationToken, setActivationToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
+  const [loadingContext, setLoadingContext] = useState(true);
 
   //check access token on mount
   useEffect(() => {
@@ -58,8 +60,9 @@ export default function ProviderFunction({
     if (access_token) {
       setAccessToken(access_token);
       updateAccessTokenFunc().then(() => fetchUserInfo());
-      console.log(`usser: ${userInfo}`)
+      //console.log(`usser: ${userInfo}`);
     }
+    setLoadingContext(false);
   }, []);
 
   //call update access token service
@@ -169,6 +172,7 @@ export default function ProviderFunction({
         handleLogout,
         userInfo,
         setUserInfo,
+        loadingContext
       }}
     >
       {children}
