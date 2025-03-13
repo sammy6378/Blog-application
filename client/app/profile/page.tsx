@@ -7,9 +7,13 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { VscWarning } from "react-icons/vsc";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import UpdateForm from "./UpdateForm";
 import UpdatePass from "./UpdatePass";
+import { updateAvatar } from "@/components/services/userService";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { getUserInfo } from "@/components/services/authService";
 
 export default function Profile() {
   const { userInfo, loadingContext, accessToken } = useContextFunc();
@@ -29,7 +33,37 @@ export default function Profile() {
     return <div>Loading...</div>;
   }
 
-  const handleImageChange = async () => {};
+  const handleImageChange = async (e: any) => {
+    //const file = e.target.files[0];
+
+    const fileReader = new FileReader();
+    fileReader.onload = async () => {
+      if (fileReader.readyState === 2) {
+        const avatar = fileReader.result
+
+        try {
+          const response = await updateAvatar(avatar as string);
+          if(response.success) {
+            toast.success(response.message);
+            const userResponse = await getUserInfo();
+            if(userResponse.success) {
+              window.location.reload();
+            }
+          } else {
+            console.log(response.message)
+          }
+        } catch (error) {
+          if(error instanceof AxiosError) {
+            console.log(error.response?.data.message);
+          } else {
+            console.log("An unexpected error occured when uploading image");
+          }
+        }
+       
+      }
+    };
+    fileReader.readAsDataURL(e.target.files[0]);
+  };
 
   const submitInfo = async () => {
     setInfo(false);

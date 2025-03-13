@@ -471,7 +471,7 @@ export const updateUserAvatar = catchAsyncErrors(
         .status(200)
         .json({ success: true, user, message: "User profile updated" });
     } catch (error: any) {
-      return next(new ErrorHandler(error.message, 400));
+      return next(new ErrorHandler(error.message || "Error updating avatar", 400));
     }
   }
 );
