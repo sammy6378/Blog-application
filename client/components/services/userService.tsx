@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
 import createApi from "../utils/axiosApi";
 
-export const updateAvatar = async (avatar: string) => {
+export const updateAvatar = async (base64String: string) => {
     try {
-        const response = await createApi.post('/update-avatar', { avatar }, { headers: { "Content-Type": "multipart/form-data" }, withCredentials: true });
+        const response = await createApi.put('/user/update-avatar', {avatar: base64String}, { headers: { "Content-Type": "multipart/form-data" }, withCredentials: true });
         return response.data;
     } catch (error) {
         if(error instanceof AxiosError) {
