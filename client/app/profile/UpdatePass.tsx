@@ -20,7 +20,7 @@ export default function UpdatePass({showPassForm, handleSubmitPassword}: IPassFo
 
       {/* new password */}
       <div className="mt-5">
-        <label htmlFor="newPassword">Enter Old Password: </label>
+        <label htmlFor="newPassword">Enter New Password: </label>
         <input
           type="password"
           name="newPassword"
