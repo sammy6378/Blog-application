@@ -1,7 +1,7 @@
 import { useContextFunc } from "@/components/context/AppContext";
 
 interface IFormProps {
-    submitInfo: () => void,
+    submitInfo: (e: React.FormEvent) => void,
     name: string,
     setName: (name: string) => void,
     showReadonlyMessage: boolean,
@@ -10,6 +10,7 @@ interface IFormProps {
 
 export default function UpdateForm({submitInfo, name, setName, showReadonlyMessage, setShowReadonlyMessage}: IFormProps) {
     const {userInfo} = useContextFunc();
+ 
   return (
     <form
       onSubmit={submitInfo}
@@ -20,7 +21,7 @@ export default function UpdateForm({submitInfo, name, setName, showReadonlyMessa
         name="name"
         value={name || userInfo?.name}
         onChange={(e) => setName(e.target.value)}
-        className=" w-full p-2 bg-transparent shadow shadow-slate-500 rounded-md outline-none"
+        className={` w-full p-2 bg-transparent shadow shadow-slate-500 rounded-md outline-none `}
       />
       <input
         type="email"

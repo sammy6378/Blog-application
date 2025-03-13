@@ -10,19 +10,27 @@ import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
 import UpdateForm from "./UpdateForm";
 import UpdatePass from "./UpdatePass";
-import { updateAvatar } from "@/components/services/userService";
+import {
+  updateAvatar,
+  updateInfo,
+  updatePassword,
+} from "@/components/services/userService";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { getUserInfo } from "@/components/services/authService";
 
 export default function Profile() {
-  const { userInfo, loadingContext, accessToken } = useContextFunc();
+  const { userInfo, loadingContext, accessToken, handleLogout } =
+    useContextFunc();
   const [info, setInfo] = useState(false);
   const [showPassForm, setShowPassForm] = useState(false);
   const { data } = useSession();
   const router = useRouter();
   const [name, setName] = useState((userInfo && userInfo?.name) || "");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [showReadonlyMessage, setShowReadonlyMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     if (!loadingContext && accessToken === null) {
       router.push("/user/login");
@@ -39,41 +47,84 @@ export default function Profile() {
     const fileReader = new FileReader();
     fileReader.onload = async () => {
       if (fileReader.readyState === 2) {
-        const avatar = fileReader.result
+        const avatar = fileReader.result;
 
         try {
           const response = await updateAvatar(avatar as string);
-          if(response.success) {
+          if (response.success) {
             toast.success(response.message);
             const userResponse = await getUserInfo();
-            if(userResponse.success) {
+            if (userResponse.success) {
               window.location.reload();
             }
           } else {
-            console.log(response.message)
+            console.log(response.message);
           }
         } catch (error) {
-          if(error instanceof AxiosError) {
+          if (error instanceof AxiosError) {
             console.log(error.response?.data.message);
           } else {
             console.log("An unexpected error occured when uploading image");
           }
         }
-       
       }
     };
     fileReader.readAsDataURL(e.target.files[0]);
   };
 
-  const submitInfo = async () => {
-    setInfo(false);
-    setInfo(false);
+  const submitInfo = async (e: React.FormEvent) => {
+    //setInfo(false);
+    e.preventDefault();
+    try {
+      const response = await updateInfo({ name });
+      if (response.success) {
+        toast.success(response.message);
+        const userResponse = await getUserInfo();
+        if (userResponse.success) {
+          setInfo(false);
+          window.location.reload();
+        }
+      } else {
+        setErrorMessage(response.message);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error.response?.data.message);
+        setErrorMessage(error.response?.data.message);
+      } else {
+        console.log("An unexpected error occurred");
+        setErrorMessage("An unexpected error occurred");
+      }
+    }
   };
 
   const handleSubmitPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setShowPassForm(false)
-  }
+    //setShowPassForm(false)
+    try {
+      const response = await updatePassword({ oldPassword, newPassword });
+      if (response.success) {
+        toast.success(response.message);
+        const userResponse = await getUserInfo();
+        if (userResponse) {
+          handleLogout();
+          setShowPassForm(false);
+          //window.location.reload();
+        router.push('/user/login');
+        }
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(
+          error.response?.data.message || "An unexpected error occurred"
+        );
+      } else {
+        console.log("An unexpected error occurred");
+      }
+    }
+  };
 
   return (
     <section className="w-full min-h-screen flex items-center max-500:items-start justify-center font-poppins mb-4">
@@ -105,7 +156,13 @@ export default function Profile() {
         </section>
         {/* name and email */}
         {info ? (
-          <UpdateForm name={name} setName={setName} showReadonlyMessage={showReadonlyMessage} setShowReadonlyMessage={setShowReadonlyMessage} submitInfo={submitInfo} />
+          <UpdateForm
+            name={name}
+            setName={setName}
+            showReadonlyMessage={showReadonlyMessage}
+            setShowReadonlyMessage={setShowReadonlyMessage}
+            submitInfo={submitInfo}
+          />
         ) : (
           <section className="mt-8 flex flex-col gap-2 dark:shadow border border-slate-500 dark:border-slate-300 rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4">
             <p className="font-semibold">{userInfo?.name}</p>
@@ -124,7 +181,16 @@ export default function Profile() {
         )}
 
         {showPassForm ? (
-          <UpdatePass showPassForm={showPassForm} handleSubmitPassword={handleSubmitPassword} />
+          <UpdatePass
+            showPassForm={showPassForm}
+            handleSubmitPassword={handleSubmitPassword}
+            setOldPassword={setOldPassword}
+            setNewPassword={setNewPassword}
+            oldPassword={oldPassword}
+            newPassword={newPassword}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+          />
         ) : (
           <button
             className="mt-8 flex flex-col gap-2 dark:shadow rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 bg-[#37a39a] hover:opacity-90 transition"
