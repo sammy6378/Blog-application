@@ -42,7 +42,7 @@ export default function Profile() {
   }
 
   return (
-    <section className="w-full max-h-screen flex items-center justify-center font-poppins mb-4">
+    <section className="w-full min-h-screen flex items-center justify-center font-poppins mb-4">
       <div className="dark:bg-slate-800 bg-slate-100 dark:text-white text-slate-900 h-1/2 w-[600px] max-w-[90%] flex flex-col items-center justify-center p-3 mt-4 rounded-md shadow">
         <section className="relative">
           <Image
