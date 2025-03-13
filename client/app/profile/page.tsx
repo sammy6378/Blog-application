@@ -42,7 +42,7 @@ export default function Profile() {
   }
 
   return (
-    <section className="w-full min-h-screen flex items-center justify-center font-poppins mb-4">
+    <section className="w-full min-h-screen flex items-center max-500:items-start justify-center font-poppins mb-4">
       <div className="dark:bg-slate-800 bg-slate-100 dark:text-white text-slate-900 h-1/2 w-[600px] max-w-[90%] flex flex-col items-center justify-center p-3 mt-4 rounded-md shadow">
         <section className="relative">
           <Image
@@ -100,7 +100,9 @@ export default function Profile() {
           </button>
         )}
 
-        <button className="flex flex-row justify-center gap-2 dark:shadow border-2 border-crimson text-crimson rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 hover:bg-[crimson]/50 transition hover:text-white">
+        {/* Delete Account */}
+
+        <button className="flex flex-row justify-center gap-2 dark:shadow border-2 border-crimson text-crimson rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 hover:bg-[crimson]/50 transition hover:text-white mt-4">
           <span className="place-self-center">Delete Account</span>
           <VscWarning className="absolute left-2" size={25} />
         </button>
