@@ -8,13 +8,16 @@ import Image from "next/image";
 import { VscWarning } from "react-icons/vsc";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import UpdateForm from "./UpdateForm";
+import UpdatePass from "./UpdatePass";
 
 export default function Profile() {
   const { userInfo, loadingContext, accessToken } = useContextFunc();
   const [info, setInfo] = useState(false);
+  const [showPassForm, setShowPassForm] = useState(false);
   const { data } = useSession();
   const router = useRouter();
-  const [name, setName] = useState(userInfo && userInfo?.name || "");
+  const [name, setName] = useState((userInfo && userInfo?.name) || "");
   const [showReadonlyMessage, setShowReadonlyMessage] = useState(false);
   useEffect(() => {
     if (!loadingContext && accessToken === null) {
@@ -29,7 +32,13 @@ export default function Profile() {
   const handleImageChange = async () => {};
 
   const submitInfo = async () => {
-    setInfo(false)
+    setInfo(false);
+    setInfo(false);
+  };
+
+  const handleSubmitPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowPassForm(false)
   }
 
   return (
@@ -55,20 +64,14 @@ export default function Profile() {
             onChange={handleImageChange}
           />
           <label htmlFor="avatar">
-            <div className="dark:bg-slate-800 w-[25px] h-[25px] rounded-full absolute bottom-2 right-2 flex items-center justify-center">
+            <div className="dark:bg-slate-800 bg-slate-100 w-[25px] h-[25px] rounded-full absolute bottom-2 right-2 flex items-center justify-center">
               <FaCamera className="  cursor-pointer" size={20} />
             </div>
           </label>
         </section>
         {/* name and email */}
         {info ? (
-          <form onSubmit={submitInfo} className="shadow shadow-slate-900 rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 mt-8 flex flex-col">
-            <input type="text" name="name" value={name || userInfo?.name} onChange={(e) => setName(e.target.value)} className=' w-full p-2 bg-transparent shadow shadow-slate-500 rounded-md outline-none' />
-            <input type="email" name="email" value={userInfo?.email} readOnly className="mt-[20px] w-full p-2 bg-transparent  rounded-md outline-none border border-crimson" onMouseOver={() => setShowReadonlyMessage(true)} onMouseLeave={() => setShowReadonlyMessage(false)} />
-            {showReadonlyMessage && <p className="w-full text-sm text-crimson">email is readOnly!</p>}
-
-            <button type="submit" className="mt-5 bg-[#37a39a] p-2 rounded place-self-end hover:bg-[#37a39a]/80">Update Info</button>
-          </form>
+          <UpdateForm name={name} setName={setName} showReadonlyMessage={showReadonlyMessage} setShowReadonlyMessage={setShowReadonlyMessage} submitInfo={submitInfo} />
         ) : (
           <section className="mt-8 flex flex-col gap-2 dark:shadow border border-slate-500 dark:border-slate-300 rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4">
             <p className="font-semibold">{userInfo?.name}</p>
@@ -79,15 +82,23 @@ export default function Profile() {
             <div
               className="absolute -bottom-2 right-2 cursor-pointer dark:bg-slate-800 bg-white"
               onClick={() => setInfo(true)}
+              title="edit profile info"
             >
               <EditIcon size={20} />
             </div>
           </section>
         )}
 
-        <button className="mt-8 flex flex-col gap-2 dark:shadow rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 bg-[#37a39a] hover:opacity-90 transition">
-          Update Password
-        </button>
+        {showPassForm ? (
+          <UpdatePass showPassForm={showPassForm} handleSubmitPassword={handleSubmitPassword} />
+        ) : (
+          <button
+            className="mt-8 flex flex-col gap-2 dark:shadow rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 bg-[#37a39a] hover:opacity-90 transition"
+            onClick={() => setShowPassForm(true)}
+          >
+            Update Password
+          </button>
+        )}
 
         <button className="flex flex-row justify-center gap-2 dark:shadow border-2 border-crimson text-crimson rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 hover:bg-[crimson]/50 transition hover:text-white">
           <span className="place-self-center">Delete Account</span>
