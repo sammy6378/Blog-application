@@ -18,6 +18,7 @@ import {
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { getUserInfo } from "@/components/services/authService";
+import Protected from "@/components/Protected";
 
 export default function Profile() {
   const { userInfo, loadingContext, accessToken, handleLogout } =
@@ -31,15 +32,6 @@ export default function Profile() {
   const [newPassword, setNewPassword] = useState("");
   const [showReadonlyMessage, setShowReadonlyMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  useEffect(() => {
-    if (!loadingContext && accessToken === null) {
-      router.push("/user/login");
-    }
-  }, [accessToken, loadingContext]);
-
-  if (loadingContext) {
-    return <div>Loading...</div>;
-  }
 
   const handleImageChange = async (e: any) => {
     //const file = e.target.files[0];
@@ -133,6 +125,7 @@ export default function Profile() {
   };
 
   return (
+    <Protected>
     <section className="w-full min-h-screen flex items-center max-500:items-start justify-center font-poppins mb-4">
       <div className="dark:bg-slate-800 bg-slate-100 dark:text-white text-slate-900 h-1/2 w-[600px] max-w-[90%] flex flex-col items-center justify-center p-3 mt-4 rounded-md shadow">
         <section className="relative">
@@ -214,5 +207,6 @@ export default function Profile() {
         </button>
       </div>
     </section>
+    </Protected>
   );
 }
