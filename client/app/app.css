@@ -67,3 +67,19 @@ input[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
+
+.user-info-p {
+  height: 16px;
+  border-radius: 4px;
+  @apply bg-gray-400 bg-gradient-to-l w-full;
+  background-size: 200%;
+  animation: user-info-skeleton 1s infinite linear;
+}
+
+@keyframes user-info-skeleton {
+  0% {background-size: 200%;}
+  25% {background-size: 100%;}
+  50% {background-size: 200%;}
+  80% {background-size: 100%;}
+  100% {background-size: 200%;}
+}
