@@ -104,13 +104,19 @@ export default function Profile() {
     try {
       const response = await updatePassword({ oldPassword, newPassword });
       if (response.success) {
-        toast.success(response.message);
-        const userResponse = await getUserInfo();
-        if (userResponse) {
-          handleLogout();
+        if (
+          window.confirm(
+            "Are you sure you want to change your password? You will need to login again"
+          )
+        ) {
+          toast.success(response.message);
           setShowPassForm(false);
-          //window.location.reload();
-        router.push('/user/login');
+          await handleLogout();
+          const userResponse = await getUserInfo();
+          if (userResponse) {
+            // window.location.reload();
+            router.push("/user/login");
+          }
         }
       } else {
         toast.error(response.message);
