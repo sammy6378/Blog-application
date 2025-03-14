@@ -336,18 +336,23 @@ export const updateUserPass = catchAsyncErrors(
         data
       );
 
-      await sendMail({
+      try {
+         await sendMail({
         email: user.email,
         template: "update-password.ejs",
         subject: "User Password Updated",
         data,
       });
-
       res.status(200).json({
         success: true,
         user,
         message: "Password updated successfully",
       });
+      } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400))
+      }
+     
+
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -471,7 +476,7 @@ export const updateUserAvatar = catchAsyncErrors(
         .status(200)
         .json({ success: true, user, message: "User profile updated" });
     } catch (error: any) {
-      return next(new ErrorHandler(error.message, 400));
+      return next(new ErrorHandler(error.message || "Error updating avatar", 400));
     }
   }
 );
