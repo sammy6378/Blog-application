@@ -18,7 +18,7 @@ import {
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { getUserInfo } from "@/components/services/authService";
-import Protected from "@/components/Protected";
+import Protected from "@/components/utils/protected/Protected";
 import '@/app/app.css'
 
 export default function Profile() {
