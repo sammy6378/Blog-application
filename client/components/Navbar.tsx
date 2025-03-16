@@ -82,7 +82,7 @@ export default function Navbar() {
             alt="logo"
             className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px] max-200px:max-w-[20px] max-200px:max-h-[20px]"
           />
-          {pathname === '/admin' && (<p className="font-josefin font-[600]">MyAdmin</p>)}
+          {pathname === '/admin' && (<p className="font-josefin font-extrabold ">MyAdmin</p>)}
         </Link>
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
