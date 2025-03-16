@@ -17,7 +17,7 @@ route.post('/update-token', authMiddleware, UpdateAccessToken);
 route.get("/get-user-info-admin", authMiddleware, authorizeRoles("admin"), getUserInfoAdmin);
 
 //api/user/get-user-info-user --- By user
-route.get("/get-user-info-user", authMiddleware, authorizeRoles("user"), getUserInfoUser);
+route.get("/get-user-info-user", authMiddleware, authorizeRoles("user", "admin"), getUserInfoUser);
 //api/user/update-password
 route.put("/update-password", authMiddleware, updateUserPass);
 //api/user/update-info
