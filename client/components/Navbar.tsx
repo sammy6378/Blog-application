@@ -97,7 +97,7 @@ export default function Navbar() {
                   Home
                 </Link>
               </li>
-              <li className="relative">
+              <li className={`relative ${userInfo?.role === 'admin' && "hidden"}`}>
                 <div
                   className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5"
                   onClick={() => setCategoryOpen(!categoryOpen)}
@@ -119,7 +119,7 @@ export default function Navbar() {
                         <Link
                           href={category.link}
                           key={index}
-                          className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5"
+                          className={`hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5 `}
                         >
                           {category.category}
                         </Link>
@@ -128,7 +128,7 @@ export default function Navbar() {
                   )}
                 </OutsideClickHandler>
               </li>
-              <li className="max-700:mb-5">
+              <li className={`max-700:mb-5 ${userInfo?.role === 'admin' && "hidden"}`}>
                 <Link
                   href={"/contact"}
                   className={`hover:text-crimson dark:hover:text-green transition ${pathname === "/contact" && "text-crimson dark:text-green"}`}
