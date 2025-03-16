@@ -6,8 +6,8 @@ import Protected from "@/components/utils/protected/Protected";
 export default function AdminHome() {
     return (
         <Protected>
-        <AdminProtected>
-            <div></div>
+        <AdminProtected>    
+            <div></div>   
         </AdminProtected>
         </Protected>
     )

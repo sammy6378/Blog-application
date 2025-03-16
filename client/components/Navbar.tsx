@@ -75,7 +75,7 @@ export default function Navbar() {
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
         <Link
           href={"/"}
-          className={`${pathname === "/admin" && "flex items-center justify-center gap-2"}`}
+          className={`${pathname.startsWith('/admin') && "flex items-center justify-center gap-2"}`}
         >
           <Image
             src={"/favicon.svg"}
@@ -85,14 +85,14 @@ export default function Navbar() {
             alt="logo"
             className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px] max-200px:max-w-[20px] max-200px:max-h-[20px]"
           />
-          {pathname === "/admin" && (
+          {pathname.startsWith('/admin') && (
             <p className="font-josefin font-extrabold ">MyAdmin</p>
           )}
         </Link>
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
             <ul
-              className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:pt-4 max-700:h-[200px] max-200px:text-sm z-50 max-700:shadow max-700:shadow-gray-900 max-700:z-[100] ${userInfo?.role === "admin" && "max-700:h-[250px]"} ${bar ? "max-700:block" : "max-700:hidden"} ${pathname === "/admin" && "hidden"}`}
+              className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:pt-4 max-700:h-[200px] max-200px:text-sm z-50 max-700:shadow max-700:shadow-gray-900 max-700:z-[100] ${userInfo?.role === "admin" && "max-700:h-[250px]"} ${bar ? "max-700:block" : "max-700:hidden"} ${pathname.startsWith('/admin') && "hidden"}`}
             >
               <li className="max-700:mt-2 max-700:mb-2">
                 <Link
@@ -103,7 +103,7 @@ export default function Navbar() {
                   Home
                 </Link>
               </li>
-              <li className={`relative ${pathname === "/admin" && "hidden"}`}>
+              <li className={`relative ${pathname.startsWith('/admin') && "hidden"}`}>
                 <div
                   className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5"
                   onClick={() => setCategoryOpen(!categoryOpen)}
@@ -135,7 +135,7 @@ export default function Navbar() {
                 </OutsideClickHandler>
               </li>
               <li
-                className={`max-700:mb-5 ${userInfo?.role === "admin" && pathname === "/admin" && "hidden"}`}
+                className={`max-700:mb-5 ${userInfo?.role === "admin" && pathname.startsWith('/admin') && "hidden"}`}
               >
                 <Link
                   href={"/contact"}
@@ -220,7 +220,7 @@ export default function Navbar() {
               )}
             </ul>
           </OutsideClickHandler>
-          {pathname === "/admin" ? (
+          {pathname.startsWith('/admin') ? (
             <div></div>
           ) : (
             <div className={`flex gap-4 items-center`}>
