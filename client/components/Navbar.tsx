@@ -73,10 +73,7 @@ export default function Navbar() {
       className={`w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 mb-1 border-b h-[80px] font-poppins sticky top-0 bg-opacity-[95%] z-[9999] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200"} ${(pathname === "/user/login" || pathname === "/user/register" || pathname === "/user/activate-user") && "hidden"}`}
     >
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
-        <Link
-          href={`${pathname.startsWith("/admin") ? "/admin" : "/"}`}
-          className={`${pathname.startsWith("/admin") && "flex items-center justify-center gap-2"}`}
-        >
+        <Link href="/">
           <Image
             src={"/favicon.svg"}
             width={100}
@@ -85,22 +82,18 @@ export default function Navbar() {
             alt="logo"
             className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px] max-200px:max-w-[20px] max-200px:max-h-[20px]"
           />
-          {pathname.startsWith("/admin") && (
-            <p className="font-josefin font-extrabold ">MyAdmin</p>
-          )}
         </Link>
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
             {/* admin */}
             {pathname.startsWith("/admin") ? (
-              <ul>
+              <ul className="flex items-center justify-center place-self-center">
                 <li className="max-700:mt-2 max-700:mb-2">
                   <Link
-                    href={"/"}
-                    className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`}
-                    onClick={() => setBar(false)}
+                    href={"/admin"}
+                    className={`hover:text-crimson dark:hover:text-white transition font-medium ${pathname === '/admin' && 'text-green'}`}
                   >
-                    Home
+                    Dashboard
                   </Link>
                 </li>
               </ul>
@@ -270,13 +263,13 @@ export default function Navbar() {
                 </span>
               )}*/}
               {accessToken ? (
-                <Link href={'/admin/profile'}>
+                <Link href={"/admin/profile"}>
                   <Image
                     src={userInfo?.avatar?.url || data?.user?.image || profile}
                     alt="avatar"
                     width={30}
                     height={30}
-                    className={`w-[30px] h-[30px] rounded-full object-cover hover:w-[35px] hover:h-[35px] transition-all duration-300 ${pathname === '/admin/profile' && 'border-2 border-crimson dark:border-[#37a39a] w-[35px] h-[36px]'}`}
+                    className={`w-[32px] h-[32px] rounded-full object-cover hover:border hover:border-crimson hover:dark:border-[#37a39a] ${pathname === "/admin/profile" && "border-2 border-crimson dark:border-[#37a39a] "}`}
                     unoptimized
                   />
                 </Link>
