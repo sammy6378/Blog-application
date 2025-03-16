@@ -74,8 +74,8 @@ export default function Navbar() {
     >
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
         <Link
-          href={`${pathname.startsWith('/admin') ? '/admin' : "/"}`}
-          className={`${pathname.startsWith('/admin') && "flex items-center justify-center gap-2"}`}
+          href={`${pathname.startsWith("/admin") ? "/admin" : "/"}`}
+          className={`${pathname.startsWith("/admin") && "flex items-center justify-center gap-2"}`}
         >
           <Image
             src={"/favicon.svg"}
@@ -85,142 +85,158 @@ export default function Navbar() {
             alt="logo"
             className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px] max-200px:max-w-[20px] max-200px:max-h-[20px]"
           />
-          {pathname.startsWith('/admin') && (
+          {pathname.startsWith("/admin") && (
             <p className="font-josefin font-extrabold ">MyAdmin</p>
           )}
         </Link>
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
-            <ul
-              className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:pt-4 max-700:h-[200px] max-200px:text-sm z-50 max-700:shadow max-700:shadow-gray-900 max-700:z-[100] ${userInfo?.role === "admin" && "max-700:h-[250px]"} ${bar ? "max-700:block" : "max-700:hidden"} ${pathname.startsWith('/admin') && "hidden"}`}
-            >
-              <li className="max-700:mt-2 max-700:mb-2">
-                <Link
-                  href={"/"}
-                  className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`}
-                  onClick={() => setBar(false)}
-                >
-                  Home
-                </Link>
-              </li>
-              <li className={`relative ${pathname.startsWith('/admin') && "hidden"}`}>
-                <div
-                  className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5"
-                  onClick={() => setCategoryOpen(!categoryOpen)}
-                >
-                  {" "}
-                  <span>Category</span>
-                  {categoryOpen ? (
-                    <ChevronUp className="" size={15} />
-                  ) : (
-                    <ChevronDown className="" size={15} />
-                  )}
-                </div>
-                <OutsideClickHandler
-                  onOutsideClick={() => setCategoryOpen(false)}
-                >
-                  {categoryOpen && (
-                    <section className="absolute z-[9999] top[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2 ">
-                      {categories.map((category, index) => (
-                        <Link
-                          href={category.link}
-                          key={index}
-                          className={`hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5 `}
-                        >
-                          {category.category}
-                        </Link>
-                      ))}
-                    </section>
-                  )}
-                </OutsideClickHandler>
-              </li>
-              <li
-                className={`max-700:mb-5 ${userInfo?.role === "admin" && pathname.startsWith('/admin') && "hidden"}`}
-              >
-                <Link
-                  href={"/contact"}
-                  className={`hover:text-crimson dark:hover:text-green transition ${pathname === "/contact" && "text-crimson dark:text-green"}`}
-                  onClick={() => setBar(false)}
-                >
-                  Contact Us
-                </Link>
-              </li>
-              {/* Admin Link */}
-
-              {userInfo?.role === "admin" && (
-                <li className="max-700:mb-5">
+            {pathname.startsWith("/admin") ? (
+              <ul>
+                <li className="max-700:mt-2 max-700:mb-2">
                   <Link
-                    href={"/admin"}
-                    className={`hover:text-crimson dark:hover:text-green transition`}
+                    href={"/"}
+                    className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`}
                     onClick={() => setBar(false)}
                   >
-                    MyAdmin
+                    Home
                   </Link>
                 </li>
-              )}
-
-              {accessToken ? (
-                /*  */
-                <div className="relative 700:hidden">
-                  <div
-                    onClick={() => setProfileOpenSmall(!profileOpenSmall)}
-                    className="flex items-end"
+              </ul>
+            ) : (
+              <ul
+                className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:pt-4 max-700:h-[200px] max-200px:text-sm z-50 max-700:shadow max-700:shadow-gray-900 max-700:z-[100] ${userInfo?.role === "admin" && "max-700:h-[250px]"} ${bar ? "max-700:block" : "max-700:hidden"} ${pathname.startsWith("/admin") && "hidden"}`}
+              >
+                <li className="max-700:mt-2 max-700:mb-2">
+                  <Link
+                    href={"/"}
+                    className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`}
+                    onClick={() => setBar(false)}
                   >
-                    <Image
-                      src={
-                        userInfo?.avatar?.url || data?.user?.image || profile
-                      }
-                      alt="avatar"
-                      width={30}
-                      height={30}
-                      className="w-[30px] h-[30px] rounded-full object-cover"
-                      unoptimized
-                    />
-                    {profileOpenSmall ? (
-                      <ChevronUp
-                        className="cursor-pointer text-gray-500"
-                        size={15}
-                      />
+                    Home
+                  </Link>
+                </li>
+                <li
+                  className={`relative ${pathname.startsWith("/admin") && "hidden"}`}
+                >
+                  <div
+                    className="flex items-center hover:text-crimson dark:hover:text-green transition cursor-pointer text-black dark:text-white max-700:dark:text-black max-700:text-white max-700:my-5"
+                    onClick={() => setCategoryOpen(!categoryOpen)}
+                  >
+                    {" "}
+                    <span>Category</span>
+                    {categoryOpen ? (
+                      <ChevronUp className="" size={15} />
                     ) : (
-                      <ChevronDown
-                        className="cursor-pointer text-gray-500"
-                        size={15}
-                      />
+                      <ChevronDown className="" size={15} />
                     )}
                   </div>
                   <OutsideClickHandler
-                    onOutsideClick={() => setProfileOpenSmall(false)}
+                    onOutsideClick={() => setCategoryOpen(false)}
                   >
-                    {profileOpenSmall && (
-                      <div className="z-50 absolute bg-gray-900 dark:bg-white p-2 rounded shadow space-y-3">
-                        <Link
-                          href={"/profile"}
-                          className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5"
-                          onClick={() => setBar(false)}
-                        >
-                          View Profile
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          className="mx-2 hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
-                        >
-                          Logout
-                        </button>
-                      </div>
+                    {categoryOpen && (
+                      <section className="absolute z-[9999] top[30px] flex flex-col dark:bg-white bg-gray-900 shadow shadow-gray-900 rounded p-2 ">
+                        {categories.map((category, index) => (
+                          <Link
+                            href={category.link}
+                            key={index}
+                            className={`hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5 `}
+                          >
+                            {category.category}
+                          </Link>
+                        ))}
+                      </section>
                     )}
                   </OutsideClickHandler>
-                </div>
-              ) : (
-                <button
-                  onClick={() => router.push("/user/login")}
-                  className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
+                </li>
+                <li
+                  className={`max-700:mb-5 ${userInfo?.role === "admin" && pathname.startsWith("/admin") && "hidden"}`}
                 >
-                  Login
-                </button>
-              )}
-            </ul>
+                  <Link
+                    href={"/contact"}
+                    className={`hover:text-crimson dark:hover:text-green transition ${pathname === "/contact" && "text-crimson dark:text-green"}`}
+                    onClick={() => setBar(false)}
+                  >
+                    Contact Us
+                  </Link>
+                </li>
+                {/* Admin Link */}
+
+                {userInfo?.role === "admin" && (
+                  <li className="max-700:mb-5">
+                    <Link
+                      href={"/admin"}
+                      className={`hover:text-crimson dark:hover:text-green transition`}
+                      onClick={() => setBar(false)}
+                    >
+                      MyAdmin
+                    </Link>
+                  </li>
+                )}
+
+                {accessToken ? (
+                  /*  */
+                  <div className="relative 700:hidden">
+                    <div
+                      onClick={() => setProfileOpenSmall(!profileOpenSmall)}
+                      className="flex items-end"
+                    >
+                      <Image
+                        src={
+                          userInfo?.avatar?.url || data?.user?.image || profile
+                        }
+                        alt="avatar"
+                        width={30}
+                        height={30}
+                        className="w-[30px] h-[30px] rounded-full object-cover"
+                        unoptimized
+                      />
+                      {profileOpenSmall ? (
+                        <ChevronUp
+                          className="cursor-pointer text-gray-500"
+                          size={15}
+                        />
+                      ) : (
+                        <ChevronDown
+                          className="cursor-pointer text-gray-500"
+                          size={15}
+                        />
+                      )}
+                    </div>
+                    <OutsideClickHandler
+                      onOutsideClick={() => setProfileOpenSmall(false)}
+                    >
+                      {profileOpenSmall && (
+                        <div className="z-50 absolute bg-gray-900 dark:bg-white p-2 rounded shadow space-y-3">
+                          <Link
+                            href={"/profile"}
+                            className="hover:text-white dark:hover:text-black transition text-crimson dark:text-green px-2 py-1.5"
+                            onClick={() => setBar(false)}
+                          >
+                            View Profile
+                          </Link>
+                          <button
+                            onClick={handleLogout}
+                            className="mx-2 hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
+                          >
+                            Logout
+                          </button>
+                        </div>
+                      )}
+                    </OutsideClickHandler>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => router.push("/user/login")}
+                    className="dark:bg-green hover:opacity-90 bg-crimson px-2 py-1 rounded duration-500 700:hidden "
+                  >
+                    Login
+                  </button>
+                )}
+              </ul>
+            )}
           </OutsideClickHandler>
-          {pathname.startsWith('/admin') ? (
+          {pathname.startsWith("/admin") ? (
             <div></div>
           ) : (
             <div className={`flex gap-4 items-center`}>
