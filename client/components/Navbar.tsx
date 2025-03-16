@@ -255,7 +255,7 @@ export default function Navbar() {
                 />
               )}
 
-              {bar ? (
+              {/* {bar ? (
                 <X
                   className="cursor-pointer z-[100] dark:text-black text-white max-200px:w-[15px] max-200px:h-[15px] 700:hidden"
                   size={24}
@@ -268,7 +268,7 @@ export default function Navbar() {
                 >
                   <HiOutlineMenuAlt3 size={24} />
                 </span>
-              )}
+              )}*/}
               {accessToken ? (
                 <Link href={'/admin/profile'}>
                   <Image
@@ -276,7 +276,7 @@ export default function Navbar() {
                     alt="avatar"
                     width={30}
                     height={30}
-                    className="w-[30px] h-[30px] rounded-full object-cover"
+                    className={`w-[30px] h-[30px] rounded-full object-cover hover:w-[35px] hover:h-[35px] transition-all duration-300 ${pathname === '/admin/profile' && 'border-2 border-crimson dark:border-[#37a39a] w-[35px] h-[36px]'}`}
                     unoptimized
                   />
                 </Link>
