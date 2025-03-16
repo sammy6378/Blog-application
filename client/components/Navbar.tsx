@@ -73,10 +73,7 @@ export default function Navbar() {
       className={`w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 mb-1 border-b h-[80px] font-poppins sticky top-0 bg-opacity-[95%] z-[9999] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200"} ${(pathname === "/user/login" || pathname === "/user/register" || pathname === "/user/activate-user") && "hidden"}`}
     >
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
-        <Link
-          href={`${pathname.startsWith("/admin") ? "/admin" : "/"}`}
-          className={`${pathname.startsWith("/admin") && "flex items-center justify-center gap-2"}`}
-        >
+        <Link href="/">
           <Image
             src={"/favicon.svg"}
             width={100}
@@ -85,25 +82,23 @@ export default function Navbar() {
             alt="logo"
             className="dark:bg-white rounded-full w-[50px] h-[50px] max-700:w-[40px] max-700:h-[40px] max-500:w-[35px] max-500:h-[35px] max-200px:max-w-[20px] max-200px:max-h-[20px]"
           />
-          {pathname.startsWith("/admin") && (
-            <p className="font-josefin font-extrabold ">MyAdmin</p>
-          )}
         </Link>
         <div className="flex justify-between gap-[50px] max-800:gap-[30px] max-700:gap-[25px] ">
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
+            {/* admin */}
             {pathname.startsWith("/admin") ? (
-              <ul>
+              <ul className="flex items-center justify-center place-self-center">
                 <li className="max-700:mt-2 max-700:mb-2">
                   <Link
-                    href={"/"}
-                    className={`hover:text-crimson dark:hover:text-green transition max-700:text-white max-700:dark:text-black ${pathname === "/" && "text-crimson dark:text-green"}`}
-                    onClick={() => setBar(false)}
+                    href={"/admin"}
+                    className={`hover:text-crimson dark:hover:text-white transition font-medium ${pathname === '/admin' && 'text-green'}`}
                   >
-                    Home
+                    Dashboard
                   </Link>
                 </li>
               </ul>
             ) : (
+              /* user */
               <ul
                 className={`flex items-center gap-5 font-[500] max-800:gap-3 max-700:block max-700:fixed max-700:top-[20px] max-700:dark:bg-white max-700:bg-gray-900 max-700:text-white max-700:dark:text-black max-700:p-2 max-700:w-[180px] max-700:max-w-full max-700:rounded max-700:right-2 max-300px:right-0 max-700:pt-4 max-700:h-[200px] max-200px:text-sm z-50 max-700:shadow max-700:shadow-gray-900 max-700:z-[100] ${userInfo?.role === "admin" && "max-700:h-[250px]"} ${bar ? "max-700:block" : "max-700:hidden"} ${pathname.startsWith("/admin") && "hidden"}`}
               >
@@ -236,9 +231,59 @@ export default function Navbar() {
               </ul>
             )}
           </OutsideClickHandler>
+          {/* admin */}
           {pathname.startsWith("/admin") ? (
-            <div></div>
+            <div className={`flex gap-4 items-center`}>
+              {theme === "light" ? (
+                <Moon
+                  onClick={() => setTheme("dark")}
+                  className="cursor-pointer text-black dark:text-white hover:text-slate-800 max-200px:w-[15px] max-200px:h-[15px] "
+                  fill="black"
+                />
+              ) : (
+                <Sun
+                  onClick={() => setTheme("light")}
+                  className="cursor-pointer hover:text-slate-300 dark:text-white text-black max-200px:w-[15px] max-200px:h-[15px]"
+                  fill="black"
+                />
+              )}
+
+              {/* {bar ? (
+                <X
+                  className="cursor-pointer z-[100] dark:text-black text-white max-200px:w-[15px] max-200px:h-[15px] 700:hidden"
+                  size={24}
+                  onClick={() => setBar(!bar)}
+                />
+              ) : (
+                <span
+                  className="cursor-pointer z-[100] dark:text-white text-black 700:hidden"
+                  onClick={() => setBar(!bar)}
+                >
+                  <HiOutlineMenuAlt3 size={24} />
+                </span>
+              )}*/}
+              {accessToken ? (
+                <Link href={"/admin/profile"}>
+                  <Image
+                    src={userInfo?.avatar?.url || data?.user?.image || profile}
+                    alt="avatar"
+                    width={30}
+                    height={30}
+                    className={`w-[32px] h-[32px] rounded-full object-cover hover:border hover:border-crimson hover:dark:border-[#37a39a] ${pathname === "/admin/profile" && "border-2 border-crimson dark:border-[#37a39a] "}`}
+                    unoptimized
+                  />
+                </Link>
+              ) : (
+                <button
+                  onClick={() => router.push("/user/login")}
+                  className="dark:bg-green hover:opacity-90 bg-crimson px-4 py-1 rounded duration-500 max-700:hidden"
+                >
+                  Login
+                </button>
+              )}
+            </div>
           ) : (
+            /* admin */
             <div className={`flex gap-4 items-center`}>
               {/* switch modes */}
               {theme === "light" ? (
