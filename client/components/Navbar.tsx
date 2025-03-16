@@ -74,7 +74,7 @@ export default function Navbar() {
     >
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
         <Link
-          href={"/"}
+          href={`${pathname.startsWith('/admin') ? '/admin' : "/"}`}
           className={`${pathname.startsWith('/admin') && "flex items-center justify-center gap-2"}`}
         >
           <Image
