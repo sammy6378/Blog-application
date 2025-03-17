@@ -91,7 +91,7 @@ export default function Navbar() {
                 <li className="max-700:mt-2 max-700:mb-2">
                   <Link
                     href={"/admin"}
-                    className={`hover:text-crimson dark:hover:text-white transition font-medium ${pathname === '/admin' && 'text-green'}`}
+                    className={`hover:text-crimson dark:hover:text-white transition font-medium ${pathname === "/admin" && "text-green"}`}
                   >
                     Dashboard
                   </Link>
