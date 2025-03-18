@@ -11,11 +11,11 @@ function Sidebar() {
           <Link href={"/admin/dashboard"} className='p-4 hover:bg-gray-800 cursor-pointer flex items-center'>
             <Home className='mr-4' /> Dashboard
           </Link>
-          <Link href={"/admin/dashboard/blogs"} className='p-4 hover:bg-gray-800 cursor-pointer flex items-center'>
-            <FileText className='mr-4' /> Blogs
-          </Link>
           <Link  href={"/admin/dashboard/users"} className='p-4 hover:bg-gray-800 cursor-pointer flex items-center'>
             <Users className='mr-4' /> Users
+          </Link>
+          <Link href={"/admin/dashboard/blogs"} className='p-4 hover:bg-gray-800 cursor-pointer flex items-center'>
+            <FileText className='mr-4' /> Blogs
           </Link>
           <Link href={"/admin/dashboard/settings"} className='p-4 hover:bg-gray-800 cursor-pointer flex items-center'>
             <Settings className='mr-4' /> Settings
