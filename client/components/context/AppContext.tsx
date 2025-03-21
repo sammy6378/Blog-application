@@ -31,6 +31,10 @@ interface IContext {
   loadingContext: boolean;
   openAdminSidebar: boolean;
   setOpenAdminSidebar: (openAdminSidebar: boolean) => void;
+  allUsers: IAllUsers | null;
+  setAllUsers: (allUsers: IAllUsers | null) => void;
+  userCount: IUserCount | 0;
+  setUserCount: (userCount: IUserCount | 0) => void;
 }
 
 interface IUserInfo {
@@ -210,6 +214,10 @@ export default function ProviderFunction({
         loadingContext,
         openAdminSidebar,
         setOpenAdminSidebar,
+        userCount,
+        setUserCount,
+        allUsers,
+        setAllUsers,
       }}
     >
       {children}
