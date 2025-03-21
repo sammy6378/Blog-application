@@ -1,3 +1,4 @@
+"use client"
 import { useContextFunc } from "@/components/context/AppContext";
 import Loader from "@/components/Loader/Loader";
 import { useRouter } from "next/navigation";

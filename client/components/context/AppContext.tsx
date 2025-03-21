@@ -16,7 +16,7 @@ import {
   updateAccessToken,
 } from "../services/authService";
 import { AxiosError } from "axios";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { getAllUsers } from "../services/userService";
 //import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
 
@@ -33,8 +33,8 @@ interface IContext {
   setOpenAdminSidebar: (openAdminSidebar: boolean) => void;
   allUsers: IAllUsers | null;
   setAllUsers: (allUsers: IAllUsers | null) => void;
-  userCount: IUserCount | 0;
-  setUserCount: (userCount: IUserCount | 0) => void;
+  userTotal: number | null;
+  setUserTotal: Dispatch<SetStateAction<number | null>>;
 }
 
 interface IUserInfo {
@@ -52,10 +52,6 @@ interface IAllUsers {
   allUsers: IUserInfo[];
 }
 
-interface IUserCount {
-  userCount: number;
-}
-
 export const AppContext = createContext<IContext | undefined>(undefined);
 
 export default function ProviderFunction({
@@ -68,7 +64,7 @@ export default function ProviderFunction({
   const [activationToken, setActivationToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
   const [allUsers, setAllUsers] = useState<IAllUsers | null>(null);
-  const [userCount, setUserCount] = useState<IUserCount | 0>(0);
+  const [userTotal, setUserTotal] = useState<number | null>(null);
   const [loadingContext, setLoadingContext] = useState(true);
   const [openAdminSidebar, setOpenAdminSidebar] = useState(false);
 
@@ -90,16 +86,30 @@ export default function ProviderFunction({
       const response = await getAllUsers();
       if (response.success) {
         setAllUsers(response.allUsers);
-        setUserCount(response.userCount);
-        console.log(response.allUsers);
-        console.log(response.userCount);
+        setUserTotal(response.userCount);
+        localStorage.setItem("all_users", JSON.stringify(response.allUsers));
+        localStorage.setItem("user_count", JSON.stringify(response.userCount));
+        //get
+        const storeUsers = localStorage.getItem("all_users");
+        const storeUserCount = localStorage.getItem("user_count");
+        if (storeUsers) {
+          const parsedUsers = JSON.parse(storeUsers);
+          setAllUsers(parsedUsers);
+          console.log(parsedUsers);
+        }
+        if (storeUserCount) {
+          const parsedUserCount = JSON.parse(storeUserCount);
+          setUserTotal(parsedUserCount);
+          console.log(parsedUserCount);
+        }
+      } else {
+        console.log(response.message);
       }
     } catch (error) {
-      if(error instanceof AxiosError) {
+      if (error instanceof AxiosError) {
         console.log(error.response?.status);
-      }
-      else {
-        console.log("Error fetching users");
+      } else {
+        console.log("Error fetching users", error);
       }
     }
   };
@@ -214,8 +224,8 @@ export default function ProviderFunction({
         loadingContext,
         openAdminSidebar,
         setOpenAdminSidebar,
-        userCount,
-        setUserCount,
+        userTotal,
+        setUserTotal,
         allUsers,
         setAllUsers,
       }}
