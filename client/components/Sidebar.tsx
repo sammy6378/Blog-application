@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Home, FileText, Users, Settings, X, Menu } from "lucide-react";
+import { Home, FileText, Users, Settings, X, Menu, LogOut, LogOutIcon, LucideLogOut } from "lucide-react";
 import Link from "next/link";
 import { useContextFunc } from "./context/AppContext";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Loading from "@/app/loading";
 
 function Sidebar() {
-  const { openAdminSidebar, setOpenAdminSidebar } = useContextFunc();
+  const { openAdminSidebar, setOpenAdminSidebar, handleLogout } = useContextFunc();
   const [mount, setMount] = useState(false);
   const pathname = usePathname();
 
@@ -85,6 +85,13 @@ function Sidebar() {
               >
                 <Settings className="mr-4" /> Settings
               </Link>
+              {/* logout button */}
+              <button
+                onClick={handleLogout}
+                className="p-4 cursor-pointer flex items-center mb-1 w-full bg-red-500/90 hover:bg-red-500/80 mt-10"
+              >
+                <LucideLogOut className="mr-4" /> Logout
+              </button>
             </ul>
           </nav>
         </section>
