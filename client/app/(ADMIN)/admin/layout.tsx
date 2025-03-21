@@ -12,8 +12,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div>
             <AdminClientLayout />
             <main className="flex">
-                <div className="w-64">
-                    <Sidebar />
+                <div>
+                <Sidebar />
                 </div>
                 <div className="flex-1">
                     {children}
