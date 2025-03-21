@@ -25,7 +25,7 @@ function HomeGreeting() {
       <h1 className="text-center font-bold text-2xl max-500:text-xl max-300px:text-lg font-josefin">
         Good {greeting} {" "}
         <span className="dark:text-green text-crimson">
-          <br />{userInfo?.name || ""}!
+          <br />{userInfo?.name || ""}
         </span>
       </h1>
     </div>

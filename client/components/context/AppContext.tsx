@@ -17,6 +17,7 @@ import {
 } from "../services/authService";
 import { AxiosError } from "axios";
 import { signOut, useSession } from "next-auth/react";
+import { getAllUsers } from "../services/userService";
 //import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
 
 interface IContext {
@@ -27,7 +28,7 @@ interface IContext {
   handleLogout: () => void;
   userInfo: IUserInfo | null;
   setUserInfo: Dispatch<SetStateAction<IUserInfo | null>>;
-  loadingContext: boolean,
+  loadingContext: boolean;
   openAdminSidebar: boolean;
   setOpenAdminSidebar: (openAdminSidebar: boolean) => void;
 }
@@ -43,6 +44,14 @@ interface IUserInfo {
   isVerified: boolean;
 }
 
+interface IAllUsers {
+  allUsers: IUserInfo[];
+}
+
+interface IUserCount {
+  userCount: number;
+}
+
 export const AppContext = createContext<IContext | undefined>(undefined);
 
 export default function ProviderFunction({
@@ -54,8 +63,10 @@ export default function ProviderFunction({
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [activationToken, setActivationToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
+  const [allUsers, setAllUsers] = useState<IAllUsers | null>(null);
+  const [userCount, setUserCount] = useState<IUserCount | 0>(0);
   const [loadingContext, setLoadingContext] = useState(true);
-   const [openAdminSidebar, setOpenAdminSidebar] = useState(false);
+  const [openAdminSidebar, setOpenAdminSidebar] = useState(false);
 
   //check access token on mount
   useEffect(() => {
@@ -64,9 +75,30 @@ export default function ProviderFunction({
       setAccessToken(access_token);
       updateAccessTokenFunc().then(() => fetchUserInfo());
       //console.log(`usser: ${userInfo}`);
+      getUsers();
     }
     setLoadingContext(false);
   }, []);
+
+  //get all users
+  const getUsers = async () => {
+    try {
+      const response = await getAllUsers();
+      if (response.success) {
+        setAllUsers(response.allUsers);
+        setUserCount(response.userCount);
+        console.log(response.allUsers);
+        console.log(response.userCount);
+      }
+    } catch (error) {
+      if(error instanceof AxiosError) {
+        console.log(error.response?.status);
+      }
+      else {
+        console.log("Error fetching users");
+      }
+    }
+  };
 
   //call update access token service
   const updateAccessTokenFunc = async () => {
@@ -177,7 +209,7 @@ export default function ProviderFunction({
         setUserInfo,
         loadingContext,
         openAdminSidebar,
-        setOpenAdminSidebar
+        setOpenAdminSidebar,
       }}
     >
       {children}

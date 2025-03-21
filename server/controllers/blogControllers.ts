@@ -272,6 +272,7 @@ export const getBlogs = catchAsyncErrors(
 
       // get all blogs
       const blogs = await blogModel.find();
+      const blogCount = await blogModel.countDocuments();
 
       if (!blogs) {
         return next(new ErrorHandler("Blogs not found", 404));
@@ -279,7 +280,7 @@ export const getBlogs = catchAsyncErrors(
 
       res
         .status(200)
-        .json({ succes: true, blogs, message: "Blogs fetched succefully" });
+        .json({ succes: true, blogs, blogCount, message: "Blogs fetched succefully" });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }

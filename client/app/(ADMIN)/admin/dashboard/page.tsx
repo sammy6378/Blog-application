@@ -27,6 +27,13 @@ function Page() {
           <br />{userInfo?.name || ""}!
         </span>
       </h1>
+
+      <section>
+        <div>
+          <span>Users</span>
+          <span>{}</span>
+        </div>
+      </section>
     </div>
   );
 }
