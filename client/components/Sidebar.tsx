@@ -26,7 +26,7 @@ function Sidebar() {
       {/* Sidebar */}
       <OutsideClickHandler onOutsideClick={() => setOpenAdminSidebar(false)}>
       <section
-        className={`sticky top-0 bottom-0 left-0 h-screen dark:bg-gray-900 bg-slate-100 w-64 transform transition-transform max-700:translate-x-0 z-[900] max-700:static mr-[20px] 700:mr-0 ${!openAdminSidebar && "max-700:-translate-x-full"} ${!openAdminSidebar && "max-700:hidden"} `}
+        className={`sticky top-0 bottom-0 left-0 h-screen dark:bg-gray-900 bg-slate-100 w-64 transform transition-transform max-700:translate-x-0 z-[900] mr-[20px] max-700:mr-0 max-700:absolute max-700:top-[80px] ${!openAdminSidebar && "max-700:-translate-x-full"} ${!openAdminSidebar && "max-700:hidden"} `}
       >
         <div className="flex items-center justify-between h-16 px-4">
           <h1 className="text-2xl max-500:text-lg font-bold">Bloogify</h1>
