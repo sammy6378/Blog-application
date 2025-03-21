@@ -68,12 +68,12 @@ function Sidebar() {
       </section>
 </OutsideClickHandler>
       {/* Overlay for small screens */}
-      {/*   {openAdminSidebar && (
+        {openAdminSidebar && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 700:hidden"
           onClick={() => setOpenAdminSidebar(false)}
         ></div>
-      )} */}
+      )}
     </div>
   );
 }
