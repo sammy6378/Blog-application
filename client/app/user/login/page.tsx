@@ -74,7 +74,7 @@ const Login = () => {
       const response = await authLogin(values);
       if (response.success) {
         const redirectUrl =
-          new URLSearchParams(window.location.search).get("redirect") as string;
+          new URLSearchParams(window.location.search).get("redirect") || "/";
         router.push(redirectUrl);
         toast.success(response.message);
         setAccessToken(response.accessToken);
