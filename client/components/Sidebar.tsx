@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Home, FileText, Users, Settings, X, Menu } from 'lucide-react'
-import Link from 'next/Link'
+import Link from 'next/link'
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
