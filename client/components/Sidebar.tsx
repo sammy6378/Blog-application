@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Home, FileText, Users, Settings, X, Menu } from "lucide-react";
 import Link from "next/link";
 import { useContextFunc } from "./context/AppContext";
+import OutsideClickHandler from 'react-outside-click-handler'
 
 function Sidebar() {
   const { openAdminSidebar, setOpenAdminSidebar } = useContextFunc();
@@ -23,6 +24,7 @@ function Sidebar() {
         <Menu className="sticky top-[90px] z-[900] mr-[20px] m-[16px] cursor-pointer" onClick={() => setOpenAdminSidebar(true)} /></div>
       )}
       {/* Sidebar */}
+      <OutsideClickHandler onOutsideClick={() => setOpenAdminSidebar(false)}>
       <section
         className={`sticky top-0 bottom-0 left-0 h-screen dark:bg-gray-900 bg-slate-100 w-64 transform transition-transform max-700:translate-x-0 z-[900] max-700:static mr-[20px] 700:mr-0 ${!openAdminSidebar && "max-700:-translate-x-full"} ${!openAdminSidebar && "max-700:hidden"} `}
       >
@@ -64,7 +66,7 @@ function Sidebar() {
           </ul>
         </nav>
       </section>
-
+</OutsideClickHandler>
       {/* Overlay for small screens */}
       {/*   {openAdminSidebar && (
         <div
