@@ -1,23 +1,37 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Home, FileText, Users, Settings, X, Menu } from "lucide-react";
 import Link from "next/link";
+import { useContextFunc } from "./context/AppContext";
 
 function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { openAdminSidebar, setOpenAdminSidebar } = useContextFunc();
+  const [mount, setMount] = useState(false);
+
+  useEffect(() => {
+    setMount(true);
+  }, []);
+
+  if (!mount) return null;
 
   return (
-    <div>
+    <div className="">
+      {/* open sidebar */}
+      {!openAdminSidebar && (
+        <div title="open sidebar">
+        <Menu className="sticky top-[90px] z-[900] mr-[20px] m-[16px] cursor-pointer" onClick={() => setOpenAdminSidebar(true)} /></div>
+      )}
       {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-screen dark:bg-gray-900 bg-slate-100 w-64 transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform md:translate-x-0 md:static md:w-64`}
+      <section
+        className={`sticky top-0 bottom-0 left-0 h-screen dark:bg-gray-900 bg-slate-100 w-64 transform transition-transform max-700:translate-x-0 z-[900] max-700:static mr-[20px] 700:mr-0 ${!openAdminSidebar && "max-700:-translate-x-full"} ${!openAdminSidebar && "hidden"} `}
       >
         <div className="flex items-center justify-between h-16 px-4">
-          <div className="text-2xl font-bold">Bloogify</div>
-          <button className="md:hidden" onClick={() => setIsOpen(false)}>
+          <h1 className="text-2xl max-500:text-lg font-bold">Bloogify</h1>
+          <button
+            className="700:hidden"
+            onClick={() => setOpenAdminSidebar(false)}
+          >
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -25,39 +39,39 @@ function Sidebar() {
           <ul>
             <Link
               href={"/admin/dashboard"}
-              className="p-4 hover:bg-gray-800 cursor-pointer flex items-center"
+              className="p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center"
             >
               <Home className="mr-4" /> Dashboard
             </Link>
             <Link
               href={"/admin/dashboard/users"}
-              className="p-4 hover:bg-gray-800 cursor-pointer flex items-center"
+              className="p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center"
             >
               <Users className="mr-4" /> Users
             </Link>
             <Link
               href={"/admin/dashboard/blogs"}
-              className="p-4 hover:bg-gray-800 cursor-pointer flex items-center"
+              className="p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center"
             >
               <FileText className="mr-4" /> Blogs
             </Link>
             <Link
               href={"/admin/dashboard/settings"}
-              className="p-4 hover:bg-gray-800 cursor-pointer flex items-center"
+              className="p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center"
             >
               <Settings className="mr-4" /> Settings
             </Link>
           </ul>
         </nav>
-      </div>
+      </section>
 
       {/* Overlay for small screens */}
-      {isOpen && (
+      {/*   {openAdminSidebar && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 md:hidden"
-          onClick={() => setIsOpen(false)}
+          onClick={() => setOpenAdminSidebar(false)}
         ></div>
-      )}
+      )} */}
     </div>
   );
 }

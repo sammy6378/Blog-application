@@ -70,7 +70,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 mb-1 border-b h-[80px] font-poppins sticky top-0 bg-opacity-[95%] z-[9999] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200"} ${(pathname === "/user/login" || pathname === "/user/register" || pathname === "/user/activate-user") && "hidden"}`}
+      className={`w-[100%] dark:bg-gradient-to-b dark:from-gray-900 dark:to-black bg-white transition duration-500 border-b h-[80px] font-poppins fixed top-0 right-0 left-0 bg-opacity-[95%] z-[9999] ${active ? "dark:shadow-white/20 shadow-black/50 shadow-md -translate-y-4 duration-100" : "dark:shadow-white/20 shadow-black/50 shadow translate-y-0 duration-200"} ${(pathname === "/user/login" || pathname === "/user/register" || pathname === "/user/activate-user") && "hidden"}`}
     >
       <section className="flex justify-between items-center h-full w-[95%] mx-auto">
         <Link href="/">
@@ -90,8 +90,8 @@ export default function Navbar() {
               <ul className="flex items-center justify-center place-self-center">
                 <li className="max-700:mt-2 max-700:mb-2">
                   <Link
-                    href={"/admin"}
-                    className={`hover:text-crimson dark:hover:text-white transition font-medium ${pathname === "/admin" && "text-green"}`}
+                    href={"/admin/dashboard"}
+                    className={`hover:text-crimson dark:hover:text-white transition font-medium ${pathname === "/admin/dashboard" && "text-green"}`}
                   >
                     Dashboard
                   </Link>
@@ -160,7 +160,7 @@ export default function Navbar() {
                 {userInfo?.role === "admin" && (
                   <li className="max-700:mb-5">
                     <Link
-                      href={"/admin"}
+                      href={"/admin/dashboard"}
                       className={`hover:text-crimson dark:hover:text-green transition`}
                       onClick={() => setBar(false)}
                     >

@@ -28,6 +28,8 @@ interface IContext {
   userInfo: IUserInfo | null;
   setUserInfo: Dispatch<SetStateAction<IUserInfo | null>>;
   loadingContext: boolean,
+  openAdminSidebar: boolean;
+  setOpenAdminSidebar: (openAdminSidebar: boolean) => void;
 }
 
 interface IUserInfo {
@@ -53,6 +55,7 @@ export default function ProviderFunction({
   const [activationToken, setActivationToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
   const [loadingContext, setLoadingContext] = useState(true);
+   const [openAdminSidebar, setOpenAdminSidebar] = useState(false);
 
   //check access token on mount
   useEffect(() => {
@@ -172,7 +175,9 @@ export default function ProviderFunction({
         handleLogout,
         userInfo,
         setUserInfo,
-        loadingContext
+        loadingContext,
+        openAdminSidebar,
+        setOpenAdminSidebar
       }}
     >
       {children}
