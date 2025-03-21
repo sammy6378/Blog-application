@@ -1,8 +1,9 @@
+
 "use client";
 import { useContextFunc } from "@/components/context/AppContext";
 import React, { useEffect, useState } from "react";
 
-function Page() {
+function HomeGreeting() {
   const { userInfo } = useContextFunc();
   const [greeting, setGreeting] = useState("");
 
@@ -22,7 +23,7 @@ function Page() {
   return (
     <div className="p-8">
       <h1 className="text-center font-bold text-2xl max-500:text-xl max-300px:text-lg font-josefin">
-        Good {greeting} Admin{" "}
+        Good {greeting} {" "}
         <span className="dark:text-green text-crimson">
           <br />{userInfo?.name || ""}!
         </span>
@@ -30,4 +31,4 @@ function Page() {
     </div>
   );
 }
-export default Page;
+export default HomeGreeting;
