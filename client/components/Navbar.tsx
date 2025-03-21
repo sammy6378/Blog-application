@@ -87,7 +87,7 @@ export default function Navbar() {
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
             {/* admin */}
             {pathname.startsWith("/admin") ? (
-              <ul className="flex items-center justify-center place-self-center">
+            /*   <ul className="flex items-center justify-center place-self-center">
                 <li className="max-700:mt-2 max-700:mb-2">
                   <Link
                     href={"/admin/dashboard"}
@@ -96,7 +96,8 @@ export default function Navbar() {
                     Dashboard
                   </Link>
                 </li>
-              </ul>
+              </ul> */
+              <></>
             ) : (
               /* user */
               <ul
