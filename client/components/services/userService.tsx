@@ -54,3 +54,19 @@ export const updatePassword = async(data: {oldPassword: string, newPassword: str
           } 
     }
 }
+
+//get all users
+export const getAllUsers = async () => {
+  try {
+    const response = await createApi.get("/user/get-users", {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw error;
+    } else {
+      throw new Error("Error occurred fetching users");
+    }
+  }
+};

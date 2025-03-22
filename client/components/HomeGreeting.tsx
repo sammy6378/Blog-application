@@ -1,11 +1,10 @@
+
 "use client";
 import { useContextFunc } from "@/components/context/AppContext";
-import AdminProtected from "@/components/utils/protected/AdminProtected";
-import Protected from "@/components/utils/protected/Protected";
 import React, { useEffect, useState } from "react";
 
-function Page() {
-  const { userInfo, userTotal, blogCount } = useContextFunc();
+function HomeGreeting() {
+  const { userInfo } = useContextFunc();
   const [greeting, setGreeting] = useState("");
 
   const hour = new Date().getHours();
@@ -22,32 +21,14 @@ function Page() {
   }, [hour]);
 
   return (
-    <Protected>
-    <AdminProtected>
     <div className="p-8">
       <h1 className="text-center font-bold text-2xl max-500:text-xl max-300px:text-lg font-josefin">
-        Good {greeting} Admin{" "}
+        Good {greeting} {" "}
         <span className="dark:text-green text-crimson">
-          <br />{userInfo?.name || ""}!
+          <br />{userInfo?.name || ""}
         </span>
       </h1>
-
-      <section>
-        {/* users */}
-        <div>
-          <span>Users</span>
-          <span>{userTotal || 0}</span>
-        </div>
-
-        {/* blogs */}
-        <div>
-          <span>Blogs</span>
-          <span>{blogCount || 0}</span>
-        </div>
-      </section>
     </div>
-    </AdminProtected>
-    </Protected>
   );
 }
-export default Page;
+export default HomeGreeting;

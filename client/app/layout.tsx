@@ -58,6 +58,7 @@ export default function RootLayout({
           <ProviderFunction>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <Navbar />
+              <div className="h-[80px]"></div>
               <main>{children}</main>
               <Toaster />
             </ThemeProvider>

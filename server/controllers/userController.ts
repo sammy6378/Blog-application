@@ -569,7 +569,9 @@ export const GetAllUsers = catchAsyncErrors(
         .find()
         .select("-password")
         .sort({ createdAt: -1 });
-      res.status(200).json({ success: true, allUsers });
+
+        const userCount = await userModel.countDocuments();
+      res.status(200).json({ success: true, allUsers, userCount });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
