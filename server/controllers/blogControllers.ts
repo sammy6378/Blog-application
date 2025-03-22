@@ -280,7 +280,7 @@ export const getBlogs = catchAsyncErrors(
 
       res
         .status(200)
-        .json({ succes: true, blogs, blogCount, message: "Blogs fetched succefully" });
+        .json({ success: true, blogs, blogCount, message: "Blogs fetched succefully" });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }

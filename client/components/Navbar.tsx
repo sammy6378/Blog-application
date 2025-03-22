@@ -87,7 +87,7 @@ export default function Navbar() {
           <OutsideClickHandler onOutsideClick={() => setBar(false)}>
             {/* admin */}
             {pathname.startsWith("/admin") ? (
-            /*   <ul className="flex items-center justify-center place-self-center">
+              /*   <ul className="flex items-center justify-center place-self-center">
                 <li className="max-700:mt-2 max-700:mb-2">
                   <Link
                     href={"/admin/dashboard"}
@@ -270,6 +270,7 @@ export default function Navbar() {
                     alt="avatar"
                     width={30}
                     height={30}
+                    priority
                     className={`w-[32px] h-[32px] rounded-full object-cover hover:border hover:border-crimson hover:dark:border-[#37a39a] ${pathname === "/admin/profile" && "border-2 border-crimson dark:border-[#37a39a] "}`}
                     unoptimized
                   />

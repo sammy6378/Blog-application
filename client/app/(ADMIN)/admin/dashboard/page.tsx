@@ -5,7 +5,7 @@ import Protected from "@/components/utils/protected/Protected";
 import React, { useEffect, useState } from "react";
 
 function Page() {
-  const { userInfo, userTotal } = useContextFunc();
+  const { userInfo, userTotal, blogCount } = useContextFunc();
   const [greeting, setGreeting] = useState("");
 
   const hour = new Date().getHours();
@@ -33,9 +33,16 @@ function Page() {
       </h1>
 
       <section>
+        {/* users */}
         <div>
           <span>Users</span>
           <span>{userTotal || 0}</span>
+        </div>
+
+        {/* blogs */}
+        <div>
+          <span>Blogs</span>
+          <span>{blogCount || 0}</span>
         </div>
       </section>
     </div>

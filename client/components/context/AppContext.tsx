@@ -18,6 +18,7 @@ import {
 import { AxiosError } from "axios";
 import { signOut } from "next-auth/react";
 import { getAllUsers } from "../services/userService";
+import { getAllBlogs } from "../services/blogService";
 //import { useAxiosInterceptor } from "../utils/axiosProtectedApi";
 
 interface IContext {
@@ -35,6 +36,10 @@ interface IContext {
   setAllUsers: (allUsers: IAllUsers | null) => void;
   userTotal: number | null;
   setUserTotal: Dispatch<SetStateAction<number | null>>;
+  blogs: IBlog[] | null;
+  setBlogs: Dispatch<SetStateAction<IBlog[] | null>>,
+  blogCount: number | null,
+  setBlogCount:  Dispatch<SetStateAction<number | null>>,
 }
 
 interface IUserInfo {
@@ -52,6 +57,41 @@ interface IAllUsers {
   allUsers: IUserInfo[];
 }
 
+interface IBlog {
+  _id: string;
+  title: string;
+  description: string;
+  body: string;
+  rating: number;
+  likes: number;
+  dislikes: number;
+  category: string;
+  author: {
+    avatar: {
+      public_id: string;
+      url: string;
+    };
+    _id: string;
+    name: string;
+    email: string;
+    isVerified: boolean;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  videos: any[]; // Adjust this type if you know the structure of videos
+  reviews: any[]; // Adjust this type if you know the structure of reviews
+  links: {
+    title: string;
+    url: string;
+    _id: string;
+  }[];
+  comments: any[]; // Adjust this type if you know the structure of comments
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const AppContext = createContext<IContext | undefined>(undefined);
 
 export default function ProviderFunction({
@@ -65,6 +105,8 @@ export default function ProviderFunction({
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
   const [allUsers, setAllUsers] = useState<IAllUsers | null>(null);
   const [userTotal, setUserTotal] = useState<number | null>(null);
+  const [blogs, setBlogs] = useState<IBlog[] | null>(null);
+  const [blogCount, setBlogCount] = useState<number | null>(null);
   const [loadingContext, setLoadingContext] = useState(true);
   const [openAdminSidebar, setOpenAdminSidebar] = useState(false);
 
@@ -75,10 +117,14 @@ export default function ProviderFunction({
       setAccessToken(access_token);
       updateAccessTokenFunc().then(() => fetchUserInfo());
       //console.log(`usser: ${userInfo}`);
+      getBlogsFunc();
       getUsers();
+      
+
     }
     setLoadingContext(false);
   }, []);
+
 
   //get all users
   const getUsers = async () => {
@@ -87,20 +133,20 @@ export default function ProviderFunction({
       if (response.success) {
         setAllUsers(response.allUsers);
         setUserTotal(response.userCount);
-        localStorage.setItem("all_users", JSON.stringify(response.allUsers));
-        localStorage.setItem("user_count", JSON.stringify(response.userCount));
+        sessionStorage.setItem("all_users", JSON.stringify(response.allUsers));
+        sessionStorage.setItem("user_count", JSON.stringify(response.userCount));
         //get
-        const storeUsers = localStorage.getItem("all_users");
-        const storeUserCount = localStorage.getItem("user_count");
+        const storeUsers = sessionStorage.getItem("all_users");
+        const storeUserCount = sessionStorage.getItem("user_count");
         if (storeUsers) {
           const parsedUsers = JSON.parse(storeUsers);
           setAllUsers(parsedUsers);
-          console.log(parsedUsers);
+         // console.log(parsedUsers);
         }
         if (storeUserCount) {
           const parsedUserCount = JSON.parse(storeUserCount);
           setUserTotal(parsedUserCount);
-          console.log(parsedUserCount);
+          //console.log(parsedUserCount);
         }
       } else {
         console.log(response.message);
@@ -113,6 +159,44 @@ export default function ProviderFunction({
       }
     }
   };
+
+  
+  //get all blogs
+  const getBlogsFunc = async() => {
+    try {
+      const response = await getAllBlogs();
+      if(response.success) {
+        setBlogs(response.blogs)
+        setBlogCount(response.blogCount);
+
+        //try session storage
+        sessionStorage.setItem("all_blogs", JSON.stringify(response.blogs));
+        sessionStorage.setItem("blog_count", JSON.stringify(response.blogCount));
+        //get
+        const storeBlogs = sessionStorage.getItem("all_blogs");
+        const storeBlogCount = sessionStorage.getItem("blog_count");
+        if (storeBlogs) {
+          const parsedBlogs = JSON.parse(storeBlogs);
+          setBlogs(parsedBlogs);
+          console.log(parsedBlogs);
+        }
+        if (storeBlogCount) {
+          const parsedBlogCount = JSON.parse(storeBlogCount);
+          setBlogCount(parsedBlogCount);
+          console.log(parsedBlogCount);
+        }
+      }
+      else {
+        console.log(response.message);
+      }
+    } catch (error) {
+      if(error instanceof AxiosError) {
+        console.log(error.response?.data.message);
+      } else {
+        console.log("Error fetching blogs");
+      }
+    }
+  }
 
   //call update access token service
   const updateAccessTokenFunc = async () => {
@@ -148,7 +232,7 @@ export default function ProviderFunction({
         const user_info = localStorage.getItem("user");
         if (user_info) {
           setUserInfo(JSON.parse(user_info));
-          console.log(user_info);
+         // console.log(user_info);
         }
       } else {
         console.log(response.message);
@@ -204,7 +288,7 @@ export default function ProviderFunction({
         }
       } else {
         toast.error("oops... error occurred on logout");
-        console.log(error.response.status);
+        console.log(error?.response?.status);
       }
     }
   };
@@ -228,6 +312,10 @@ export default function ProviderFunction({
         setUserTotal,
         allUsers,
         setAllUsers,
+        blogCount,
+        setBlogCount,
+        blogs,
+        setBlogs
       }}
     >
       {children}
