@@ -5,7 +5,7 @@ import { IBlogs } from "../page";
 import { useParams } from "next/navigation";
 import { myBlogs } from "../page";
 
-export const BlogDetails: React.FC = () => {
+const BlogDetails: React.FC = () => {
   const params = useParams(); // Correctly retrieve params object
   const id = params?.id; // Safely extract the id parameter
 
@@ -45,7 +45,7 @@ export const BlogDetails: React.FC = () => {
   }
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <div className="p-4 max-w-4xl mx-auto mb-[80px] max-700:mb-[150px]">
       <h1 className="text-2xl font-bold mb-4">Blog Details</h1>
       <input
         type="text"

@@ -26,7 +26,7 @@ export interface IBlogs {
   tags: string[];
 }
 
-export const myBlogs = [
+const myBlogs = [
   {
     id: 1,
     title: "First Blog",
@@ -88,7 +88,7 @@ function BlogPage() {
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-8 max-w-4xl mx-auto mb-[80px] max-700:mb-[150px]">
       <button
         onClick={handleCreateBlog}
         className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
@@ -147,4 +147,5 @@ function BlogPage() {
   );
 }
 
+export {myBlogs}
 export default BlogPage;

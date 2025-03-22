@@ -119,8 +119,6 @@ export default function ProviderFunction({
       //console.log(`usser: ${userInfo}`);
       getBlogsFunc();
       getUsers();
-      
-
     }
     setLoadingContext(false);
   }, []);
