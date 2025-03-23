@@ -74,10 +74,9 @@ function BlogPage() {
 
   const [blogs, setBlogs] = useState<IBlogs[]>(myBlogs);
 
-  const [selectedBlog, setSelectedBlog] = useState<IBlogs | null>(null);
 
   const handleCreateBlog = () => {
-    setSelectedBlog(null); // Reset selected blog for creation
+    router.push("/admin/dashboard/blogs/new"); // Navigate to blog creation page
   };
 
   const handleEditBlog = (blog: IBlogs) => {
