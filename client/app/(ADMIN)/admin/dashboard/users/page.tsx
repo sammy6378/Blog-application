@@ -3,40 +3,34 @@
 import  {useState} from 'react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-interface IUser{
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
+import { IAllUsers, IUserInfo, useContextFunc } from '@/components/context/AppContext';
 
 const Page = () => {
-
-  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const { allUsers }= useContextFunc();
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
-    const [users, setUsers] = useState<IUser[]>([
+/*     const [users, setUsers] = useState<any[]>([
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
     { id: 3, name: 'Sam Smith', email: 'sam@example.com', role: 'user' },
-  ]);
+  ]); 
+  */
 
- 
 
-  const handleEditUser = (user:IUser) => {
+  const handleEditUser = (user:any) => {
     setSelectedUser(user);
     setIsFormVisible(true); // Show the form
   };
 
-  const handleDeleteUser = (id:number) => {
+/*   const handleDeleteUser = (id:number) => {
     setUsers(users.filter((user) => user.id !== id)); // Delete user
     toast.success('User deleted successfully');
-  };
+  }; */
 
   return (
-    <div className="p-8 mb-[80px] max-700:mb-[150px]">
-      <table className="w-full border-collapse rounded-lg overflow-hidden shadow-md">
+    <div className="p-8 mb-[80px] max-700:mb-[150px] overflow-x-auto">
+      <table className="w-full rounded-lg">
         <thead>
           <tr className="bg-gray-100 text-gray-700">
             <th className="px-4 py-3 border">ID</th>
@@ -47,23 +41,24 @@ const Page = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="border-t hover:bg-gray-800">
-              <td className="px-4 py-3 border">{user.id}</td>
+          {(allUsers as unknown as IUserInfo[]) ?.map((user: IUserInfo, index: number) => (
+            <tr key={user._id} className="border-t dark:hover:bg-gray-800 hover:bg-gray-100">
+              <td className="px-4 py-3 border">{index + 1}</td>
               <td className="px-4 py-3 border">{user.name}</td>
-              <td className="px-4 py-3 border">{user.email}</td>
+              <td className="px-4 py-3 border">
+                <a href={`mailto:${user.email}`}>{user.email}</a></td>
               <td className="px-4 py-3 border">{user.role}</td>
-              <td className="px-4 py-3 border flex justify-between items-center">
+              <td className="px-4 py-3 border">
+                <div className='flex justify-between'>
                 <button
                 onClick={() => handleEditUser(user)}
                  className="text-blue-500 hover:text-blue-700">
-                  <PencilIcon size={18} />
+                  <PencilIcon size={18}/>
                 </button>
                 <button 
-                onClick={() => handleDeleteUser(user.id)}
                 className="text-red-500 hover:text-red-700">
                   <TrashIcon size={18} />
-                </button>
+                </button></div>
               </td>
             </tr>
           ))}
