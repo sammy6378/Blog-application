@@ -150,9 +150,9 @@ function Page() {
               <Link href={'/admin/dashboard/blogs/create-blog'} className="px-4 py-2 dark:bg-white bg-slate-100 dark:text-black shadow-sm shadow-slate-600  rounded-md hover:bg-green-600 hover:dark:bg-slate-200 hover:bg-slate-200 transition">
                 Create New Blog
               </Link>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
+              <Link href={'/admin/dashboard/users'} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
                 Manage Users
-              </button>
+              </Link>
               <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
                 View Reports
               </button>
