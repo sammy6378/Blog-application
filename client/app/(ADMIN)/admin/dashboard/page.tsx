@@ -65,6 +65,24 @@ function Page() {
               {userInfo?.name || ""}!
             </span>
           </h1>
+          {/* Admin Notifications */}
+          <section className="mt-8 mb-2">
+            <h2 className="text-xl font-bold mb-4">Notifications</h2>
+            <div className="flex flex-col gap-4">
+              <div className="p-4 bg-yellow-100 dark:bg-yellow-900 rounded-md shadow">
+                <p className="text-sm">
+                  User verification request from{" "}
+                  <span className="font-semibold">Jane Doe</span>
+                </p>
+              </div>
+              <div className="p-4 bg-red-100 dark:bg-red-900 rounded-md shadow">
+                <p className="text-sm">
+                  Flagged comment on blog:{" "}
+                  <span className="font-semibold">"React Best Practices"</span>
+                </p>
+              </div>
+            </div>
+          </section>
           {/* display total users and blogs */}
           <section className="flex items-center justify-between 700:justify-center 800:gap-[25%] gap-[20px] my-[50px] max-500:flex-col">
             {/* users */}
@@ -128,7 +146,7 @@ function Page() {
           {/* Quick Actions */}
           <section className="mt-8">
             <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-            <div className="flex gap-4">
+            <div className="flex gap-4 max-500:flex-col">
               <Link href={'/admin/dashboard/blogs/create-blog'} className="px-4 py-2 dark:bg-white bg-slate-100 dark:text-black shadow-sm shadow-slate-600  rounded-md hover:bg-green-600 hover:dark:bg-slate-200 hover:bg-slate-200 transition">
                 Create New Blog
               </Link>
@@ -155,25 +173,6 @@ function Page() {
                   </p>
                 </div>
               ))}
-            </div>
-          </section>
-
-          {/* Admin Notifications */}
-          <section className="mt-8 mb-2">
-            <h2 className="text-xl font-bold mb-4">Notifications</h2>
-            <div className="flex flex-col gap-4">
-              <div className="p-4 bg-yellow-100 dark:bg-yellow-900 rounded-md shadow">
-                <p className="text-sm">
-                  User verification request from{" "}
-                  <span className="font-semibold">Jane Doe</span>
-                </p>
-              </div>
-              <div className="p-4 bg-red-100 dark:bg-red-900 rounded-md shadow">
-                <p className="text-sm">
-                  Flagged comment on blog:{" "}
-                  <span className="font-semibold">"React Best Practices"</span>
-                </p>
-              </div>
             </div>
           </section>
         </div>
