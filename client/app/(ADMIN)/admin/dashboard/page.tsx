@@ -65,24 +65,7 @@ function Page() {
               {userInfo?.name || ""}!
             </span>
           </h1>
-          {/* Admin Notifications */}
-          <section className="mt-8 mb-2">
-            <h2 className="text-xl font-bold mb-4">Notifications</h2>
-            <div className="flex flex-col gap-4">
-              <div className="p-4 bg-yellow-100 dark:bg-yellow-900 rounded-md shadow">
-                <p className="text-sm">
-                  User verification request from{" "}
-                  <span className="font-semibold">Jane Doe</span>
-                </p>
-              </div>
-              <div className="p-4 bg-red-100 dark:bg-red-900 rounded-md shadow">
-                <p className="text-sm">
-                  Flagged comment on blog:{" "}
-                  <span className="font-semibold">"React Best Practices"</span>
-                </p>
-              </div>
-            </div>
-          </section>
+  
           {/* display total users and blogs */}
           <section className="flex items-center justify-between 700:justify-center 800:gap-[25%] gap-[20px] my-[50px] max-500:flex-col">
             {/* users */}
@@ -99,6 +82,25 @@ function Page() {
               <span className="dark:text-green text-crimson">
                 {blogCount || 0}
               </span>
+            </div>
+          </section>
+
+                  {/* Admin Notifications */}
+                  <section className="mt-8 mb-2">
+            <h2 className="text-xl font-bold mb-4">Notifications</h2>
+            <div className="flex flex-col gap-4">
+              <div className="p-4 bg-yellow-100 dark:bg-yellow-900 rounded-md shadow">
+                <p className="text-sm">
+                  User verification request from{" "}
+                  <span className="font-semibold">Jane Doe</span>
+                </p>
+              </div>
+              <div className="p-4 bg-red-100 dark:bg-red-900 rounded-md shadow">
+                <p className="text-sm">
+                  Flagged comment on blog:{" "}
+                  <span className="font-semibold">"React Best Practices"</span>
+                </p>
+              </div>
             </div>
           </section>
 
