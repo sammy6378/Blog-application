@@ -35,7 +35,7 @@ const Page = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8 mb-[80px] max-700:mb-[150px]">
       <table className="w-full border-collapse rounded-lg overflow-hidden shadow-md">
         <thead>
           <tr className="bg-gray-100 text-gray-700">

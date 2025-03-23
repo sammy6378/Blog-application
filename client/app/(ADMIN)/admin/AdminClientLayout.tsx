@@ -9,6 +9,9 @@ export default function AdminClientLayout() {
         if(userInfo && userInfo.email) {
             document.title = `Admin-${userInfo.email}`;
         }
+        else {
+            document.title = "Admin Bloogy";
+        }
     }, [userInfo])
     return null
 }
