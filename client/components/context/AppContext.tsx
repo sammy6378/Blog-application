@@ -42,7 +42,8 @@ interface IContext {
   setBlogCount:  Dispatch<SetStateAction<number | null>>,
 }
 
-interface IUserInfo {
+export interface IUserInfo {
+  _id: string,
   avatar: {
     public_id: string;
     url: string;
@@ -53,7 +54,7 @@ interface IUserInfo {
   isVerified: boolean;
 }
 
-interface IAllUsers {
+export interface IAllUsers {
   allUsers: IUserInfo[];
 }
 
