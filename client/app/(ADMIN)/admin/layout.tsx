@@ -27,7 +27,7 @@ export default function AdminLayout({
     <AdminProtected>
       <div>
       <AdminClientLayout />
-      <main className="flex justify-between">
+      <main className="flex justify-between font-poppins">
         <Sidebar />
 
         <div className={`flex-1 700:ml-64 ml-[30px] fixed right-0 left-0 top-[80px] max-700:top-[150px]  p-4 overflow-y-auto h-screen ${pathname === '/admin/profile' && "max-700:top-[40px]"}`}>{children}</div>

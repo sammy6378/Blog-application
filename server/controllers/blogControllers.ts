@@ -91,6 +91,127 @@ export const addBlog = catchAsyncErrors(
   }
 );
 
+//add links
+export const AddLinks = catchAsyncErrors(async(req: Request,res: Response, next: NextFunction) => {
+  try {
+    const {links, blogId} = req.body;
+    if(!Array.isArray(links)) {
+      return next(new ErrorHandler("Links must be array", 400));
+    }
+
+    const linkData: any = links.map((link) => ({
+      title: link.title,
+      url: link.url,
+    }))
+
+    const user = await userModel.findById(req.user?._id);
+    if(!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+    const blog = await blogModel.findById(blogId) as IBlog;
+    if(!blog) {
+      return next(new ErrorHandler("Blog not found", 404));
+    }
+
+    blog.links = linkData;
+    await blog.save();
+   
+    res.status(200).json({success: true, blog});
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
+
+//update links
+export const UpdateLinks = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {links, blogId} = req.body;
+    if(!Array.isArray(links)) {
+      return next(new ErrorHandler("Links must be array", 400));
+    }
+
+    const linkData = links.map((link) => ({
+      title: link.title,
+      url: link.url,
+    }))
+
+    const user = await userModel.findById(req.user?._id);
+    if(!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+    const blog = await blogModel.findById(blogId);
+    if(!blog) {
+      return next(new ErrorHandler("Blog not found", 404));
+    }
+
+    const updatedBlog = await blogModel.findByIdAndUpdate(blogId, {
+      links: linkData,
+    }, {new: true});
+    res.status(200).json({success: true, updatedBlog});
+    
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
+
+//add tags ---only for admin
+export const addTag = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { tag, blogId } = req.body;
+      const userId = req.user?._id;
+      // const blogId = req.params.id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
+
+      //check if tag is provided
+      if (!tag) {
+        return next(new ErrorHandler("Tag is required", 400));
+      }
+
+      blog.tags.push({ tag } as ITag);
+      await blog.save();
+
+      res
+        .status(200)
+        .json({ success: true, tags: blog.tags, message: "Tag added" });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//delete tag
+export const deleteTag = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { blogId, tagId } = req.body;
+      const userId = req.user?._id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+      const blog = await blogModel.findById(blogId);
+      if (!blog) {
+        return next(new ErrorHandler("Blog not found", 404));
+      }
+
+      blog.tags = blog.tags.filter((t) => (t._id as string) !== tagId);
+      await blog.save();
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
 //Update Blog
 export const updateBlog = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -281,63 +402,6 @@ export const getBlogs = catchAsyncErrors(
       res
         .status(200)
         .json({ success: true, blogs, blogCount, message: "Blogs fetched succefully" });
-    } catch (error: any) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  }
-);
-
-//add tags ---only for admin
-export const addTag = catchAsyncErrors(
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { tag, blogId } = req.body;
-      const userId = req.user?._id;
-      // const blogId = req.params.id;
-      const user = await userModel.findById(userId);
-      if (!user) {
-        return next(new ErrorHandler("User not found", 404));
-      }
-
-      const blog = await blogModel.findById(blogId);
-      if (!blog) {
-        return next(new ErrorHandler("Blog not found", 404));
-      }
-
-      //check if tag is provided
-      if (!tag) {
-        return next(new ErrorHandler("Tag is required", 400));
-      }
-
-      blog.tags.push({ tag } as ITag);
-      await blog.save();
-
-      res
-        .status(200)
-        .json({ success: true, tags: blog.tags, message: "Tag added" });
-    } catch (error: any) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  }
-);
-
-//delete tag
-export const deleteTag = catchAsyncErrors(
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { blogId, tagId } = req.body;
-      const userId = req.user?._id;
-      const user = await userModel.findById(userId);
-      if (!user) {
-        return next(new ErrorHandler("User not found", 404));
-      }
-      const blog = await blogModel.findById(blogId);
-      if (!blog) {
-        return next(new ErrorHandler("Blog not found", 404));
-      }
-
-      blog.tags = blog.tags.filter((t) => (t._id as string) !== tagId);
-      await blog.save();
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -667,69 +731,6 @@ export const BlogDislikes = catchAsyncErrors(
     }
   }
 );
-//add links
-export const AddLinks = catchAsyncErrors(async(req: Request,res: Response, next: NextFunction) => {
-  try {
-    const {links, blogId} = req.body;
-    if(!Array.isArray(links)) {
-      return next(new ErrorHandler("Links must be array", 400));
-    }
-
-    const linkData: any = links.map((link) => ({
-      title: link.title,
-      url: link.url,
-    }))
-
-    const user = await userModel.findById(req.user?._id);
-    if(!user) {
-      return next(new ErrorHandler("User not found", 404));
-    }
-    const blog = await blogModel.findById(blogId) as IBlog;
-    if(!blog) {
-      return next(new ErrorHandler("Blog not found", 404));
-    }
-
-    blog.links = linkData;
-    await blog.save();
-   
-    res.status(200).json({success: true, blog});
-    
-  } catch (error: any) {
-    return next(new ErrorHandler(error.message, 500));
-  }
-})
-
-//update links
-export const UpdateLinks = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {links, blogId} = req.body;
-    if(!Array.isArray(links)) {
-      return next(new ErrorHandler("Links must be array", 400));
-    }
-
-    const linkData = links.map((link) => ({
-      title: link.title,
-      url: link.url,
-    }))
-
-    const user = await userModel.findById(req.user?._id);
-    if(!user) {
-      return next(new ErrorHandler("User not found", 404));
-    }
-    const blog = await blogModel.findById(blogId);
-    if(!blog) {
-      return next(new ErrorHandler("Blog not found", 404));
-    }
-
-    const updatedBlog = await blogModel.findByIdAndUpdate(blogId, {
-      links: linkData,
-    }, {new: true});
-    res.status(200).json({success: true, updatedBlog});
-    
-  } catch (error: any) {
-    return next(new ErrorHandler(error.message, 500));
-  }
-})
 
 //add tags --done
 //update tags --no need--

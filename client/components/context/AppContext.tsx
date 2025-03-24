@@ -40,6 +40,8 @@ interface IContext {
   setBlogs: Dispatch<SetStateAction<IBlog[] | null>>,
   blogCount: number | null,
   setBlogCount:  Dispatch<SetStateAction<number | null>>,
+  getBlogsFunc: () => Promise<void>;
+  getUsers: () => Promise<void>
 }
 
 export interface IUserInfo {
@@ -116,10 +118,7 @@ export default function ProviderFunction({
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       setAccessToken(access_token);
-      updateAccessTokenFunc().then(() => fetchUserInfo());
-      //console.log(`usser: ${userInfo}`);
-      getBlogsFunc();
-      getUsers();
+      updateAccessTokenFunc().then(() => fetchUserInfo().then(() => getBlogsFunc().then(() => getUsers())));
     }
     setLoadingContext(false);
   }, []);
@@ -314,7 +313,9 @@ export default function ProviderFunction({
         blogCount,
         setBlogCount,
         blogs,
-        setBlogs
+        setBlogs,
+        getBlogsFunc,
+        getUsers
       }}
     >
       {children}
