@@ -58,7 +58,7 @@ export interface IAllUsers {
   allUsers: IUserInfo[];
 }
 
-interface IBlog {
+export interface IBlog {
   _id: string;
   title: string;
   description: string;
