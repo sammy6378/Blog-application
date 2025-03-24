@@ -30,7 +30,7 @@ function Page() {
   useEffect(() => {
     fetchBlogItems();
     console.log(blogs?.length)
-  }, [blogs])
+  }, [])
 
   const fetchBlogItems = () => {
     if(!blogs || blogs.length === 0) return;
@@ -149,7 +149,7 @@ function Page() {
           <section className="mt-8">
             <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
             <div className="flex gap-4 max-500:flex-col">
-              <Link href={'/admin/dashboard/blogs/create-blog'} className="px-4 py-2 dark:bg-white bg-slate-100 dark:text-black shadow-sm shadow-slate-600  rounded-md hover:bg-green-600 hover:dark:bg-slate-200 hover:bg-slate-200 transition">
+              <Link href={'/admin/dashboard/blogs/new'} className="px-4 py-2 dark:bg-white bg-slate-100 dark:text-black shadow-sm shadow-slate-600  rounded-md hover:bg-green-600 hover:dark:bg-slate-200 hover:bg-slate-200 transition">
                 Create New Blog
               </Link>
               <Link href={'/admin/dashboard/users'} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
