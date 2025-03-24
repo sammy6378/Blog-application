@@ -69,19 +69,19 @@ function Sidebar() {
               </Link>
               <Link
                 href={"/admin/dashboard/users"}
-                className={`p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center mb-1 ${pathname === "/admin/dashboard/users" && "dark:bg-gray-800 bg-gray-300"}`}
+                className={`p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center mb-1 ${pathname.startsWith("/admin/dashboard/users") && "dark:bg-gray-800 bg-gray-300"}`}
               >
                 <Users className="mr-4" /> Users
               </Link>
               <Link
                 href={"/admin/dashboard/blogs"}
-                className={`p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center mb-1 ${pathname === "/admin/dashboard/blogs" && "dark:bg-gray-800 bg-gray-300"}`}
+                className={`p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center mb-1 ${pathname.startsWith("/admin/dashboard/blogs") && "dark:bg-gray-800 bg-gray-300"}`}
               >
                 <FileText className="mr-4" /> Blogs
               </Link>
               <Link
                 href={"/admin/dashboard/settings"}
-                className={`p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center mb-1 ${pathname === "/admin/dashboard/settings" && "dark:bg-gray-800 bg-gray-300"}`}
+                className={`p-4 dark:hover:bg-gray-800 hover:bg-gray-300 cursor-pointer flex items-center mb-1 ${pathname.startsWith("/admin/dashboard/settings") && "dark:bg-gray-800 bg-gray-300"}`}
               >
                 <Settings className="mr-4" /> Settings
               </Link>
