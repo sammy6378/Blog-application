@@ -10,7 +10,7 @@ interface IComment extends Document {
   user: IUser;
   comment: string;
   commentReplies?: IComment[];
-}
+} 
 
 interface IBlogReview extends Document {
   user: IUser;

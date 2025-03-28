@@ -6,13 +6,22 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 function Page() {
-  const { userInfo, userTotal, blogCount, blogs } = useContextFunc();
+  const { userInfo, userTotal, blogCount, blogs, getBlogsFunc, getUsers } =
+    useContextFunc();
   const [greeting, setGreeting] = useState("");
   const [totalLikes, setTotalLikes] = useState(0);
   const [totalDislikes, setTotalDislikes] = useState(0);
   const [totalComments, setTotalComments] = useState(0);
   const [averageRating, setAverageRating] = useState(0);
   const [topBlogs, setTopBlogs] = useState<any>([]);
+
+  useEffect(() => {
+    getBlogsFunc();
+    getUsers();
+    fetchBlogItems();
+
+    //console.log(blogs?.length);
+  }, []);
 
   const hour = new Date().getHours();
   useEffect(() => {
@@ -27,32 +36,38 @@ function Page() {
     }
   }, [hour]);
 
-  useEffect(() => {
-    fetchBlogItems();
-    console.log(blogs?.length)
-  }, [blogs])
-
   const fetchBlogItems = () => {
-    if(!blogs || blogs.length === 0) return;
+    if (!blogs || blogs.length === 0) return;
 
     //sum up all likes
-    const totalLikesCount = blogs?.reduce((acc: number, blog: any) => acc + blog.likes, 0);
+    const totalLikesCount = blogs?.reduce(
+      (acc: number, blog: any) => acc + blog.likes,
+      0
+    );
     setTotalLikes(totalLikesCount as number);
 
     //dislikes
-    const totalDislikesCount = blogs?.reduce((acc: number, blog: any) => acc + blog.dislikes, 0);
+    const totalDislikesCount = blogs?.reduce(
+      (acc: number, blog: any) => acc + blog.dislikes,
+      0
+    );
     setTotalDislikes(totalDislikesCount as number);
 
     //rating
-    const totalRating = blogs?.reduce((acc: number, blog: any) => acc + blog.rating, 0);
+    const totalRating = blogs?.reduce(
+      (acc: number, blog: any) => acc + blog.rating,
+      0
+    );
     const averageRating = blogs.length > 0 ? totalRating / blogs.length : 0;
     setAverageRating(averageRating);
-    
 
     //sum up all comments
-    const totalComments = blogs.reduce((acc: number, blog: any) => acc + blog.comments.length, 0);
+    const totalComments = blogs.reduce(
+      (acc: number, blog: any) => acc + blog.comments.length,
+      0
+    );
     setTotalComments(totalComments);
-  }
+  };
 
   return (
     <Protected>
@@ -65,7 +80,7 @@ function Page() {
               {userInfo?.name || ""}!
             </span>
           </h1>
-  
+
           {/* display total users and blogs */}
           <section className="flex items-center justify-between 700:justify-center 800:gap-[25%] gap-[20px] my-[50px] max-500:flex-col">
             {/* users */}
@@ -85,8 +100,8 @@ function Page() {
             </div>
           </section>
 
-                  {/* Admin Notifications */}
-                  <section className="mt-8 mb-2">
+          {/* Admin Notifications */}
+          <section className="mt-8 mb-2">
             <h2 className="text-xl font-bold mb-4">Notifications</h2>
             <div className="flex flex-col gap-4">
               <div className="p-4 bg-yellow-100 dark:bg-yellow-900 rounded-md shadow">
@@ -149,10 +164,16 @@ function Page() {
           <section className="mt-8">
             <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
             <div className="flex gap-4 max-500:flex-col">
-              <Link href={'/admin/dashboard/blogs/create-blog'} className="px-4 py-2 dark:bg-white bg-slate-100 dark:text-black shadow-sm shadow-slate-600  rounded-md hover:bg-green-600 hover:dark:bg-slate-200 hover:bg-slate-200 transition">
+              <Link
+                href={"/admin/dashboard/blogs/new"}
+                className="px-4 py-2 dark:bg-white bg-slate-100 dark:text-black shadow-sm shadow-slate-600  rounded-md hover:bg-green-600 hover:dark:bg-slate-200 hover:bg-slate-200 transition"
+              >
                 Create New Blog
               </Link>
-              <Link href={'/admin/dashboard/users'} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
+              <Link
+                href={"/admin/dashboard/users"}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+              >
                 Manage Users
               </Link>
               <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">

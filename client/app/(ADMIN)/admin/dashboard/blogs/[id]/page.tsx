@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { IBlogs } from "../page";
 import { useParams, useRouter } from "next/navigation"; // Import useRouter
-import { myBlogs } from "../page";
 import { MessageCircle, ThumbsUp, PlusCircle, ArrowLeft } from "lucide-react"; // Import icons
+import { IBlog, useContextFunc } from "@/components/context/AppContext";
 
 const BlogDetails: React.FC = () => {
+  const {blogs} = useContextFunc();
   const router = useRouter(); // Initialize router
   const params = useParams();
   const id = params?.id;
   
-  const [blog, setBlog] = useState<IBlogs | null>(null);
-  const [editedBlog, setEditedBlog] = useState<IBlogs | null>(null);
+  const [blog, setBlog] = useState<IBlog | null>(null);
+  const [editedBlog, setEditedBlog] = useState<IBlog | null>(null);
   const [isModified, setIsModified] = useState(false);
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState<string>("");
@@ -20,13 +20,13 @@ const BlogDetails: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      const foundBlog = myBlogs.find((b) => b.id.toString() === id);
+      const foundBlog = blogs?.find((b) => b._id.toString() === id);
       setBlog(foundBlog || null);
     }
   }, [id]);
 
-  const handleInputChange = (field: keyof IBlogs, value: any) => {
-    setEditedBlog({ ...editedBlog, [field]: value } as IBlogs);
+  const handleInputChange = (field: keyof IBlog, value: any) => {
+    setEditedBlog({ ...editedBlog, [field]: value } as IBlog);
     setIsModified(true);
   };
 
@@ -79,8 +79,8 @@ const BlogDetails: React.FC = () => {
       />
 
       <textarea
-        value={blog.content}
-        onChange={(e) => handleInputChange("content", e.target.value)}
+        value={blog.body}
+        /* onChange={(e) => handleInputChange("content", e.target.value)} */
         placeholder="Blog Content"
         className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg mb-4 text-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         rows={5}
@@ -158,7 +158,7 @@ const BlogDetails: React.FC = () => {
             {comment.replies.length > 0 && (
               <div className="mt-3 ml-6 border-l-2 border-gray-300 dark:border-gray-700 pl-3">
                 <h4 className="font-semibold text-gray-800 dark:text-gray-200">Replies:</h4>
-                {comment.replies.map((reply) => (
+                {comment.replies.map((reply: any) => (
                   <p key={reply.id} className="mt-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 p-2 rounded-lg">
                     {reply.content}
                   </p>
