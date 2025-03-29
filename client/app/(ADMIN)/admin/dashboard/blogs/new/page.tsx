@@ -143,23 +143,24 @@ const CreateBlog = () => {
             className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
           />
           {/* Thumbnail Upload */}
-          <div className="mb-4">
+          <div className="my-5">
             <label htmlFor="blog-thumbnail" className="block text-gray-700 dark:text-white mb-2">
               Upload Thumbnail
             </label>
             <input
               type="file"
+              name="videoThumbnail"
               id="blog-thumbnail"
               accept="image/*"
               onChange={handleThumbnailUpload}
             />
-            {thumbnail.url && (
+       {/*      {thumbnail.url && (
               <img
                 src={thumbnail.url}
                 alt="Thumbnail"
                 className="mt-2 w-40 rounded-md"
               />
-            )}
+            )} */}
           </div>
           {!videoModal && (
             <div className="mb-4">
@@ -197,7 +198,7 @@ const CreateBlog = () => {
           <OutsideClickHandler onOutsideClick={() => setVideoModal(false)}>
             <form
               onSubmit={handleAddVideo}
-              className="absolute inset-0 top-[60%] h-fit bg-gray-900 z-10 p-2 rounded-md w-[90%] max-500:w-[95%] mx-auto"
+              className="absolute inset-0 top-[60%] h-fit dark:bg-gray-900 bg-slate-100 shadow shadow-black z-10 p-2 rounded-md w-[90%] max-500:w-[95%] mx-auto"
             >
               <h1
                 className="mb-5 place-self-end cursor-pointer"
