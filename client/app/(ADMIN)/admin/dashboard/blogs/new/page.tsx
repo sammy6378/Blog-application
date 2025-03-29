@@ -23,7 +23,7 @@ const CreateBlog = () => {
   const [videoDescription, setVideoDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [videoThumbnail, setVideoThumbnail] = useState("");
-  const [videoLinks, setVideoLinks] = useState("");
+  const [videoLinks, setVideoLinks] = useState<string[]>([]);
 
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [videoModal, setVideoModal] = useState(false);
@@ -52,38 +52,48 @@ const CreateBlog = () => {
   };
 
   useEffect(() => {
-    console.log(blogThumbnail)
-    console.log("title", title)
-    console.log("description", description)
-    console.log("body: ", body)
-    console.log("links", links)
-    console.log("tags: ", tags)
-    console.log("category", category)
-    console.log("Blog Thumbnail", blogThumbnail)
-  }, [blogThumbnail, title, description, body, tags, links, body, category, blogThumbnail])
+    console.log(blogThumbnail);
+    console.log("title", title);
+    console.log("description", description);
+    console.log("body: ", body);
+    console.log("links", links);
+    console.log("tags: ", tags);
+    console.log("category", category);
+    console.log("Blog Thumbnail", blogThumbnail);
+  }, [
+    blogThumbnail,
+    title,
+    description,
+    body,
+    tags,
+    links,
+    body,
+    category,
+    blogThumbnail,
+  ]);
 
-  const handleThumbnailUpload = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    /* if (!event.target.files) return;
-
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setThumbnail({ url: reader.result as string });
-    };
-
-    reader.readAsDataURL(file); */
-
+  const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader();
     fileReader.onload = () => {
-      if(fileReader.readyState === 2) {
+      if (fileReader.readyState === 2) {
         const thumbnail = fileReader.result as string;
-        setBlogThumbnail(thumbnail)
+        setBlogThumbnail(thumbnail);
       }
     };
-    if(e.target.files && e.target.files[0]) {
+    if (e.target.files && e.target.files[0]) {
+      fileReader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const handleVideoThumbnailUpload = (e: any) => {
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      if (fileReader.readyState === 2) {
+        const thumbnail = fileReader.result as string;
+        setVideoThumbnail(thumbnail);
+      }
+    };
+    if (e.target.files && e.target.files[0]) {
       fileReader.readAsDataURL(e.target.files[0]);
     }
   };
@@ -110,6 +120,31 @@ const CreateBlog = () => {
     const linkUrl = prompt("Enter external link URL:");
     if (linkUrl) setLinks([...links, linkUrl]);
   };
+
+  const handleVideoLinks = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newLink: string = (e.target as HTMLInputElement).value.trim();
+      if(videoLinks.includes(newLink)) return;
+      setVideoLinks([...videoLinks, newLink]);
+      e.target.value = ""
+    }
+  };
+
+  const handleRemoveVideoLink = (index: number) => {
+    const updatedLinks = videoLinks.filter((_, i) => i !== index);
+    setVideoLinks(updatedLinks);
+  }
+
+  const handleRemoveLink = (index: number) => {
+    const updatedLinks = links.filter((_, i) => i !== index);
+    setLinks(updatedLinks)
+  }
+
+  const handleRemoveTag = (index: number) => {
+    const updatedTags = tags.filter((_, i) => i !== index);
+    setTags(updatedTags);
+  }
 
   return (
     <div className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins ">
@@ -169,7 +204,10 @@ const CreateBlog = () => {
           />
           {/* Thumbnail Upload */}
           <div className="my-5">
-            <label htmlFor="blog-thumbnail" className="block text-gray-700 dark:text-white mb-2">
+            <label
+              htmlFor="blog-thumbnail"
+              className="block text-gray-700 dark:text-white mb-2"
+            >
               Upload Thumbnail
             </label>
             <input
@@ -179,7 +217,7 @@ const CreateBlog = () => {
               accept="image/*"
               onChange={handleThumbnailUpload}
             />
-       {/*      {thumbnail.url && (
+            {/*      {thumbnail.url && (
               <img
                 src={thumbnail.url}
                 alt="Thumbnail"
@@ -187,8 +225,6 @@ const CreateBlog = () => {
               />
             )} */}
           </div>
-
-
           {!videoModal && (
             <div className="mb-4">
               {/* Video Links */}
@@ -236,23 +272,67 @@ const CreateBlog = () => {
               <input
                 type="text"
                 name="title"
+                value={videoTitle}
+                onChange={(e) => setVideoTitle(e.target.value)}
                 placeholder="Enter Video Title"
                 className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
               />
               <input
                 type="text"
                 name="description"
+                value={videoDescription}
+                onChange={(e) => setVideoDescription(e.target.value)}
                 placeholder="Enter Video Description"
                 className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
               />
               <input
                 type="text"
                 name="videoUrl"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
                 placeholder="Enter Video Url"
                 className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
               />
               {/* video thumbnail */}
+              <div className="my-3">
+                <label
+                  htmlFor="videoThumbnail"
+                  className="dark:text-gray-300 text-gray-800"
+                >
+                  Add Thumbnail
+                </label>
+                <input
+                  type="file"
+                  name="thumbnail"
+                  id="videoThumbnail"
+                  accept="image/*"
+                  onChange={handleVideoThumbnailUpload}
+                  className="dark:text-gray-300 text-gray-800"
+                />
+              </div>
               {/* video links */}
+              <div className="mb-4">
+                <label
+                  htmlFor="videoLinks"
+                  className="block text-gray-700 dark:text-white mt-2"
+                >
+                  Add Links
+                </label>
+                <input
+                  type="text"
+                  id="videoLinks"
+                  className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+                  placeholder="Press Enter to add link"
+                  onKeyDown={handleVideoLinks}
+                />
+
+                <div className="flex gap-2">
+                  {videoLinks.length > 0 &&
+                    videoLinks.map((link, index) => (
+                      <div className="bg-green p-1 rounded-md relative flex" key={index}>{link} <X className="ml-1 cursor-pointer" size={14} onClick={() => handleRemoveVideoLink(index)} /></div>
+                    ))}
+                </div>
+              </div>
 
               <button
                 type="submit"
@@ -278,9 +358,9 @@ const CreateBlog = () => {
           {tags.map((tag, index) => (
             <span
               key={index}
-              className="px-2 py-1 dark:bg-green bg-crimson text-white rounded-md"
+              className="px-2 py-1 dark:bg-green bg-crimson text-white rounded-md flex"
             >
-              {tag}
+              {tag} <X className="ml-1 cursor-pointer" size={14} onClick={() => handleRemoveTag(index)} />
             </span>
           ))}
         </div>
@@ -299,8 +379,8 @@ const CreateBlog = () => {
         </button>
         <ul className="mt-2">
           {links.map((link, index) => (
-            <li key={index} className="text-purple-500">
-              {link}
+            <li key={index} className="text-purple-500 flex">
+              {link} <X className="ml-1 cursor-pointer" size={14} onClick={() => handleRemoveLink(index)} />
             </li>
           ))}
         </ul>
