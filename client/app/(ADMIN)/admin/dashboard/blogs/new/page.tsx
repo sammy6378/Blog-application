@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ReactMde from "react-mde";
 import ReactMarkdown from "react-markdown";
@@ -15,12 +15,15 @@ const CreateBlog = () => {
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [thumbnail, setThumbnail] = useState<{
-    public_id?: string;
-    url?: string;
-  }>({});
-  const [videos, setVideos] = useState<string[]>([]);
+  const [blogThumbnail, setBlogThumbnail] = useState("");
+  const [videos, setVideos] = useState([]);
   const [links, setLinks] = useState<string[]>([]);
+
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoDescription, setVideoDescription] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoThumbnail, setVideoThumbnail] = useState("");
+  const [videoLinks, setVideoLinks] = useState("");
 
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [videoModal, setVideoModal] = useState(false);
@@ -48,8 +51,19 @@ const CreateBlog = () => {
     router.push("/admin/dashboard/blogs"); */
   };
 
+  useEffect(() => {
+    console.log(blogThumbnail)
+    console.log("title", title)
+    console.log("description", description)
+    console.log("body: ", body)
+    console.log("links", links)
+    console.log("tags: ", tags)
+    console.log("category", category)
+    console.log("Blog Thumbnail", blogThumbnail)
+  }, [blogThumbnail, title, description, body, tags, links, body, category, blogThumbnail])
+
   const handleThumbnailUpload = (
-    event: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     /* if (!event.target.files) return;
 
@@ -61,6 +75,17 @@ const CreateBlog = () => {
     };
 
     reader.readAsDataURL(file); */
+
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      if(fileReader.readyState === 2) {
+        const thumbnail = fileReader.result as string;
+        setBlogThumbnail(thumbnail)
+      }
+    };
+    if(e.target.files && e.target.files[0]) {
+      fileReader.readAsDataURL(e.target.files[0]);
+    }
   };
 
   const handleAddTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -87,7 +112,7 @@ const CreateBlog = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto overflow-y-auto mb-20 font-poppins ">
+    <div className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins ">
       <div className="flex justify-between items-center">
         <button
           onClick={() => router.back()}
@@ -162,6 +187,8 @@ const CreateBlog = () => {
               />
             )} */}
           </div>
+
+
           {!videoModal && (
             <div className="mb-4">
               {/* Video Links */}
