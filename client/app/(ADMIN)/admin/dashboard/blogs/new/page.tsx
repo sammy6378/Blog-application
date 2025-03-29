@@ -144,11 +144,12 @@ const CreateBlog = () => {
           />
           {/* Thumbnail Upload */}
           <div className="mb-4">
-            <label className="block text-gray-700 dark:text-white mb-2">
+            <label htmlFor="blog-thumbnail" className="block text-gray-700 dark:text-white mb-2">
               Upload Thumbnail
             </label>
             <input
               type="file"
+              id="blog-thumbnail"
               accept="image/*"
               onChange={handleThumbnailUpload}
             />
