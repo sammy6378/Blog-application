@@ -6,6 +6,7 @@ import ReactMde from "react-mde";
 import ReactMarkdown from "react-markdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { X } from "lucide-react";
+import OutsideClickHandler from "react-outside-click-handler";
 
 const CreateBlog = () => {
   const router = useRouter();
@@ -192,36 +193,46 @@ const CreateBlog = () => {
         </form>
         {/* If videoModal is true */}
         {videoModal && (
-          <form onSubmit={handleAddVideo} className="absolute inset-0 top-[60%] h-fit bg-gray-900 z-10 p-2 rounded-md w-[90%] max-500:w-[95%] mx-auto">
-            <h1 className="mb-5 place-self-end cursor-pointer" onClick={() => setVideoModal(false)}><X /></h1>
-            <input
-              type="text"
-              name="title"
-              placeholder="Enter Video Title"
-              className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
-            />
-            <input
-              type="text"
-              name="description"
-              placeholder="Enter Video Description"
-              className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
-            />
-            <input
-              type="text"
-              name="videoUrl"
-              placeholder="Enter Video Url"
-              className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
-            />
-            {/* video thumbnail */}
-            {/* video links */}
-
-            <button
-              type="submit"
-              className=" px-4 py-2 grid mx-auto bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all"
+          <OutsideClickHandler onOutsideClick={() => setVideoModal(false)}>
+            <form
+              onSubmit={handleAddVideo}
+              className="absolute inset-0 top-[60%] h-fit bg-gray-900 z-10 p-2 rounded-md w-[90%] max-500:w-[95%] mx-auto"
             >
-              Submit Video
-            </button>
-          </form>
+              <h1
+                className="mb-5 place-self-end cursor-pointer"
+                onClick={() => setVideoModal(false)}
+              >
+                <X />
+              </h1>
+              <input
+                type="text"
+                name="title"
+                placeholder="Enter Video Title"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+              />
+              <input
+                type="text"
+                name="description"
+                placeholder="Enter Video Description"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+              />
+              <input
+                type="text"
+                name="videoUrl"
+                placeholder="Enter Video Url"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+              />
+              {/* video thumbnail */}
+              {/* video links */}
+
+              <button
+                type="submit"
+                className=" px-4 py-2 grid mx-auto bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all"
+              >
+                Submit Video
+              </button>
+            </form>
+          </OutsideClickHandler>
         )}
       </div>
       {/* Tags Input */}
