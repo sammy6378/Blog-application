@@ -435,10 +435,10 @@ const CreateBlog = () => {
 
               <button
                 type="submit"
-                className=" px-4 py-2 grid mx-auto bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all"
+                className={`px-4 py-2 grid mx-auto bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all ${loading && "cursor-not-allowed"}`}
                 onClick={handleSubmitVideo}
               >
-                Submit Video
+               {loading ? "Submitting...": "Submit Video"}
               </button>
             </form>
           </OutsideClickHandler>
