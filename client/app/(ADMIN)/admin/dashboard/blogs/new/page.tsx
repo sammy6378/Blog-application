@@ -341,7 +341,7 @@ const CreateBlog = () => {
               onClick={handleSaveBlog}
               className={`px-4 py-2  bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all ${videoModal && "cursor-not-allowed"}`}
             >
-              Save Blog
+              {loading ? "Saving Blog...": "Save Blog"}
             </button>
           </div>
         </form>
@@ -438,7 +438,7 @@ const CreateBlog = () => {
                 className={`px-4 py-2 grid mx-auto bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all ${loading && "cursor-not-allowed"}`}
                 onClick={handleSubmitVideo}
               >
-               {loading ? "Submitting...": "Submit Video"}
+               Submit Video
               </button>
             </form>
           </OutsideClickHandler>

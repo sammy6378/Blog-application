@@ -8,7 +8,7 @@ import path from "path";
 import ejs from "ejs";
 import { sendMail } from "../utils/mail";
 
-//Add New Blog
+//Add New Blog --- only for admin
 export const addBlog = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -91,9 +91,10 @@ export const addBlog = catchAsyncErrors(
   }
 );
 
+//!NOT USED
 //add links
 export const AddLinks = catchAsyncErrors(async(req: Request,res: Response, next: NextFunction) => {
-  try {
+  /* try {
     const {links, blogId} = req.body;
     if(!Array.isArray(links)) {
       return next(new ErrorHandler("Links must be array", 400));
@@ -120,12 +121,13 @@ export const AddLinks = catchAsyncErrors(async(req: Request,res: Response, next:
     
   } catch (error: any) {
     return next(new ErrorHandler(error.message, 500));
-  }
+  } */
 })
 
+//!NOT USED
 //update links
 export const UpdateLinks = catchAsyncErrors(async(req: Request, res: Response, next: NextFunction) => {
-  try {
+/*   try {
     const {links, blogId} = req.body;
     if(!Array.isArray(links)) {
       return next(new ErrorHandler("Links must be array", 400));
@@ -152,13 +154,14 @@ export const UpdateLinks = catchAsyncErrors(async(req: Request, res: Response, n
     
   } catch (error: any) {
     return next(new ErrorHandler(error.message, 500));
-  }
+  } */
 })
 
+//!NOT USED
 //add tags ---only for admin
 export const addTag = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
+   /*  try {
       const { tag, blogId } = req.body;
       const userId = req.user?._id;
       // const blogId = req.params.id;
@@ -185,15 +188,16 @@ export const addTag = catchAsyncErrors(
         .json({ success: true, tags: blog.tags, message: "Tag added" });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
-    }
-  }
+    }*/
+  } 
 );
 
+//!NOT USED
 //delete tag
 export const deleteTag = catchAsyncErrors(
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { blogId, tagId } = req.body;
+  async (req: Request, next: NextFunction) => {
+   /*  try {
+      const { blogId } = req.body;
       const userId = req.user?._id;
       const user = await userModel.findById(userId);
       if (!user) {
@@ -204,13 +208,12 @@ export const deleteTag = catchAsyncErrors(
         return next(new ErrorHandler("Blog not found", 404));
       }
 
-     // blog.tags = blog.tags.filter((t) => (t._id as string) !== tagId);
-     //!FIX IF ERROR
-      blog.tags = blog.tags.filter((_, i) => i)
+      // Remove the tag logic (if tagId is required, reintroduce it with proper usage)
+      blog.tags = blog.tags.filter((_, i) => i);
       await blog.save();
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
-    }
+    } */
   }
 );
 
