@@ -36,15 +36,11 @@ const CreateBlog = () => {
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [videoModal, setVideoModal] = useState(false);
 
-  useEffect(() => {
-    console.log("videos: ", videos);
-  }, [videos]);
-
   const handleSaveBlog = () => {
     /*  if (!title.trim() || !description.trim() || !body.trim()) {
       alert("Title, description, and body cannot be empty."); 
       return;
-    }
+    }*/
 
     const newBlog = {
       title,
@@ -52,7 +48,7 @@ const CreateBlog = () => {
       body,
       category,
       tags,
-      thumbnail,
+      thumbnail: blogThumbnail,
       videos,
       links,
     };
@@ -60,7 +56,7 @@ const CreateBlog = () => {
     console.log("Saving blog:", newBlog);
     alert("Blog saved!");
 
-    router.push("/admin/dashboard/blogs"); */
+    router.push("/admin/dashboard/blogs"); 
   };
 
   const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
