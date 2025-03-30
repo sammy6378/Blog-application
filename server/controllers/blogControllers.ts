@@ -177,7 +177,7 @@ export const addTag = catchAsyncErrors(
         return next(new ErrorHandler("Tag is required", 400));
       }
 
-      blog.tags.push({ tag } as ITag);
+      blog.tags.push(tag);
       await blog.save();
 
       res
@@ -204,7 +204,9 @@ export const deleteTag = catchAsyncErrors(
         return next(new ErrorHandler("Blog not found", 404));
       }
 
-      blog.tags = blog.tags.filter((t) => (t._id as string) !== tagId);
+     // blog.tags = blog.tags.filter((t) => (t._id as string) !== tagId);
+     //!FIX IF ERROR
+      blog.tags = blog.tags.filter((_, i) => i)
       await blog.save();
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -392,7 +394,7 @@ export const getBlogs = catchAsyncErrors(
       }
 
       // get all blogs
-      const blogs = await blogModel.find();
+      const blogs = await blogModel.find().sort({ updatedAt: -1 });
       const blogCount = await blogModel.countDocuments();
 
       if (!blogs) {

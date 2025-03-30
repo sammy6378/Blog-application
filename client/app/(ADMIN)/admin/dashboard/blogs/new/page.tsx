@@ -7,6 +7,10 @@ import ReactMarkdown from "react-markdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { X } from "lucide-react";
 import OutsideClickHandler from "react-outside-click-handler";
+import { createNewBlog } from "@/components/services/blogService";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { useContextFunc } from "@/components/context/AppContext";
 
 interface IVideo {
   title: string;
@@ -17,6 +21,7 @@ interface IVideo {
 }
 
 const CreateBlog = () => {
+  const {getBlogsFunc} = useContextFunc();
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -35,13 +40,14 @@ const CreateBlog = () => {
 
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [videoModal, setVideoModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSaveBlog = () => {
+  const handleSaveBlog = async (e: any) => {
     /*  if (!title.trim() || !description.trim() || !body.trim()) {
       alert("Title, description, and body cannot be empty."); 
       return;
     }*/
-
+   e.preventDefault();
     const newBlog = {
       title,
       description,
@@ -52,11 +58,28 @@ const CreateBlog = () => {
       videos,
       links,
     };
+    setLoading(true);
 
-    console.log("Saving blog:", newBlog);
-    alert("Blog saved!");
-
-    router.push("/admin/dashboard/blogs"); 
+    try {
+      const response = await createNewBlog(newBlog);
+      if (response.success) {
+        console.log("Saving blog:", newBlog);
+        setLoading(false);
+        alert("Blog saved!");
+        getBlogsFunc()
+        router.push("/admin/dashboard/blogs");
+      } else {
+        toast.error(response.message);
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      setLoading(false);
+    }
+    finally {
+      setLoading(false);
+      getBlogsFunc();
+    }
   };
 
   const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,8 +126,9 @@ const CreateBlog = () => {
     setVideoModal(false);
   };
 
-  const handleAddLink = () => {
+  const handleAddLink = (e: any) => {
     const linkUrl = prompt("Enter external link URL:");
+    e.preventDefault();
     if (linkUrl) setLinks([...links, linkUrl]);
   };
 
@@ -175,6 +199,7 @@ const CreateBlog = () => {
             type="text"
             placeholder="Blog Title"
             value={title}
+            name="title"
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
           />
@@ -182,25 +207,31 @@ const CreateBlog = () => {
           <textarea
             placeholder="Short description..."
             value={description}
+            name="description"
             onChange={(e) => setDescription(e.target.value)}
             className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
           />{" "}
           {/* Body */}
-          <div className="dark:bg-gray-900 mb-5 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg">
+            <div className="dark:bg-gray-900 mb-5 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg">
             <ReactMde
               value={body}
               onChange={setBody}
               selectedTab={selectedTab}
               onTabChange={setSelectedTab}
               generateMarkdownPreview={(markdown) =>
-                Promise.resolve(
-                  <div className="p-4 dark:bg-gray-800 dark:text-white rounded-lg">
-                    <ReactMarkdown>{markdown}</ReactMarkdown>
-                  </div>
-                )
+              Promise.resolve(
+                <div className="p-4 dark:bg-gray-800 dark:text-white rounded-lg">
+                <ReactMarkdown>{markdown}</ReactMarkdown>
+                </div>
+              )
               }
+              childProps={{
+              textArea: {
+                name: "body",
+              },
+              }}
             />
-          </div>
+            </div>
           {/* Category Selection */}
           <input
             type="text"

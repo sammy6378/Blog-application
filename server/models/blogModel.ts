@@ -1,10 +1,10 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import { IUser } from "./userModel";
 
-interface IBlogLink extends Document {
+/* interface IBlogLink extends Document {
   title: string;
   url: string;
-}
+} */
 
 interface IComment extends Document {
   user: IUser;
@@ -27,7 +27,7 @@ export interface IVideo extends Document {
     public_id: string;
     url: string;
   };
-  links: IBlogLink[];
+  links: string[];
 }
 
 export interface ITag extends Document {
@@ -77,34 +77,34 @@ export interface IBlog extends Document {
   videos: IVideo[];
   reviews: IBlogReview[];
   rating: number;
-  links: IBlogLink[];
+  links: string[];
   likes: number;
   dislikes: number;
   comments: IComment[];
   category: string;
   author: IUser;
-  tags: ITag[];
+  tags: string[];
   likeInfo: ILikeInfo[];
   dislikeInfo: IDislikeInfo[];
 }
 
 //schemas
 //tag schema
-const tagSchema = new Schema<ITag>({
+/* const tagSchema = new Schema<ITag>({
   tag: String,
-});
+}); */
 //link schema
-const linkSchema = new Schema<IBlogLink>({
+/* const linkSchema = new Schema<IBlogLink>({
   title: String,
   url: {
     required: true,
     type: String,
   },
-});
+}); */
 
 //comment schema
 const commentSchema = new Schema<IComment>({
-  user: Object,
+  user: { type: Schema.Types.ObjectId, ref: "User" },
   comment: {
     type: String,
     required: true,
@@ -135,10 +135,10 @@ const videoSchema = new Schema<IVideo>({
   },
   videoUrl: String,
   videoThumbnail: {
-    type: String,
-    required: true,
+    public_id: String,
+    url: String, 
   },
-  links: [Object],
+  links: [String],
 });
 
 //like info schema
@@ -177,7 +177,7 @@ const blogSchema = new Schema<IBlog>(
       type: Number,
       default: 0,
     },
-    links: [linkSchema],
+    links: [String],
     likes: {
       type: Number,
       default: 0,
@@ -189,7 +189,7 @@ const blogSchema = new Schema<IBlog>(
     comments: [commentSchema],
     category: String,
     author: Object,
-    tags: [tagSchema],
+    tags: [String],
     likeInfo: [likeInfoSchema],
     dislikeInfo: [dislikeInfoSchema]
   },
