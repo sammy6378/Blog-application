@@ -8,6 +8,14 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import { X } from "lucide-react";
 import OutsideClickHandler from "react-outside-click-handler";
 
+interface IVideo {
+  title: string;
+  description: string;
+  videoUrl: string;
+  videoThumbnail: string;
+  links: string[];
+}
+
 const CreateBlog = () => {
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -16,7 +24,7 @@ const CreateBlog = () => {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [blogThumbnail, setBlogThumbnail] = useState("");
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState<IVideo[]>([]);
   const [links, setLinks] = useState<string[]>([]);
 
   const [videoTitle, setVideoTitle] = useState("");
@@ -27,6 +35,10 @@ const CreateBlog = () => {
 
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [videoModal, setVideoModal] = useState(false);
+
+  useEffect(() => {
+    console.log("videos: ", videos);
+  }, [videos]);
 
   const handleSaveBlog = () => {
     /*  if (!title.trim() || !description.trim() || !body.trim()) {
@@ -50,27 +62,6 @@ const CreateBlog = () => {
 
     router.push("/admin/dashboard/blogs"); */
   };
-
-  useEffect(() => {
-    console.log(blogThumbnail);
-    console.log("title", title);
-    console.log("description", description);
-    console.log("body: ", body);
-    console.log("links", links);
-    console.log("tags: ", tags);
-    console.log("category", category);
-    console.log("Blog Thumbnail", blogThumbnail);
-  }, [
-    blogThumbnail,
-    title,
-    description,
-    body,
-    tags,
-    links,
-    body,
-    category,
-    blogThumbnail,
-  ]);
 
   const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader();
@@ -125,26 +116,46 @@ const CreateBlog = () => {
     if (e.key === "Enter") {
       e.preventDefault();
       const newLink: string = (e.target as HTMLInputElement).value.trim();
-      if(videoLinks.includes(newLink)) return;
-      setVideoLinks([...videoLinks, newLink]);
-      e.target.value = ""
+      if (!videoLinks.includes(newLink)) {
+        setVideoLinks([...videoLinks, newLink]);
+      }
+      e.target.value = "";
     }
   };
 
   const handleRemoveVideoLink = (index: number) => {
     const updatedLinks = videoLinks.filter((_, i) => i !== index);
     setVideoLinks(updatedLinks);
-  }
+  };
 
   const handleRemoveLink = (index: number) => {
     const updatedLinks = links.filter((_, i) => i !== index);
-    setLinks(updatedLinks)
-  }
+    setLinks(updatedLinks);
+  };
 
   const handleRemoveTag = (index: number) => {
     const updatedTags = tags.filter((_, i) => i !== index);
     setTags(updatedTags);
-  }
+  };
+
+  const handleSubmitVideo = () => {
+    if (Array.isArray(videos)) {
+      setVideos((videos: IVideo[]) => [
+        ...videos,
+        {
+          title: videoTitle,
+          description: videoDescription,
+          videoUrl: videoUrl,
+          videoThumbnail,
+          links: videoLinks,
+        },
+      ]);
+    }
+    setVideoTitle("");
+    setVideoDescription("");
+    setVideoUrl("")
+    setVideoLinks([])
+  };
 
   return (
     <div className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins ">
@@ -240,7 +251,8 @@ const CreateBlog = () => {
               <ul className="mt-2">
                 {videos.map((video, index) => (
                   <li key={index} className="text-blue-500">
-                    {video}
+                    {/* <video src={video.videoUrl}></video> */}
+                    {video.title}
                   </li>
                 ))}
               </ul>
@@ -329,7 +341,17 @@ const CreateBlog = () => {
                 <div className="flex gap-2">
                   {videoLinks.length > 0 &&
                     videoLinks.map((link, index) => (
-                      <div className="bg-green p-1 rounded-md relative flex" key={index}>{link} <X className="ml-1 cursor-pointer" size={14} onClick={() => handleRemoveVideoLink(index)} /></div>
+                      <div
+                        className="bg-green p-1 rounded-md relative flex"
+                        key={index}
+                      >
+                        {link}{" "}
+                        <X
+                          className="ml-1 cursor-pointer"
+                          size={14}
+                          onClick={() => handleRemoveVideoLink(index)}
+                        />
+                      </div>
                     ))}
                 </div>
               </div>
@@ -337,6 +359,7 @@ const CreateBlog = () => {
               <button
                 type="submit"
                 className=" px-4 py-2 grid mx-auto bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all"
+                onClick={handleSubmitVideo}
               >
                 Submit Video
               </button>
@@ -360,7 +383,12 @@ const CreateBlog = () => {
               key={index}
               className="px-2 py-1 dark:bg-green bg-crimson text-white rounded-md flex"
             >
-              {tag} <X className="ml-1 cursor-pointer" size={14} onClick={() => handleRemoveTag(index)} />
+              {tag}{" "}
+              <X
+                className="ml-1 cursor-pointer"
+                size={14}
+                onClick={() => handleRemoveTag(index)}
+              />
             </span>
           ))}
         </div>
@@ -380,7 +408,12 @@ const CreateBlog = () => {
         <ul className="mt-2">
           {links.map((link, index) => (
             <li key={index} className="text-purple-500 flex">
-              {link} <X className="ml-1 cursor-pointer" size={14} onClick={() => handleRemoveLink(index)} />
+              {link}{" "}
+              <X
+                className="ml-1 cursor-pointer"
+                size={14}
+                onClick={() => handleRemoveLink(index)}
+              />
             </li>
           ))}
         </ul>
