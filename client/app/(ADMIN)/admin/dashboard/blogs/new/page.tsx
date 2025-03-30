@@ -153,8 +153,8 @@ const CreateBlog = () => {
     }
     setVideoTitle("");
     setVideoDescription("");
-    setVideoUrl("")
-    setVideoLinks([])
+    setVideoUrl("");
+    setVideoLinks([]);
   };
 
   return (
@@ -170,7 +170,7 @@ const CreateBlog = () => {
       <div className="dark:border-none border shadow dark:shadow-slate-600 shadow-slate-400 p-4 rounded-md mb-4 relative">
         <form>
           <div className="flex items-center justify-end">
-            <h1 className="text-3xl max:700:text-2xl max-500:text-xl font-bold mb-6 dark:text-white">
+            <h1 className="text-[28px] max-700:text-2xl max-500:text-xl font-bold mb-6 dark:text-white">
               Create New Blog
             </h1>
           </div>
@@ -258,6 +258,56 @@ const CreateBlog = () => {
               </ul>
             </div>
           )}
+          {/* Tags Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-white mb-2">
+              Tags (Press Enter to add)
+            </label>
+            <input
+              type="text"
+              onKeyDown={handleAddTag}
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+            />
+            <div className="flex gap-2 mt-2">
+              {tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="px-2 py-1 dark:bg-green bg-crimson text-white rounded-md flex"
+                >
+                  {tag}{" "}
+                  <X
+                    className="ml-1 cursor-pointer"
+                    size={14}
+                    onClick={() => handleRemoveTag(index)}
+                  />
+                </span>
+              ))}
+            </div>
+          </div>
+          {/* External Links */}
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-white mb-2">
+              External Links
+            </label>
+            <button
+              onClick={handleAddLink}
+              className="px-3 py-1 bg-purple-500 text-white rounded-md"
+            >
+              + Add Link
+            </button>
+            <ul className="mt-2">
+              {links.map((link, index) => (
+                <li key={index} className="text-purple-500 flex">
+                  {link}{" "}
+                  <X
+                    className="ml-1 cursor-pointer"
+                    size={14}
+                    onClick={() => handleRemoveLink(index)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
           {/* submit form */}
           <div className="flex items-center justify-end my-6 dark:bg-gray-900/20 bg-gray-100 p-2 rounded-md">
             <button
@@ -366,57 +416,6 @@ const CreateBlog = () => {
             </form>
           </OutsideClickHandler>
         )}
-      </div>
-      {/* Tags Input */}
-      <div className="mb-4">
-        <label className="block text-gray-700 dark:text-white mb-2">
-          Tags (Press Enter to add)
-        </label>
-        <input
-          type="text"
-          onKeyDown={handleAddTag}
-          className="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
-        />
-        <div className="flex gap-2 mt-2">
-          {tags.map((tag, index) => (
-            <span
-              key={index}
-              className="px-2 py-1 dark:bg-green bg-crimson text-white rounded-md flex"
-            >
-              {tag}{" "}
-              <X
-                className="ml-1 cursor-pointer"
-                size={14}
-                onClick={() => handleRemoveTag(index)}
-              />
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* External Links */}
-      <div className="mb-4">
-        <label className="block text-gray-700 dark:text-white mb-2">
-          External Links
-        </label>
-        <button
-          onClick={handleAddLink}
-          className="px-3 py-1 bg-purple-500 text-white rounded-md"
-        >
-          + Add Link
-        </button>
-        <ul className="mt-2">
-          {links.map((link, index) => (
-            <li key={index} className="text-purple-500 flex">
-              {link}{" "}
-              <X
-                className="ml-1 cursor-pointer"
-                size={14}
-                onClick={() => handleRemoveLink(index)}
-              />
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
