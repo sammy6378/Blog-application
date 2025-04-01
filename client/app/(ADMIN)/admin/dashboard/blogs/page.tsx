@@ -77,9 +77,9 @@ function BlogPage() {
     router.push("/admin/dashboard/blogs/new"); // Navigate to blog creation page
   };
 
-  /*   const handleEditBlog = (blog: IBlog) => {
-    router.push(`/admin/dashboard/blogs/${blog.id}`); // Navigate to the blog details page
-  }; */
+    const handleEditBlog = (blog: IBlog) => {
+    router.push(`/admin/dashboard/blogs/${blog._id}`); // Navigate to the blog details page
+  };
   /* 
   const handleDeleteBlog = (id: number) => {
     setBlogs(blogs.filter((blog) => blog.id !== id)); // Delete the blog
@@ -117,7 +117,7 @@ function BlogPage() {
             <h2 className="text-xl font-bold">{blog.title}</h2>
             <div className="flex gap-3">
               <button
-                /* onClick={() => handleEditBlog(blog)} */
+                onClick={() => handleEditBlog(blog)}
                 className="text-blue-500 hover:text-blue-700"
               >
                 <PencilIcon size={20} />

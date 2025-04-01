@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation"; // Import useRouter
 import { MessageCircle, ThumbsUp, PlusCircle, ArrowLeft } from "lucide-react"; // Import icons
 import { IBlog, useContextFunc } from "@/components/context/AppContext";
 
-const BlogDetails: React.FC = () => {
+export default function BlogDetails() {
   const {blogs} = useContextFunc();
   const router = useRouter(); // Initialize router
   const params = useParams();
@@ -181,4 +181,3 @@ const BlogDetails: React.FC = () => {
   );
 };
 
-export default BlogDetails;
