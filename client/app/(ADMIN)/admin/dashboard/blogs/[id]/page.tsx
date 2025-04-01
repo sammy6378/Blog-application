@@ -8,6 +8,9 @@ import {
   PlusCircle,
   ArrowLeft,
   Trash,
+  Trash2,
+  Trash2Icon,
+  Edit2Icon,
 } from "lucide-react"; // Import icons
 import { IBlog, useContextFunc } from "@/components/context/AppContext";
 
@@ -24,17 +27,37 @@ export default function BlogDetails() {
   const [replyContent, setReplyContent] = useState<string>("");
   const [newTag, setNewTag] = useState<string>(""); */
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(blog?.title || "");
+  const [description, setDescription] = useState(blog?.description);
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
+  const [thumbnail, setThumbnail] = useState({});
+  const [tags, setTags] = useState([]);
+  const [links, setLinks] = useState([]);
+
+  //videos
+  const [videos, setVideos] = useState([]);
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoDescription, setVideoDescription] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoThumbnail, setVideoThumbnail] = useState({});
+  const [videoLinks, setVideoLinks] = useState([]);
 
   useEffect(() => {
     if (id) {
       const foundBlog = blogs?.find((b) => b._id.toString() === id);
       setBlog(foundBlog || null);
+
+      if(foundBlog) {
+        setTitle(foundBlog.title);
+        setDescription(foundBlog.description);
+      }
+      console.log("found blog: ", foundBlog);
     }
   }, [id, blogs]);
+
+  //delete entire blog
+  const handleDeleteBlog = async () => {};
 
   if (blog === null) {
     return (
@@ -45,12 +68,70 @@ export default function BlogDetails() {
   }
 
   return (
-    <section>
-      <div className="flex justify-between">
-        <h2>Edit Blog</h2>
-        <button title="delete blog">
-          <Trash />  
+    <section className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins">
+      <header className="flex justify-between">
+      <button
+          onClick={() => router.back()}
+          className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4"
+        >
+          ← Go Back
         </button>
+        <button
+          title="delete blog"
+          onClick={() => handleDeleteBlog()}
+          className="flex items-center gap-1 border-[1.5px] p-2 rounded shadow-inner shadow-crimson bg-opacity-50 border-crimson hover:bg-red-500/50 transition-all group"
+        >
+          <span> Delete Blog </span>
+          <Trash2Icon
+            size={14}
+            fill="transparent"
+            className="text-crimson group-hover:text-white"
+          />
+        </button>
+      </header>
+
+      <div className="dark:border-none border shadow dark:shadow-slate-600 shadow-slate-400 p-4 rounded-md mb-4 relative mt-5">
+        <h1 className="text-xl 700:text-2xl font-semibold">Edit Blog</h1>
+        <form className="mt-8">
+          {/* Blog Title */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="blogTitle">Blog Title: </label>
+            <input
+              type="text"
+              placeholder="Blog Title"
+              id="blogTitle"
+              value={title}
+              name="title"
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+            />
+          </div>
+          {/* Blog Description */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="blogDescription">Blog Description: </label>
+            <textarea
+              name="description"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+              placeholder="Blog Description"
+            ></textarea>
+          </div>
+
+          {/* submit button */}
+          <button
+            type="submit"
+            className="flex items-center place-self-end mt-5 gap-1 border-[1.5px] p-2 rounded shadow-inner shadow-green bg-opacity-50 border-green hover:bg-emerald-200/50 transition-all group"
+          >
+            <span> Update Blog </span>
+            <Edit2Icon
+              size={14}
+              fill="transparent"
+              className="text-green group-hover:text-white"
+            />
+          </button>
+        </form>
       </div>
     </section>
   );
