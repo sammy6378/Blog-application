@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation"; // Import useRouter
+import { useParams, useRouter } from "next/navigation";
 import {
   MessageCircle,
   ThumbsUp,
@@ -11,8 +11,18 @@ import {
   Trash2,
   Trash2Icon,
   Edit2Icon,
-} from "lucide-react"; // Import icons
+} from "lucide-react";
 import { IBlog, useContextFunc } from "@/components/context/AppContext";
+import ReactMde from "react-mde";
+import * as Showdown from "showdown";
+import "react-mde/lib/styles/css/react-mde-all.css";
+
+const converter = new Showdown.Converter({
+  tables: true,
+  simplifiedAutoLink: true,
+  strikethrough: true,
+  tasklists: true,
+});
 
 export default function BlogDetails() {
   const { blogs } = useContextFunc();
@@ -35,6 +45,9 @@ export default function BlogDetails() {
   const [tags, setTags] = useState([]);
   const [links, setLinks] = useState([]);
 
+  //markdown
+  const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
+
   //videos
   const [videos, setVideos] = useState([]);
   const [videoTitle, setVideoTitle] = useState("");
@@ -48,9 +61,11 @@ export default function BlogDetails() {
       const foundBlog = blogs?.find((b) => b._id.toString() === id);
       setBlog(foundBlog || null);
 
-      if(foundBlog) {
+      if (foundBlog) {
         setTitle(foundBlog.title);
         setDescription(foundBlog.description);
+        setBody(foundBlog.body);
+        setCategory(foundBlog.category)
       }
       console.log("found blog: ", foundBlog);
     }
@@ -69,8 +84,8 @@ export default function BlogDetails() {
 
   return (
     <section className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins">
-      <header className="flex justify-between">
-      <button
+      <header className="flex justify-between items-center">
+        <button
           onClick={() => router.back()}
           className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4"
         >
@@ -117,6 +132,53 @@ export default function BlogDetails() {
               className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
               placeholder="Blog Description"
             ></textarea>
+          </div>
+
+          {/* body */}
+          <div className="flex flex-col gap-1">
+            <label
+              htmlFor="blogBody"
+              className="font-medium text-gray-700 dark:text-gray-300"
+            >
+              Blog Body:
+            </label>
+            <ReactMde
+              value={body}
+              onChange={setBody}
+              selectedTab={selectedTab}
+              onTabChange={setSelectedTab}
+              generateMarkdownPreview={(markdown) =>
+                Promise.resolve(converter.makeHtml(markdown))
+              }
+              childProps={{
+                writeButton: {
+                  //  className: "bg-blue-500 dark:text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all",
+                },
+              }}
+              classes={{
+                reactMde:
+                  "border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800",
+                toolbar: "bg-gray-100 dark:bg-gray-900",
+                preview:
+                  "p-4 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100",
+                textArea:
+                  "p-4 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded focus:outline focus:outline-slate-800",
+              }}
+            />
+          </div>
+
+          {/* category */}
+          <div className="flex flex-col gap-1 mt-4">
+            <label htmlFor="blogCategory">Category: </label>
+            <input
+              type="text"
+              placeholder="Blog Category"
+              id="blogCategory"
+              value={category}
+              name="category"
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+            />
           </div>
 
           {/* submit button */}

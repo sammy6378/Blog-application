@@ -42,7 +42,7 @@ function Sidebar() {
           className="cursor-pointer 700:hidden mb-10"
           onClick={() => setOpenAdminSidebar(true)}
         >
-          <Menu className="top-[90px] z-[900] mr-[20px] m-[16px] cursor-pointer" />
+          <Menu className="top-[90px] z-[900] mr-[20px] max-500:mr-[10px] m-[16px] cursor-pointer" />
         </div>
       )}
       {/* Sidebar */}
