@@ -43,7 +43,7 @@ export default function BlogDetails() {
   const [category, setCategory] = useState("");
   const [thumbnail, setThumbnail] = useState({});
   const [tags, setTags] = useState([]);
-  const [links, setLinks] = useState([]);
+  const [links, setLinks] = useState<string[]>([]);
 
   //markdown
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
@@ -65,7 +65,8 @@ export default function BlogDetails() {
         setTitle(foundBlog.title);
         setDescription(foundBlog.description);
         setBody(foundBlog.body);
-        setCategory(foundBlog.category)
+        setCategory(foundBlog.category);
+        setLinks(foundBlog.links)
       }
       console.log("found blog: ", foundBlog);
     }
@@ -179,6 +180,13 @@ export default function BlogDetails() {
               onChange={(e) => setCategory(e.target.value)}
               className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
             />
+          </div>
+
+          {/* links */}<label htmlFor="links">Links: </label>
+          <div className="flex gap-2">
+            {links.map((link, index) => (
+              <input type="text" key={index} value={link} onChange={(e) => setLinks([...links, e.target.value])} className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit" />
+            ))}
           </div>
 
           {/* submit button */}
