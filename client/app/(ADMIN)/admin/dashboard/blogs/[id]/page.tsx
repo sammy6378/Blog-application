@@ -201,51 +201,55 @@ export default function BlogDetails() {
           </div>
 
           {/* links */}
-          <div>
-            <label htmlFor="links">Links: </label>
-            {links && links.length > 0 ? (
-              <div>
-                <div className="flex gap-2 flex-wrap">
-                  {links.map((link, index) => (
-                    <input
-                      type="text"
-                      key={index}
-                      defaultValue={link}
-                      /* onChange={(e) => setLinks([...links, e.target.value])} */
-                      onKeyDown={(e) => handleEditLink(e, index)}
-                      className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
-                    />
-                  ))}
+
+          <section className="border dark:border-slate-800 p-2 rounded shadow dark:shadow-slate-500">
+            <div>
+              <label htmlFor="links">Links: </label>
+              {links && links.length > 0 ? (
+                <div>
+                  <div className="flex gap-2 flex-wrap">
+                    {links.map((link, index) => (
+                      <input
+                        type="text"
+                        key={index}
+                        defaultValue={link}
+                        /* onChange={(e) => setLinks([...links, e.target.value])} */
+                        onKeyDown={(e) => handleEditLink(e, index)}
+                        className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                      />
+                    ))}
+                  </div>
+                  <div
+                    className="flex items-center gap-1"
+                    onClick={() => setAddLink(true)}
+                  >
+                    <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />{" "}
+                    <span className="text-xs">Add Link</span>
+                  </div>
                 </div>
+              ) : (
                 <div
                   className="flex items-center gap-1"
                   onClick={() => setAddLink(true)}
                 >
-                  <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />{" "}
+                  <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />
                   <span className="text-xs">Add Link</span>
                 </div>
-              </div>
-            ) : (
-              <div
-                className="flex items-center gap-1"
-                onClick={() => setAddLink(true)}
-              >
-                <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />
-                <span className="text-xs">Add Link</span>
+              )}
+            </div>
+
+            {/* Add Link */}
+            {addLink && (
+              <div>
+                <input
+                  type="text"
+                  className="p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                  onKeyDown={addNewLink}
+                  autoFocus
+                />
               </div>
             )}
-          </div>
-          {/* Add Link */}
-          {addLink && (
-            <div>
-              <input
-                type="text"
-                className="p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
-                onKeyDown={addNewLink}
-              />
-            </div>
-          )}
-
+          </section>
           {/* submit button */}
           <button
             type="submit"
