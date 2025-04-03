@@ -13,7 +13,7 @@ import {
   Edit2Icon,
   Camera,
 } from "lucide-react";
-import { IBlog, useContextFunc } from "@/components/context/AppContext";
+import { IBlog, IVideo, useContextFunc } from "@/components/context/AppContext";
 import ReactMde from "react-mde";
 import * as Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -52,8 +52,8 @@ export default function BlogDetails() {
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
 
   //videos
-  const [videos, setVideos] = useState([]);
-  const [videoTitle, setVideoTitle] = useState("");
+  const [videos, setVideos] = useState<IVideo[]>([]);
+  const [videoTitle, setVideoTitle] = useState('');
   const [videoDescription, setVideoDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [videoThumbnail, setVideoThumbnail] = useState({});
@@ -72,6 +72,9 @@ export default function BlogDetails() {
         setLinks(foundBlog.links);
         setTags(foundBlog.tags);
         setThumbnail(foundBlog.thumbnail.url);
+
+        //videos
+        setVideos(foundBlog.videos);
       }
       console.log("found blog: ", foundBlog);
     }
