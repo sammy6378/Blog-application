@@ -11,11 +11,13 @@ import {
   Trash2,
   Trash2Icon,
   Edit2Icon,
+  Camera,
 } from "lucide-react";
 import { IBlog, useContextFunc } from "@/components/context/AppContext";
 import ReactMde from "react-mde";
 import * as Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
+import Image from "next/image";
 
 const converter = new Showdown.Converter({
   tables: true,
@@ -41,7 +43,7 @@ export default function BlogDetails() {
   const [description, setDescription] = useState(blog?.description);
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
-  const [thumbnail, setThumbnail] = useState({});
+  const [thumbnail, setThumbnail] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [addTag, setAddTag] = useState(false);
   const [links, setLinks] = useState<string[]>([]);
@@ -69,14 +71,15 @@ export default function BlogDetails() {
         setCategory(foundBlog.category);
         setLinks(foundBlog.links);
         setTags(foundBlog.tags);
+        setThumbnail(foundBlog.thumbnail.url);
       }
       console.log("found blog: ", foundBlog);
     }
   }, [id, blogs]);
 
   useEffect(() => {
-    console.log(links);
-  }, [links]);
+    console.log(thumbnail);
+  }, [thumbnail]);
 
   //delete entire blog
   const handleDeleteBlog = async () => {};
@@ -115,6 +118,19 @@ export default function BlogDetails() {
       setAddTag(false);
     }
     e.target.value === "";
+  };
+
+  const handleThumbnailUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      if (fileReader.readyState == 2) {
+        const fileName = fileReader.result as string;
+        setThumbnail(fileName);
+      }
+    };
+    if (e.target.files && e.target.files[0]) {
+      fileReader.readAsDataURL(e.target.files[0]);
+    }
   };
 
   return (
@@ -213,6 +229,35 @@ export default function BlogDetails() {
               name="category"
               onChange={(e) => setCategory(e.target.value)}
               className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+            />
+          </div>
+
+          {/* thumbnail */}
+          <div className="flex flex-col gap-1 my-4">
+            <p>Update Thumbnail: </p>
+            <div className="relative w-fit">
+              <Image
+                src={thumbnail}
+                alt="thumbnail"
+                width={150}
+                height={150}
+                className="rounded shadow shadow-slate-700"
+              />
+              <label htmlFor="thumbnail">
+                <Camera
+                  className="absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all"
+                  width={20}
+                  height={20}
+                />
+              </label>
+            </div>
+            <input
+              type="file"
+              name="thumbnail"
+              id="thumbnail"
+              accept="image/*"
+              onChange={handleThumbnailUpdate}
+              hidden
             />
           </div>
 

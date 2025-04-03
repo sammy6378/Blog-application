@@ -87,6 +87,10 @@ export interface IBlog {
   links: string[];
   comments: any[]; // Adjust this type if you know the structure of comments
   tags: string[];
+  thumbnail: {
+    public_id: string,
+    url: string,
+  }
   createdAt: string;
   updatedAt: string;
 }
