@@ -84,11 +84,7 @@ export interface IBlog {
   };
   videos: any[]; // Adjust this type if you know the structure of videos
   reviews: any[]; // Adjust this type if you know the structure of reviews
-  links: {
-    title: string;
-    url: string;
-    _id: string;
-  }[];
+  links: string[];
   comments: any[]; // Adjust this type if you know the structure of comments
   tags: string[];
   createdAt: string;
