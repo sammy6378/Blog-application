@@ -70,3 +70,41 @@ export const getAllUsers = async () => {
     }
   }
 };
+
+
+
+// update user role
+export const updateUserRole = async (role: string,email:string) => {
+  try {
+    const response = await createApi.put(
+      `/user/update-role`,
+      { role,email },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw error;
+    } else {
+      throw new Error("Error occurred updating user role");
+    }
+  }
+};
+
+
+// delete user
+
+export const deleteUser = async (userId: string) => {
+  try {
+    const response = await createApi.delete(`/user/delete_user_by_admin/${userId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw error;
+    } else {
+      throw new Error("Error occurred deleting user");
+    }
+  }
+};
