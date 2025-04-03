@@ -44,7 +44,7 @@ export default function BlogDetails() {
   const [thumbnail, setThumbnail] = useState({});
   const [tags, setTags] = useState([]);
   const [links, setLinks] = useState<string[]>([]);
-
+  const [addLink, setAddLink] = useState(false);
   //markdown
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
 
@@ -73,7 +73,7 @@ export default function BlogDetails() {
   }, [id, blogs]);
 
   useEffect(() => {
-    console.log(links)
+    console.log(links);
   }, [links]);
 
   //delete entire blog
@@ -87,18 +87,19 @@ export default function BlogDetails() {
     );
   }
 
-  const removeLink = (index: number) => {
-    const updatedLinks = links.filter((_, i) => i !== index);
-    setLinks(updatedLinks) ;
-    
-  }
-
   const handleEditLink = (e: any, index: number) => {
-    const updatedLinks = [...links]; 
+    const updatedLinks = [...links];
     updatedLinks[index] = e.target.value;
     setLinks(updatedLinks);
   };
 
+  const addNewLink = (e: any) => {
+    if (e.key === "Enter") {
+      setLinks([...links, e.target.value]);
+      setAddLink(false);
+    }
+    e.target.value === "";
+  };
 
   return (
     <section className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins">
@@ -203,25 +204,47 @@ export default function BlogDetails() {
           <div>
             <label htmlFor="links">Links: </label>
             {links && links.length > 0 ? (
-              <div className="flex gap-2 flex-wrap">
-                {links.map((link, index) => (
-                  <input
-                    type="text"
-                    key={index}
-                    defaultValue={link}
-                    /* onChange={(e) => setLinks([...links, e.target.value])} */
-                    onKeyDown={(e) => handleEditLink(e, index)}
-                    className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
-                  />
-                ))}
+              <div>
+                <div className="flex gap-2 flex-wrap">
+                  {links.map((link, index) => (
+                    <input
+                      type="text"
+                      key={index}
+                      defaultValue={link}
+                      /* onChange={(e) => setLinks([...links, e.target.value])} */
+                      onKeyDown={(e) => handleEditLink(e, index)}
+                      className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                    />
+                  ))}
+                </div>
+                <div
+                  className="flex items-center gap-1"
+                  onClick={() => setAddLink(true)}
+                >
+                  <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />{" "}
+                  <span className="text-xs">Add Link</span>
+                </div>
               </div>
             ) : (
-              <div className="flex items-center gap-1">
-                <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />{" "}
+              <div
+                className="flex items-center gap-1"
+                onClick={() => setAddLink(true)}
+              >
+                <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />
                 <span className="text-xs">Add Link</span>
               </div>
             )}
           </div>
+          {/* Add Link */}
+          {addLink && (
+            <div>
+              <input
+                type="text"
+                className="p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                onKeyDown={addNewLink}
+              />
+            </div>
+          )}
 
           {/* submit button */}
           <button
