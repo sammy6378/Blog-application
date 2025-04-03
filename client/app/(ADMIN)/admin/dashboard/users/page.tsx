@@ -4,29 +4,45 @@ import  {useState} from 'react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { IAllUsers, IUserInfo, useContextFunc } from '@/components/context/AppContext';
+import { updateUserRole } from '@/components/services/userService';
 
 const Page = () => {
   const { allUsers }= useContextFunc();
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
-
-/*     const [users, setUsers] = useState<any[]>([
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
-    { id: 3, name: 'Sam Smith', email: 'sam@example.com', role: 'user' },
-  ]); 
-  */
+  const [role, setRole] = useState("");
 
 
   const handleEditUser = (user:any) => {
     setSelectedUser(user);
+    setRole(user.role);
     setIsFormVisible(true); // Show the form
   };
 
-/*   const handleDeleteUser = (id:number) => {
-    setUsers(users.filter((user) => user.id !== id)); // Delete user
-    toast.success('User deleted successfully');
-  }; */
+  // update selected user role
+  const handleUpdateRole = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent form submission
+    if (!selectedUser) return;
+  
+    try {
+      await updateUserRole(role, selectedUser.email);
+      toast.success("User role updated successfully");
+      setIsFormVisible(false); // Close modal after success
+    } catch (error) {
+      toast.error("Failed to update user role");
+    }
+  };
+
+// const handleDeleteUser = (id:string) => {
+//     const updatedUsers = allUsers?.filter((user: IUserInfo) => user._id !== id); // Filter out the user
+//     if (updatedUsers) {
+//       // Update the state or context with the filtered users
+//       toast.success('User deleted successfully');
+//     } else {
+//       toast.error('Failed to delete user');
+//     }
+//     toast.success('User deleted successfully');
+//   }; 
 
   return (
     <div className="p-8 mb-[80px] max-700:mb-[150px] overflow-x-auto">
@@ -72,12 +88,14 @@ const Page = () => {
       <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-200">
         {selectedUser ? "Edit user" : "Create User"}
       </h2>
-      <form>
+      <form onSubmit={handleUpdateRole}>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Title</label>
           <input
             type="text"
             name="Role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
             defaultValue={selectedUser ? selectedUser.role : ""}
             className="w-full px-3 py-2 border rounded-lg border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required
