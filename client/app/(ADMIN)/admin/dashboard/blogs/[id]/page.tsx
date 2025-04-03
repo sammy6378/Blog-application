@@ -42,7 +42,8 @@ export default function BlogDetails() {
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
   const [thumbnail, setThumbnail] = useState({});
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [addTag, setAddTag] = useState(false);
   const [links, setLinks] = useState<string[]>([]);
   const [addLink, setAddLink] = useState(false);
   //markdown
@@ -67,6 +68,7 @@ export default function BlogDetails() {
         setBody(foundBlog.body);
         setCategory(foundBlog.category);
         setLinks(foundBlog.links);
+        setTags(foundBlog.tags);
       }
       console.log("found blog: ", foundBlog);
     }
@@ -97,6 +99,20 @@ export default function BlogDetails() {
     if (e.key === "Enter") {
       setLinks([...links, e.target.value]);
       setAddLink(false);
+    }
+    e.target.value === "";
+  };
+
+  const handleEditTag = (e: any, index: number) => {
+    const updatedTags = [...tags];
+    updatedTags[index] = e.target.value;
+    setTags(updatedTags);
+  };
+
+  const addNewTag = (e: any) => {
+    if (e.key === "Enter") {
+      setTags([...tags, e.target.value]);
+      setAddTag(false);
     }
     e.target.value === "";
   };
@@ -201,18 +217,17 @@ export default function BlogDetails() {
           </div>
 
           {/* links */}
-
           <section className="border dark:border-slate-800 p-2 rounded shadow dark:shadow-slate-500">
             <div>
               <label htmlFor="links">Links: </label>
               {links && links.length > 0 ? (
                 <div>
                   <div className="flex gap-2 flex-wrap">
-                    {links.map((link, index) => (
+                    {links.map((tag, index) => (
                       <input
                         type="text"
                         key={index}
-                        defaultValue={link}
+                        defaultValue={tag}
                         /* onChange={(e) => setLinks([...links, e.target.value])} */
                         onKeyDown={(e) => handleEditLink(e, index)}
                         className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
@@ -241,10 +256,61 @@ export default function BlogDetails() {
             {/* Add Link */}
             {addLink && (
               <div>
+                <p className="text-xs">Press (Enter) to add</p>
                 <input
                   type="text"
                   className="p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
                   onKeyDown={addNewLink}
+                  autoFocus
+                />
+              </div>
+            )}
+          </section>
+
+          {/* tags */}
+          <section className="border dark:border-slate-800 p-2 rounded shadow dark:shadow-slate-500 mt-7">
+            <div>
+              <label htmlFor="links">Tags: </label>
+              {tags && tags.length > 0 ? (
+                <div>
+                  <div className="flex gap-2 flex-wrap">
+                    {tags.map((tag, index) => (
+                      <input
+                        type="text"
+                        key={index}
+                        defaultValue={tag}
+                        onKeyDown={(e) => handleEditTag(e, index)}
+                        className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                      />
+                    ))}
+                  </div>
+                  <div
+                    className="flex items-center gap-1"
+                    onClick={() => setAddTag(true)}
+                  >
+                    <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />{" "}
+                    <span className="text-xs">Add Tag</span>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className="flex items-center gap-1"
+                  onClick={() => setAddTag(true)}
+                >
+                  <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />
+                  <span className="text-xs">Add Tag</span>
+                </div>
+              )}
+            </div>
+
+            {/* Add Link */}
+            {addTag && (
+              <div>
+                <p className="text-xs">Press (Enter) to add</p>
+                <input
+                  type="text"
+                  className="p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                  onKeyDown={addNewTag}
                   autoFocus
                 />
               </div>
