@@ -2,30 +2,60 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation"; // Import useRouter
-import { MessageCircle, ThumbsUp, PlusCircle, ArrowLeft } from "lucide-react"; // Import icons
+import {
+  MessageCircle,
+  ThumbsUp,
+  PlusCircle,
+  ArrowLeft,
+  Trash,
+} from "lucide-react"; // Import icons
 import { IBlog, useContextFunc } from "@/components/context/AppContext";
 
-const BlogDetails: React.FC = () => {
-  const {blogs} = useContextFunc();
-  const router = useRouter(); // Initialize router
+export default function BlogDetails() {
+  const { blogs } = useContextFunc();
+  const router = useRouter();
   const params = useParams();
   const id = params?.id;
-  
+
   const [blog, setBlog] = useState<IBlog | null>(null);
-  const [editedBlog, setEditedBlog] = useState<IBlog | null>(null);
+  /*   const [editedBlog, setEditedBlog] = useState<IBlog | null>(null);
   const [isModified, setIsModified] = useState(false);
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState<string>("");
-  const [newTag, setNewTag] = useState<string>("");
+  const [newTag, setNewTag] = useState<string>(""); */
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [body, setBody] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     if (id) {
       const foundBlog = blogs?.find((b) => b._id.toString() === id);
       setBlog(foundBlog || null);
     }
-  }, [id]);
+  }, [id, blogs]);
 
-  const handleInputChange = (field: keyof IBlog, value: any) => {
+  if (blog === null) {
+    return (
+      <p className="text-center text-red-500 text-lg font-semibold">
+        Blog not found!
+      </p>
+    );
+  }
+
+  return (
+    <section>
+      <div className="flex justify-between">
+        <h2>Edit Blog</h2>
+        <button title="delete blog">
+          <Trash />  
+        </button>
+      </div>
+    </section>
+  );
+
+  /* const handleInputChange = (field: keyof IBlog, value: any) => {
     setEditedBlog({ ...editedBlog, [field]: value } as IBlog);
     setIsModified(true);
   };
@@ -59,7 +89,7 @@ const BlogDetails: React.FC = () => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto mb-20 bg-white dark:bg-gray-900 shadow-md rounded-lg">
-      {/* Go Back Button */}
+      
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-blue-500 hover:text-blue-600 font-semibold mb-4"
@@ -80,7 +110,7 @@ const BlogDetails: React.FC = () => {
 
       <textarea
         value={blog.body}
-        /* onChange={(e) => handleInputChange("content", e.target.value)} */
+         onChange={(e) => handleInputChange("content", e.target.value)} 
         placeholder="Blog Content"
         className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg mb-4 text-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         rows={5}
@@ -181,4 +211,5 @@ const BlogDetails: React.FC = () => {
   );
 };
 
-export default BlogDetails;
+ */
+}
