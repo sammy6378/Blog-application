@@ -66,11 +66,15 @@ export default function BlogDetails() {
         setDescription(foundBlog.description);
         setBody(foundBlog.body);
         setCategory(foundBlog.category);
-        setLinks(foundBlog.links)
+        setLinks(foundBlog.links);
       }
       console.log("found blog: ", foundBlog);
     }
   }, [id, blogs]);
+
+  useEffect(() => {
+    console.log(links)
+  }, [links]);
 
   //delete entire blog
   const handleDeleteBlog = async () => {};
@@ -82,6 +86,19 @@ export default function BlogDetails() {
       </p>
     );
   }
+
+  const removeLink = (index: number) => {
+    const updatedLinks = links.filter((_, i) => i !== index);
+    setLinks(updatedLinks) ;
+    
+  }
+
+  const handleEditLink = (e: any, index: number) => {
+    const updatedLinks = [...links]; 
+    updatedLinks[index] = e.target.value;
+    setLinks(updatedLinks);
+  };
+
 
   return (
     <section className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins">
@@ -108,7 +125,7 @@ export default function BlogDetails() {
 
       <div className="dark:border-none border shadow dark:shadow-slate-600 shadow-slate-400 p-4 rounded-md mb-4 relative mt-5">
         <h1 className="text-xl 700:text-2xl font-semibold">Edit Blog</h1>
-        <form className="mt-8">
+        <form className="mt-8" onSubmit={(e) => e.preventDefault()}>
           {/* Blog Title */}
           <div className="flex flex-col gap-1">
             <label htmlFor="blogTitle">Blog Title: </label>
@@ -182,11 +199,28 @@ export default function BlogDetails() {
             />
           </div>
 
-          {/* links */}<label htmlFor="links">Links: </label>
-          <div className="flex gap-2">
-            {links.map((link, index) => (
-              <input type="text" key={index} value={link} onChange={(e) => setLinks([...links, e.target.value])} className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit" />
-            ))}
+          {/* links */}
+          <div>
+            <label htmlFor="links">Links: </label>
+            {links && links.length > 0 ? (
+              <div className="flex gap-2 flex-wrap">
+                {links.map((link, index) => (
+                  <input
+                    type="text"
+                    key={index}
+                    defaultValue={link}
+                    /* onChange={(e) => setLinks([...links, e.target.value])} */
+                    onKeyDown={(e) => handleEditLink(e, index)}
+                    className=" p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />{" "}
+                <span className="text-xs">Add Link</span>
+              </div>
+            )}
           </div>
 
           {/* submit button */}
