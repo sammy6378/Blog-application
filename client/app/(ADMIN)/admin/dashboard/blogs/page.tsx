@@ -162,14 +162,14 @@ function BlogPage() {
                   <div className="absolute bottom-2 right-[5px] border z-10 dark:bg-gray-800 bg-gray-200 w-fit p-2 px-4 rounded-md shadow-md">
                     {blog?.links && blog?.links.length > 0 ? (
                       <div className="flex flex-col">
-                        {blog.links.map((link) => (
+                        {blog.links.map((link, index) => (
                           <Link
-                            href={link.url}
-                            key={link._id}
+                            href={link}
+                            key={index}
                             className="whitespace-nowrap"
                             onClick={() => setLinksOpen("")}
                           >
-                            {link.title}
+                            {link}
                           </Link>
                         ))}
                       </div>

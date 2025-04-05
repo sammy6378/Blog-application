@@ -82,17 +82,34 @@ export interface IBlog {
     createdAt: string;
     updatedAt: string;
   };
-  videos: any[]; // Adjust this type if you know the structure of videos
+  videos: IVideo[]; // Adjust this type if you know the structure of videos
   reviews: any[]; // Adjust this type if you know the structure of reviews
-  links: {
-    title: string;
-    url: string;
-    _id: string;
-  }[];
+  links: string[];
   comments: any[]; // Adjust this type if you know the structure of comments
   tags: string[];
+  thumbnail: {
+    public_id: string,
+    url: string,
+  }
   createdAt: string;
   updatedAt: string;
+}
+
+export interface IVideo {
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  videoUrl: String,
+  videoThumbnail: {
+    public_id: String,
+    url: String, 
+  },
+  links: [String],
 }
 
 export const AppContext = createContext<IContext | undefined>(undefined);
