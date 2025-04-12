@@ -99,7 +99,7 @@ export interface IVideo {
   title: string,
   description: string,
   videoUrl: string,
-  videoThumbnail: {
+  videoThumbnail: string | {
     public_id: string,
     url: string, 
   },

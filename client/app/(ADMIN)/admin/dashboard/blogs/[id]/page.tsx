@@ -75,7 +75,6 @@ export default function BlogDetails() {
         setLinks(foundBlog.links);
         setTags(foundBlog.tags);
         setThumbnail(foundBlog.thumbnail.url);
-     
 
         //videos
         setVideos(foundBlog.videos);
@@ -161,6 +160,19 @@ export default function BlogDetails() {
     }
   };
 
+  const updatedBlog = {
+    title,
+    description,
+    body,
+    thumbnail,
+    videos,
+  };
+
+  const handleUpdateBlog = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+    } catch (error) {}
+  };
+
   return (
     <section className="mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins">
       <header className="flex justify-between items-center">
@@ -186,7 +198,7 @@ export default function BlogDetails() {
 
       <div className="dark:border-none border shadow dark:shadow-slate-600 shadow-slate-400 p-4 rounded-md mb-4 relative mt-5">
         <h1 className="text-xl 700:text-2xl font-semibold">Edit Blog</h1>
-        <form className="mt-8" onSubmit={(e) => e.preventDefault()}>
+        <form className="mt-8" onSubmit={handleUpdateBlog}>
           {/* Blog Title */}
           <div className="flex flex-col gap-1">
             <label htmlFor="blogTitle">Blog Title: </label>
@@ -620,7 +632,9 @@ export default function BlogDetails() {
                         <div className="relative w-fit">
                           <Image
                             src={
-                              video.videoThumbnail && video.videoThumbnail.url
+                              typeof video.videoThumbnail === "object" && video.videoThumbnail.url
+                                ? video.videoThumbnail.url
+                                : ""
                             }
                             alt="video-thumbnail"
                             width={100}
@@ -641,7 +655,23 @@ export default function BlogDetails() {
                             accept="image/*"
                             name="videoThumbnail"
                             hidden
-                            onChange={handleVideoThumbnailUpdate}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  const base64String = fileReader.result as string; // Convert file to Base64 string
+                                  const updatedVideos = [...videos];
+                                  updatedVideos[index] = {
+                                    ...updatedVideos[index],
+                                    videoThumbnail: base64String, // Assign the Base64 string directly
+                                  };
+                                  setVideos(updatedVideos); // Update the videos state
+                                }
+                              };
+                              if (e.target.files && e.target.files[0]) {
+                                fileReader.readAsDataURL(e.target.files[0]); // Read the file as a Base64 string
+                              }
+                            }}
                           />
                         </div>
                       </div>
