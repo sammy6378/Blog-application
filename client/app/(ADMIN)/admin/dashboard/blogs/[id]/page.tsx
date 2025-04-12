@@ -13,6 +13,7 @@ import {
   Edit2Icon,
   Camera,
   X,
+  CameraIcon,
 } from "lucide-react";
 import { IBlog, IVideo, useContextFunc } from "@/components/context/AppContext";
 import ReactMde from "react-mde";
@@ -58,9 +59,9 @@ export default function BlogDetails() {
   /* const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
-  const [videoThumbnail, setVideoThumbnail] = useState({});
-  const [videoLinks, setVideoLinks] = useState([]); */
 
+  const [videoLinks, setVideoLinks] = useState([]); */
+  const [videoThumbnail, setVideoThumbnail] = useState("");
   useEffect(() => {
     if (id) {
       const foundBlog = blogs?.find((b) => b._id.toString() === id);
@@ -74,6 +75,7 @@ export default function BlogDetails() {
         setLinks(foundBlog.links);
         setTags(foundBlog.tags);
         setThumbnail(foundBlog.thumbnail.url);
+     
 
         //videos
         setVideos(foundBlog.videos);
@@ -137,6 +139,21 @@ export default function BlogDetails() {
       if (fileReader.readyState == 2) {
         const fileName = fileReader.result as string;
         setThumbnail(fileName);
+      }
+    };
+    if (e.target.files && e.target.files[0]) {
+      fileReader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const handleVideoThumbnailUpdate = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      if (fileReader.readyState === 2) {
+        const fileName = fileReader.result as string;
+        setVideoThumbnail(fileName);
       }
     };
     if (e.target.files && e.target.files[0]) {
@@ -476,11 +493,20 @@ export default function BlogDetails() {
                                   />
                                   <X
                                     className="-ml-4 cursor-pointer"
-                                    size={16} onClick={() => {
+                                    size={16}
+                                    onClick={() => {
                                       const updatedVideos = [...videos];
-                                      const singleVideo = { ...updatedVideos[index] };
-                                      const updatedLinks = singleVideo.links.filter((_, i) => i !== linkIndex);
-                                      updatedVideos[index] = { ...singleVideo, links: updatedLinks };
+                                      const singleVideo = {
+                                        ...updatedVideos[index],
+                                      };
+                                      const updatedLinks =
+                                        singleVideo.links.filter(
+                                          (_, i) => i !== linkIndex
+                                        );
+                                      updatedVideos[index] = {
+                                        ...singleVideo,
+                                        links: updatedLinks,
+                                      };
                                       setVideos(updatedVideos);
                                     }}
                                   />
@@ -586,6 +612,38 @@ export default function BlogDetails() {
                             </section>
                           </div>
                         )}
+                      </div>
+
+                      {/* video thumbnail */}
+                      <div className="my-2 mt-4">
+                        <p>Update Video Thumbnail: </p>
+                        <div className="relative w-fit">
+                          <Image
+                            src={
+                              video.videoThumbnail && video.videoThumbnail.url
+                            }
+                            alt="video-thumbnail"
+                            width={100}
+                            height={100}
+                            unoptimized
+                            className="rounded shadow shadow-slate-700"
+                          />
+                          <label htmlFor="video-thumbnail">
+                            <Camera
+                              className="absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all"
+                              width={20}
+                              height={20}
+                            />
+                          </label>
+                          <input
+                            type="file"
+                            id="video-thumbnail"
+                            accept="image/*"
+                            name="videoThumbnail"
+                            hidden
+                            onChange={handleVideoThumbnailUpdate}
+                          />
+                        </div>
                       </div>
                     </section>
                   </section>
