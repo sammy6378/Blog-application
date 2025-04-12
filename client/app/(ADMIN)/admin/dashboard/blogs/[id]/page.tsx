@@ -12,6 +12,7 @@ import {
   Trash2Icon,
   Edit2Icon,
   Camera,
+  X,
 } from "lucide-react";
 import { IBlog, IVideo, useContextFunc } from "@/components/context/AppContext";
 import ReactMde from "react-mde";
@@ -454,7 +455,7 @@ export default function BlogDetails() {
                           <>
                             <div className="flex flex-wrap gap-2">
                               {video.links.map((link, linkIndex) => (
-                                <div key={linkIndex}>
+                                <div key={linkIndex} className="flex">
                                   <input
                                     type="text"
                                     placeholder={`link-${linkIndex + 1}`}
@@ -472,6 +473,16 @@ export default function BlogDetails() {
                                       }
                                     }}
                                     className="w-fit p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+                                  />
+                                  <X
+                                    className="-ml-4 cursor-pointer"
+                                    size={16} onClick={() => {
+                                      const updatedVideos = [...videos];
+                                      const singleVideo = { ...updatedVideos[index] };
+                                      const updatedLinks = singleVideo.links.filter((_, i) => i !== linkIndex);
+                                      updatedVideos[index] = { ...singleVideo, links: updatedLinks };
+                                      setVideos(updatedVideos);
+                                    }}
                                   />
                                 </div>
                               ))}
@@ -500,7 +511,9 @@ export default function BlogDetails() {
                                         };
                                         const newLink = e.target.value;
 
-                                        if (!updatedVideo.links.includes(newLink)) {
+                                        if (
+                                          !updatedVideo.links.includes(newLink)
+                                        ) {
                                           const updatedLinks = [
                                             ...updatedVideo.links,
                                             newLink,
@@ -512,7 +525,7 @@ export default function BlogDetails() {
                                           setVideos(updatedVideos);
                                           e.target.value = "";
                                         } else {
-                                          alert("Link already exists")
+                                          alert("Link already exists");
                                         }
                                       }
                                     }}
@@ -524,7 +537,7 @@ export default function BlogDetails() {
                           </>
                         ) : (
                           <div>
-                             <section>
+                            <section>
                               <div
                                 className="flex items-center gap-1"
                                 onClick={() => setAddVideoLink(true)}
@@ -548,7 +561,9 @@ export default function BlogDetails() {
                                         };
                                         const newLink = e.target.value;
 
-                                        if (!updatedVideo.links.includes(newLink)) {
+                                        if (
+                                          !updatedVideo.links.includes(newLink)
+                                        ) {
                                           const updatedLinks = [
                                             ...updatedVideo.links,
                                             newLink,
@@ -560,7 +575,7 @@ export default function BlogDetails() {
                                           setVideos(updatedVideos);
                                           e.target.value = "";
                                         } else {
-                                          alert("Link already exists")
+                                          alert("Link already exists");
                                         }
                                       }
                                     }}
