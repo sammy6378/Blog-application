@@ -46,6 +46,7 @@ export default function BlogDetails() {
   const [thumbnail, setThumbnail] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [addTag, setAddTag] = useState(false);
+  const [addVideoLink, setAddVideoLink] = useState(false);
   const [links, setLinks] = useState<string[]>([]);
   const [addLink, setAddLink] = useState(false);
   //markdown
@@ -53,11 +54,11 @@ export default function BlogDetails() {
 
   //videos
   const [videos, setVideos] = useState<IVideo[]>([]);
-  const [videoTitle, setVideoTitle] = useState('');
+  /* const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [videoThumbnail, setVideoThumbnail] = useState({});
-  const [videoLinks, setVideoLinks] = useState([]);
+  const [videoLinks, setVideoLinks] = useState([]); */
 
   useEffect(() => {
     if (id) {
@@ -122,6 +123,12 @@ export default function BlogDetails() {
     }
     e.target.value === "";
   };
+
+  /*   const addNewVideoTag = (e: any) => {
+    if(e.key === "Enter") {
+      const updated
+    }
+  } */
 
   const handleThumbnailUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader();
@@ -351,7 +358,7 @@ export default function BlogDetails() {
               )}
             </div>
 
-            {/* Add Link */}
+            {/* Add Tag */}
             {addTag && (
               <div>
                 <p className="text-xs">Press (Enter) to add</p>
@@ -362,6 +369,215 @@ export default function BlogDetails() {
                   autoFocus
                 />
               </div>
+            )}
+          </section>
+
+          {/* videos */}
+          <section className="border dark:border-slate-800 p-2 rounded shadow dark:shadow-slate-500 mt-7">
+            <h1 className="text-xl mb-3 font-semibold">Blog Videos</h1>
+            {videos && videos.length > 0 ? (
+              <div>
+                {videos.map((video, index) => (
+                  <section
+                    key={index}
+                    className="border-b-2 mt-2 last:border-none "
+                  >
+                    <h2 className="font-medium mb-2 text-center">
+                      Video{" "}
+                      <span className="font-bold dark:text-green text-crimson">
+                        {index + 1}
+                      </span>
+                    </h2>
+                    <section>
+                      <div className="mb-2">
+                        <label htmlFor={`title-${index}`}>Title: </label>
+                        <input
+                          type="text"
+                          value={video.title}
+                          placeholder="video title"
+                          id={`title-${index}`}
+                          onChange={(e) => {
+                            const updatedVideos = [...videos];
+                            updatedVideos[index] = {
+                              ...video,
+                              title: e.target.value,
+                            };
+                            setVideos(updatedVideos);
+                          }}
+                          className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+                        />
+                      </div>
+                      <div className="mb-2">
+                        <label htmlFor={`description-${index}`}>
+                          Description:{" "}
+                        </label>
+                        <textarea
+                          name="description"
+                          id={`description-${index}`}
+                          placeholder="video description"
+                          value={video.description}
+                          onChange={(e) => {
+                            const updatedVideos = [...videos];
+                            updatedVideos[index] = {
+                              ...video,
+                              description: e.target.value,
+                            };
+                            setVideos(updatedVideos);
+                          }}
+                          className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+                        ></textarea>
+                      </div>
+                      <div className="mb-2">
+                        <label htmlFor={`url-${index}`}>Video Url: </label>
+                        <input
+                          type="text"
+                          id={`url-${index}`}
+                          name="videoUrl"
+                          placeholder="videoUrl"
+                          value={video.videoUrl}
+                          onChange={(e) => {
+                            const updatedVideos = [...videos];
+                            updatedVideos[index] = {
+                              ...video,
+                              videoUrl: e.target.value,
+                            };
+                            setVideos(updatedVideos);
+                          }}
+                          className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+                        />
+                      </div>
+
+                      {/* links */}
+                      <div className="mb-2">
+                        <h2 className="after:">Video Links: </h2>
+                        {video.links && video.links.length > 0 ? (
+                          <>
+                            <div className="flex flex-wrap gap-2">
+                              {video.links.map((link, linkIndex) => (
+                                <div key={linkIndex}>
+                                  <input
+                                    type="text"
+                                    placeholder={`link-${linkIndex + 1}`}
+                                    value={link}
+                                    onChange={(e) => {
+                                      const updatedVideos = [...videos];
+                                      const singleVideo = {
+                                        ...updatedVideos[index],
+                                      };
+                                      if (Array.isArray(singleVideo.links)) {
+                                        singleVideo.links[linkIndex] =
+                                          e.target.value;
+                                        updatedVideos[index] = singleVideo;
+                                        setVideos(updatedVideos);
+                                      }
+                                    }}
+                                    className="w-fit p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                            <section>
+                              <div
+                                className="flex items-center gap-1"
+                                onClick={() => setAddVideoLink(true)}
+                              >
+                                <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />
+                                <span className="text-xs">Add Link</span>
+                              </div>
+                              {addVideoLink && (
+                                <div className="block">
+                                  <p className="text-xs">
+                                    Press (Enter) to add
+                                  </p>
+                                  <input
+                                    type="text"
+                                    className="p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                                    onKeyDown={(e: any) => {
+                                      if (e.key === "Enter") {
+                                        const updatedVideos = [...videos];
+                                        const updatedVideo = {
+                                          ...updatedVideos[index],
+                                        };
+                                        const newLink = e.target.value;
+
+                                        if (!updatedVideo.links.includes(newLink)) {
+                                          const updatedLinks = [
+                                            ...updatedVideo.links,
+                                            newLink,
+                                          ];
+                                          updatedVideos[index] = {
+                                            ...updatedVideo,
+                                            links: updatedLinks,
+                                          };
+                                          setVideos(updatedVideos);
+                                          e.target.value = "";
+                                        } else {
+                                          alert("Link already exists")
+                                        }
+                                      }
+                                    }}
+                                    autoFocus
+                                  />
+                                </div>
+                              )}
+                            </section>
+                          </>
+                        ) : (
+                          <div>
+                             <section>
+                              <div
+                                className="flex items-center gap-1"
+                                onClick={() => setAddVideoLink(true)}
+                              >
+                                <PlusCircle className="hover:dark:text-green hover:text-crimson cursor-pointer transition-all" />
+                                <span className="text-xs">Add Link</span>
+                              </div>
+                              {addVideoLink && (
+                                <div className="block">
+                                  <p className="text-xs">
+                                    Press (Enter) to add
+                                  </p>
+                                  <input
+                                    type="text"
+                                    className="p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md w-fit"
+                                    onKeyDown={(e: any) => {
+                                      if (e.key === "Enter") {
+                                        const updatedVideos = [...videos];
+                                        const updatedVideo = {
+                                          ...updatedVideos[index],
+                                        };
+                                        const newLink = e.target.value;
+
+                                        if (!updatedVideo.links.includes(newLink)) {
+                                          const updatedLinks = [
+                                            ...updatedVideo.links,
+                                            newLink,
+                                          ];
+                                          updatedVideos[index] = {
+                                            ...updatedVideo,
+                                            links: updatedLinks,
+                                          };
+                                          setVideos(updatedVideos);
+                                          e.target.value = "";
+                                        } else {
+                                          alert("Link already exists")
+                                        }
+                                      }
+                                    }}
+                                    autoFocus
+                                  />
+                                </div>
+                              )}
+                            </section>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  </section>
+                ))}
+              </div>
+            ) : (
+              <div></div>
             )}
           </section>
           {/* submit button */}
