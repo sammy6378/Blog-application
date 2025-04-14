@@ -35,7 +35,7 @@ const converter = new Showdown.Converter({
 });
 
 export default function BlogDetails() {
-  const { blogs } = useContextFunc();
+  const { blogs, getBlogsFunc } = useContextFunc();
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
@@ -68,6 +68,7 @@ export default function BlogDetails() {
 
   const [videoLinks, setVideoLinks] = useState([]); */
   //const [videoThumbnail, setVideoThumbnail] = useState("");
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (id) {
       const foundBlog = blogs?.find((b) => b._id.toString() === id);
@@ -168,6 +169,7 @@ export default function BlogDetails() {
 
   const handleUpdateBlog = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const updatedBlog: IUpdateBlog = {
       title,
@@ -198,9 +200,14 @@ export default function BlogDetails() {
       if (response.success) {
         toast.success(response.message);
         router.push("/admin/dashboard/blogs");
+        getBlogsFunc().then(() => setLoading(false));
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.message);
+      console.log(error.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -661,19 +668,22 @@ export default function BlogDetails() {
                       <div className="my-2 mt-4">
                         <p>Update Video Thumbnail: </p>
                         <div className="relative w-fit">
-                          <Image
-                            src={
-                              typeof video.videoThumbnail === "object" &&
-                              video.videoThumbnail.url
-                                ? video.videoThumbnail.url
-                                : ""
-                            }
-                            alt="video-thumbnail"
-                            width={100}
-                            height={100}
-                            unoptimized
-                            className="rounded shadow shadow-slate-700"
-                          />
+                          {video.videoThumbnail && (
+                            <Image
+                              src={
+                                typeof video.videoThumbnail === "object" &&
+                                video.videoThumbnail.url
+                                  ? video.videoThumbnail.url
+                                  : ""
+                              }
+                              alt="video-thumbnail"
+                              width={100}
+                              height={100}
+                              unoptimized
+                              className="rounded shadow shadow-slate-700"
+                            />
+                          )}
+
                           <label htmlFor="video-thumbnail">
                             <Camera
                               className="absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all"
@@ -723,12 +733,19 @@ export default function BlogDetails() {
             type="submit"
             className="flex items-center place-self-end mt-5 gap-1 border-[1.5px] p-2 rounded shadow-inner shadow-green bg-opacity-50 border-green hover:bg-emerald-200/50 transition-all group"
           >
-            <span> Update Blog </span>
-            <Edit2Icon
-              size={14}
-              fill="transparent"
-              className="text-green group-hover:text-white"
-            />
+            {!loading ? (
+              <>
+                {" "}
+                <span> Update Blog </span>
+                <Edit2Icon
+                  size={14}
+                  fill="transparent"
+                  className="text-green group-hover:text-white"
+                />
+              </>
+            ) : (
+              "Updating in progress..."
+            )}
           </button>
         </form>
       </div>
