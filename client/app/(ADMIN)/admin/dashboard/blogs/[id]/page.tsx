@@ -20,6 +20,7 @@ import ReactMde from "react-mde";
 import * as Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import Image from "next/image";
+import { ICreateVideo, IUpdateBlog, updateBlog } from "@/components/services/blogService";
 
 const converter = new Showdown.Converter({
   tables: true,
@@ -42,10 +43,11 @@ export default function BlogDetails() {
   const [newTag, setNewTag] = useState<string>(""); */
 
   const [title, setTitle] = useState(blog?.title || "");
-  const [description, setDescription] = useState(blog?.description);
+  const [description, setDescription] = useState(blog?.description || ""
+  );
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const [thumbnail, setThumbnail] = useState<string | { url: string }>(""); 
   const [tags, setTags] = useState<string[]>([]);
   const [addTag, setAddTag] = useState(false);
   const [addVideoLink, setAddVideoLink] = useState(false);
@@ -61,7 +63,7 @@ export default function BlogDetails() {
   const [videoUrl, setVideoUrl] = useState("");
 
   const [videoLinks, setVideoLinks] = useState([]); */
-  const [videoThumbnail, setVideoThumbnail] = useState("");
+  //const [videoThumbnail, setVideoThumbnail] = useState("");
   useEffect(() => {
     if (id) {
       const foundBlog = blogs?.find((b) => b._id.toString() === id);
@@ -81,6 +83,7 @@ export default function BlogDetails() {
       }
       console.log("found blog: ", foundBlog);
     }
+
   }, [id, blogs]);
 
   useEffect(() => {
@@ -145,7 +148,7 @@ export default function BlogDetails() {
     }
   };
 
-  const handleVideoThumbnailUpdate = (
+ /*  const handleVideoThumbnailUpdate = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const fileReader = new FileReader();
@@ -158,19 +161,43 @@ export default function BlogDetails() {
     if (e.target.files && e.target.files[0]) {
       fileReader.readAsDataURL(e.target.files[0]);
     }
-  };
+  }; */
 
-  const updatedBlog = {
-    title,
-    description,
-    body,
-    thumbnail,
-    videos,
-  };
+ 
 
   const handleUpdateBlog = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    const updatedBlog: IUpdateBlog = {
+      title,
+      description,
+      body,
+      category,
+      tags,
+      links,
+      videos: videos.map((video) => ({
+        title: video.title,
+        description: video.description,
+        videoUrl: video.videoUrl,
+        videoThumbnail:
+          typeof video.videoThumbnail === 'object'
+            ? video.videoThumbnail.url // Use existing URL
+            : video.videoThumbnail, // Or new Base64 string
+        links: video.links,
+      })),
+    };
+  
+    // Only include thumbnail if it's a new Base64 string
+    if (typeof thumbnail === 'string') {
+      updatedBlog.thumbnail = thumbnail;
+    }
+  
     try {
-    } catch (error) {}
+      const response = await updateBlog(updatedBlog, id as string);
+      // Handle success
+    } catch (error) {
+      // Handle error
+    }
   };
 
   return (
@@ -277,7 +304,7 @@ export default function BlogDetails() {
             <p>Update Thumbnail: </p>
             <div className="relative w-fit">
               <Image
-                src={thumbnail}
+                src={typeof thumbnail === "string" ? thumbnail : thumbnail.url}
                 alt="thumbnail"
                 width={150}
                 height={150}
@@ -659,13 +686,13 @@ export default function BlogDetails() {
                               const fileReader = new FileReader();
                               fileReader.onload = () => {
                                 if (fileReader.readyState === 2) {
-                                  const base64String = fileReader.result as string; // Convert file to Base64 string
+                                  const base64String = fileReader.result as string; 
                                   const updatedVideos = [...videos];
                                   updatedVideos[index] = {
                                     ...updatedVideos[index],
-                                    videoThumbnail: base64String, // Assign the Base64 string directly
+                                    videoThumbnail: base64String,
                                   };
-                                  setVideos(updatedVideos); // Update the videos state
+                                  setVideos(updatedVideos);
                                 }
                               };
                               if (e.target.files && e.target.files[0]) {
