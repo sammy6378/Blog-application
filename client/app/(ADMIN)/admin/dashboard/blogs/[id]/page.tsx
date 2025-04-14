@@ -20,7 +20,12 @@ import ReactMde from "react-mde";
 import * as Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import Image from "next/image";
-import { ICreateVideo, IUpdateBlog, updateBlog } from "@/components/services/blogService";
+import {
+  ICreateVideo,
+  IUpdateBlog,
+  updateBlog,
+} from "@/components/services/blogService";
+import { toast } from "react-hot-toast";
 
 const converter = new Showdown.Converter({
   tables: true,
@@ -43,11 +48,10 @@ export default function BlogDetails() {
   const [newTag, setNewTag] = useState<string>(""); */
 
   const [title, setTitle] = useState(blog?.title || "");
-  const [description, setDescription] = useState(blog?.description || ""
-  );
+  const [description, setDescription] = useState(blog?.description || "");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
-  const [thumbnail, setThumbnail] = useState<string | { url: string }>(""); 
+  const [thumbnail, setThumbnail] = useState<string | { url: string }>("");
   const [tags, setTags] = useState<string[]>([]);
   const [addTag, setAddTag] = useState(false);
   const [addVideoLink, setAddVideoLink] = useState(false);
@@ -83,7 +87,6 @@ export default function BlogDetails() {
       }
       console.log("found blog: ", foundBlog);
     }
-
   }, [id, blogs]);
 
   useEffect(() => {
@@ -148,7 +151,7 @@ export default function BlogDetails() {
     }
   };
 
- /*  const handleVideoThumbnailUpdate = (
+  /*  const handleVideoThumbnailUpdate = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const fileReader = new FileReader();
@@ -163,11 +166,9 @@ export default function BlogDetails() {
     }
   }; */
 
- 
-
   const handleUpdateBlog = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     const updatedBlog: IUpdateBlog = {
       title,
       description,
@@ -180,23 +181,26 @@ export default function BlogDetails() {
         description: video.description,
         videoUrl: video.videoUrl,
         videoThumbnail:
-          typeof video.videoThumbnail === 'object'
+          typeof video.videoThumbnail === "object"
             ? video.videoThumbnail.url // Use existing URL
             : video.videoThumbnail, // Or new Base64 string
         links: video.links,
       })),
     };
-  
+
     // Only include thumbnail if it's a new Base64 string
-    if (typeof thumbnail === 'string') {
+    if (typeof thumbnail === "string") {
       updatedBlog.thumbnail = thumbnail;
     }
-  
+
     try {
       const response = await updateBlog(updatedBlog, id as string);
-      // Handle success
-    } catch (error) {
-      // Handle error
+      if (response.success) {
+        toast.success(response.message);
+        router.push("/admin/dashboard/blogs");
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -659,7 +663,8 @@ export default function BlogDetails() {
                         <div className="relative w-fit">
                           <Image
                             src={
-                              typeof video.videoThumbnail === "object" && video.videoThumbnail.url
+                              typeof video.videoThumbnail === "object" &&
+                              video.videoThumbnail.url
                                 ? video.videoThumbnail.url
                                 : ""
                             }
@@ -682,11 +687,14 @@ export default function BlogDetails() {
                             accept="image/*"
                             name="videoThumbnail"
                             hidden
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
                               const fileReader = new FileReader();
                               fileReader.onload = () => {
                                 if (fileReader.readyState === 2) {
-                                  const base64String = fileReader.result as string; 
+                                  const base64String =
+                                    fileReader.result as string;
                                   const updatedVideos = [...videos];
                                   updatedVideos[index] = {
                                     ...updatedVideos[index],
