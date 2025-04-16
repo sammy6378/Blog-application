@@ -81,7 +81,7 @@ export default function BlogDetails() {
         setCategory(foundBlog.category);
         setLinks(foundBlog.links);
         setTags(foundBlog.tags);
-        setThumbnail(foundBlog.thumbnail.url);
+        setThumbnail(foundBlog.thumbnail);
 
         //videos
         setVideos(foundBlog.videos);

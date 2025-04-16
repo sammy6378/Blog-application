@@ -129,7 +129,7 @@ export default function Profile() {
   return (
     <Protected>
       <AdminProtected>
-        <section className="w-full min-h-screen flex items-center flex-col max-500:items-start justify-center mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins">
+        <section className="w-full min-h-screen flex items-center flex-col max-500:items-start justify-center9 mb-[80px] max-700:mb-[150px] p-6 max-w-3xl mx-auto overflow-y-auto font-poppins">
           <h1 className="font-medium text-lg">Admin Profile</h1>
           <div className="dark:bg-slate-800 bg-slate-100 dark:text-white text-slate-900 h-1/2 w-[600px] max-w-[90%] flex flex-col items-center justify-center p-3 mt-4 rounded-md shadow">
             <section className="relative">
