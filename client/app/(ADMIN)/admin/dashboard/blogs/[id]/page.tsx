@@ -179,6 +179,7 @@ export default function BlogDetails() {
       tags,
       links,
       videos: videos.map((video) => ({
+        ...video,
         title: video.title,
         description: video.description,
         videoUrl: video.videoUrl,
@@ -671,10 +672,9 @@ export default function BlogDetails() {
                           {video.videoThumbnail && (
                             <Image
                               src={
-                                typeof video.videoThumbnail === "object" &&
-                                video.videoThumbnail.url
+                                typeof video.videoThumbnail === "object"
                                   ? video.videoThumbnail.url
-                                  : ""
+                                  : video.videoThumbnail || ""
                               }
                               alt="video-thumbnail"
                               width={100}
