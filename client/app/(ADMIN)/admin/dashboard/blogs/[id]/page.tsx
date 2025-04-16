@@ -684,7 +684,7 @@ export default function BlogDetails() {
                             />
                           )}
 
-                          <label htmlFor="video-thumbnail">
+                          <label htmlFor={`videothumbnail-${index}`}>
                             <Camera
                               className="absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all"
                               width={20}
@@ -693,7 +693,7 @@ export default function BlogDetails() {
                           </label>
                           <input
                             type="file"
-                            id="video-thumbnail"
+                            id={`videothumbnail-${index}`}
                             accept="image/*"
                             name="videoThumbnail"
                             hidden
