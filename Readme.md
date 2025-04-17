@@ -100,8 +100,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 For questions or suggestions, feel free to reach out:
+- **Email: ** bildadsimiyu6@gmail.com
 - **Email:** samuel.developer202@gmail.com
-- **GitHub:** [sammy6378](https://github.com/sammy6378)
 
 ---
 
