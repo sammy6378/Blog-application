@@ -51,7 +51,7 @@ export default function BlogDetails() {
   const [description, setDescription] = useState(blog?.description || "");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
-  const [thumbnail, setThumbnail] = useState<string | { url: string }>("");
+  const [thumbnail, setThumbnail] = useState<{ url: string } | string>({ url: "" });
   const [tags, setTags] = useState<string[]>([]);
   const [addTag, setAddTag] = useState(false);
   const [addVideoLink, setAddVideoLink] = useState(false);
@@ -315,13 +315,14 @@ export default function BlogDetails() {
           <div className="flex flex-col gap-1 my-4">
             <p>Update Thumbnail: </p>
             <div className="relative w-fit">
-              <Image
-                src={typeof thumbnail === "string" ? thumbnail : thumbnail.url}
+              {!thumbnail ? <div className="mb-7">No thumbnail</div> : (  <Image
+                src={typeof thumbnail === "string" ? thumbnail : thumbnail?.url}
                 alt="thumbnail"
                 width={150}
                 height={150}
                 className="rounded shadow shadow-slate-700"
-              />
+              />)}
+            
               <label htmlFor="thumbnail">
                 <Camera
                   className="absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all"
