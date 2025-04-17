@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   MessageCircle,
@@ -26,6 +26,7 @@ import {
   updateBlog,
 } from "@/components/services/blogService";
 import { toast } from "react-hot-toast";
+import OutsideClickHandler from "react-outside-click-handler";
 
 const converter = new Showdown.Converter({
   tables: true,
@@ -51,7 +52,9 @@ export default function BlogDetails() {
   const [description, setDescription] = useState(blog?.description || "");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("");
-  const [thumbnail, setThumbnail] = useState<{ url: string } | string>({ url: "" });
+  const [thumbnail, setThumbnail] = useState<{ url: string } | string>({
+    url: "",
+  });
   const [tags, setTags] = useState<string[]>([]);
   const [addTag, setAddTag] = useState(false);
   const [addVideoLink, setAddVideoLink] = useState(false);
@@ -62,13 +65,14 @@ export default function BlogDetails() {
 
   //videos
   const [videos, setVideos] = useState<IVideo[]>([]);
-  /* const [videoTitle, setVideoTitle] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
 
-  const [videoLinks, setVideoLinks] = useState([]); */
-  //const [videoThumbnail, setVideoThumbnail] = useState("");
+  const [videoLinks, setVideoLinks] = useState<string[]>([]);
+  const [videoThumbnail, setVideoThumbnail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [videoModal, setVideoModal] = useState(false);
   useEffect(() => {
     if (id) {
       const foundBlog = blogs?.find((b) => b._id.toString() === id);
@@ -166,6 +170,56 @@ export default function BlogDetails() {
       fileReader.readAsDataURL(e.target.files[0]);
     }
   }; */
+
+  const handleVideoThumbnailUpload = (e: any) => {
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      if (fileReader.readyState === 2) {
+        const video_thumbnail = fileReader.result as string;
+        setVideoThumbnail(video_thumbnail);
+      }
+    };
+    if (e.target.files && e.target.files[0]) {
+      fileReader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const handleVideoLinks = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newLink = (e.target as HTMLInputElement).value.trim();
+      if (!videoLinks.includes(newLink)) {
+        setVideoLinks([...videoLinks, newLink]);
+        (e.target as HTMLInputElement).value = "";
+      }
+    }
+  };
+
+  const handleRemoveVideoLink = (index: number) => {
+    const newLinks = videoLinks.filter((_, i) => index !== i);
+    setVideoLinks(newLinks);
+  };
+
+  const handleSubmitVideo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const newVideo = {
+      title: videoTitle,
+      description: videoDescription,
+      videoUrl,
+      videoThumbnail,
+      links,
+    };
+    setVideos((prevVideos) => [...prevVideos, newVideo]);
+
+    setVideoTitle("");
+    setVideoDescription("");
+    setVideoUrl("");
+    setVideoThumbnail("");
+    setVideoLinks([]);
+
+    setVideoModal(false);
+  };
 
   const handleUpdateBlog = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -315,14 +369,20 @@ export default function BlogDetails() {
           <div className="flex flex-col gap-1 my-4">
             <p>Update Thumbnail: </p>
             <div className="relative w-fit">
-              {!thumbnail ? <div className="mb-7">No thumbnail</div> : (  <Image
-                src={typeof thumbnail === "string" ? thumbnail : thumbnail?.url}
-                alt="thumbnail"
-                width={150}
-                height={150}
-                className="rounded shadow shadow-slate-700"
-              />)}
-            
+              {!thumbnail ? (
+                <div className="mb-7">No thumbnail</div>
+              ) : (
+                <Image
+                  src={
+                    typeof thumbnail === "string" ? thumbnail : thumbnail?.url
+                  }
+                  alt="thumbnail"
+                  width={150}
+                  height={150}
+                  className="rounded shadow shadow-slate-700"
+                />
+              )}
+
               <label htmlFor="thumbnail">
                 <Camera
                   className="absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all"
@@ -445,6 +505,30 @@ export default function BlogDetails() {
           {/* videos */}
           <section className="border dark:border-slate-800 p-2 rounded shadow dark:shadow-slate-500 mt-7">
             <h1 className="text-xl mb-3 font-semibold">Blog Videos</h1>
+
+            <div>
+                {!videoModal && (
+                  <div className="mb-4">
+                    {/* Video Links */}
+                   {videos.length > 0 && <button
+                      onClick={() => setVideoModal(true)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded-md"
+                    >
+                      + Add Video
+                    </button>}
+                    
+                    <p>{videoTitle}</p>
+                    <ul className="mt-2">
+                      {videos.map((video, index) => (
+                        <li key={index} className="text-blue-500">
+                          {/* <video src={video.videoUrl}></video> */}
+                          {video.title}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             {videos && videos.length > 0 ? (
               <div>
                 {videos.map((video, index) => (
@@ -667,7 +751,7 @@ export default function BlogDetails() {
                       </div>
 
                       {/* video thumbnail */}
-                      <div className="my-2 mt-4">
+                      <div className={`my-2 mt-4 `}>
                         <p>Update Video Thumbnail: </p>
                         <div className="relative w-fit">
                           {video.videoThumbnail && (
@@ -687,7 +771,7 @@ export default function BlogDetails() {
 
                           <label htmlFor={`videothumbnail-${index}`}>
                             <Camera
-                              className="absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all"
+                              className={`absolute bottom-2 right-3 cursor-pointer hover:w-[24px] hover:h-[24px] transition-all ${!video.videoThumbnail && "right-0"}`}
                               width={20}
                               height={20}
                             />
@@ -726,7 +810,31 @@ export default function BlogDetails() {
                 ))}
               </div>
             ) : (
-              <div></div>
+              <div>
+                {!videoModal && (
+                  <div className="mb-4">
+                    {/* Video Links */}
+                    <label className="block text-gray-700 dark:text-white mb-2">
+                      Videos
+                    </label>
+                    <button
+                      onClick={() => setVideoModal(true)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded-md"
+                    >
+                      + Add Video
+                    </button>
+                    <p>{videoTitle}</p>
+                    <ul className="mt-2">
+                      {videos.map((video, index) => (
+                        <li key={index} className="text-blue-500">
+                          {/* <video src={video.videoUrl}></video> */}
+                          {video.title}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             )}
           </section>
           {/* submit button */}
@@ -749,165 +857,105 @@ export default function BlogDetails() {
             )}
           </button>
         </form>
+        {/* If videoModal is true */}
+        {videoModal && (
+          <OutsideClickHandler onOutsideClick={() => setVideoModal(false)}>
+            <form
+              /*  onSubmit={handleAddVideo} */
+              className="absolute inset-0 top-[60%] h-fit dark:bg-gray-900 bg-slate-100 shadow shadow-black z-10 p-2 rounded-md w-[90%] max-500:w-[95%] mx-auto"
+            >
+              <h1
+                className="mb-5 place-self-end cursor-pointer"
+                onClick={() => setVideoModal(false)}
+              >
+                <X />
+              </h1>
+              <input
+                type="text"
+                name="title"
+                value={videoTitle}
+                onChange={(e) => setVideoTitle(e.target.value)}
+                placeholder="Enter Video Title"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+              />
+              <input
+                type="text"
+                name="description"
+                value={videoDescription}
+                onChange={(e) => setVideoDescription(e.target.value)}
+                placeholder="Enter Video Description"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+              />
+              <input
+                type="text"
+                name="videoUrl"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="Enter Video Url"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+              />
+              {/* video thumbnail */}
+              <div className="my-3">
+                <label
+                  htmlFor="videoThumbnail"
+                  className="dark:text-gray-300 text-gray-800"
+                >
+                  Add Thumbnail
+                </label>
+                <input
+                  type="file"
+                  name="thumbnail"
+                  id="videoThumbnail"
+                  accept="image/*"
+                  onChange={handleVideoThumbnailUpload}
+                  className="dark:text-gray-300 text-gray-800"
+                />
+              </div>
+              {/* video links */}
+              <div className="mb-4">
+                <label
+                  htmlFor="videoLinks"
+                  className="block text-gray-700 dark:text-white mt-2"
+                >
+                  Add Links
+                </label>
+                <input
+                  type="text"
+                  id="videoLinks"
+                  className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg"
+                  placeholder="Press Enter to add link"
+                  onKeyDown={handleVideoLinks}
+                />
+
+                <div className="flex gap-2">
+                  {videoLinks.length > 0 &&
+                    videoLinks.map((link, index) => (
+                      <div
+                        className="bg-green p-1 rounded-md relative flex"
+                        key={index}
+                      >
+                        {link}{" "}
+                        <X
+                          className="ml-1 cursor-pointer"
+                          size={14}
+                          onClick={() => handleRemoveVideoLink(index)}
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className={`px-4 py-2 grid mx-auto bg-crimson hover:bg-crimson/80 dark:bg-green hover:opacity-80 text-white rounded-lg hover:bg-green-600 transition-all ${loading && "cursor-not-allowed"}`}
+                onClick={handleSubmitVideo}
+              >
+                Submit Video
+              </button>
+            </form>
+          </OutsideClickHandler>
+        )}
       </div>
     </section>
   );
-
-  /* const handleInputChange = (field: keyof IBlog, value: any) => {
-    setEditedBlog({ ...editedBlog, [field]: value } as IBlog);
-    setIsModified(true);
-  };
-
-  const handleReply = (commentId: number) => {
-    if (!blog || !replyContent.trim()) return;
-    const updatedComments = blog.comments.map((comment) =>
-      comment.id === commentId
-        ? { 
-            ...comment, 
-            replies: [...comment.replies, { id: Date.now(), content: replyContent, replies: [] }] 
-          }
-        : comment
-    );
-    setEditedBlog({ ...blog, comments: updatedComments });
-    setReplyingTo(null);
-    setReplyContent("");
-    setIsModified(true);
-  };
-
-  const handleAddTag = () => {
-    if (!blog || !newTag.trim()) return;
-    setEditedBlog({ ...blog, tags: [...blog.tags, newTag] });
-    setNewTag("");
-    setIsModified(true);
-  };
-
-  if (!blog) {
-    return <p className="text-center text-red-500 text-lg font-semibold">Blog not found!</p>;
-  }
-
-  return (
-    <div className="p-6 max-w-3xl mx-auto mb-20 bg-white dark:bg-gray-900 shadow-md rounded-lg">
-      
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-blue-500 hover:text-blue-600 font-semibold mb-4"
-      >
-        <ArrowLeft size={20} />
-        Go Back
-      </button>
-
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Blog Details</h1>
-      
-      <input
-        type="text"
-        value={blog.title}
-        onChange={(e) => handleInputChange("title", e.target.value)}
-        placeholder="Blog Title"
-        className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg mb-4 text-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-
-      <textarea
-        value={blog.body}
-         onChange={(e) => handleInputChange("content", e.target.value)} 
-        placeholder="Blog Content"
-        className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg mb-4 text-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        rows={5}
-      />
-
-      <div>
-        <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">Tags</h2>
-        <div className="flex flex-wrap gap-2">
-          {blog.tags.map((tag, index) => (
-            <input
-              key={index}
-              type="text"
-              value={tag}
-              onChange={(e) => {
-                const updatedTags = [...blog.tags];
-                updatedTags[index] = e.target.value;
-                handleInputChange("tags", updatedTags);
-              }}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-800 dark:text-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          ))}
-        </div>
-
-        <div className="flex items-center gap-2 mt-4">
-          <input
-            type="text"
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            placeholder="Add a tag..."
-            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-800 dark:text-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button onClick={handleAddTag} className="text-blue-500 hover:text-blue-600">
-            <PlusCircle size={24} />
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Comments</h2>
-        
-        {blog.comments.map((comment) => (
-          <div key={comment.id} className="p-4 border rounded-lg shadow-sm mb-4 dark:border-gray-700">
-            <p className="text-gray-700 dark:text-gray-300 mb-2">{comment.content}</p>
-            
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
-                className="text-blue-500 hover:text-blue-600"
-              >
-                <MessageCircle size={20} />
-              </button>
-              <button className="text-green-500 hover:text-green-600">
-                <ThumbsUp size={20} />
-              </button>
-            </div>
-
-            {replyingTo === comment.id && (
-              <div className="mt-3">
-                <input
-                  type="text"
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Write your reply..."
-                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                  onClick={() => handleReply(comment.id)}
-                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
-                >
-                  Submit Reply
-                </button>
-              </div>
-            )}
-
-            {comment.replies.length > 0 && (
-              <div className="mt-3 ml-6 border-l-2 border-gray-300 dark:border-gray-700 pl-3">
-                <h4 className="font-semibold text-gray-800 dark:text-gray-200">Replies:</h4>
-                {comment.replies.map((reply: any) => (
-                  <p key={reply.id} className="mt-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 p-2 rounded-lg">
-                    {reply.content}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {isModified && (
-        <button
-          onClick={() => alert("Blog updated!")}
-          className="bg-green-500 text-white px-5 py-2 rounded-lg mt-6 hover:bg-green-600 transition-all"
-        >
-          Update Blog
-        </button>
-      )}
-    </div>
-  );
-};
-
- */
 }
