@@ -97,13 +97,17 @@ export default function BlogDetails() {
 
   //delete entire blog
   const handleDeleteBlog = async (id: string) => {
-    if (confirm("Are you sure you want to delete this blog? This is permanent and cannot be undone :(")) {
+    if (
+      confirm(
+        "Are you sure you want to delete this blog? This is permanent and cannot be undone :("
+      )
+    ) {
       try {
         const response = await deleteBlog(id);
         if (response.success) {
           toast.success(response.message);
           await getBlogsFunc();
-          router.push('/admin/dashboard/blogs');
+          router.push("/admin/dashboard/blogs");
         } else {
           toast.error(response.message);
         }

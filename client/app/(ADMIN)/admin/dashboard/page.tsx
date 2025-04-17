@@ -156,7 +156,7 @@ function Page() {
             <div className="flex flex-col items-center justify-center w-full h-[150px] bg-gray-100 dark:bg-gray-900 rounded-md text-2xl font-semibold gap-2 dark:text-white shadow hover:shadow-md transition-all">
               <span>Average Rating</span>
               <span className="dark:text-green text-crimson">
-                {averageRating || 0}
+                {averageRating.toFixed(2) || "0.00"}
               </span>
             </div>
           </section>
