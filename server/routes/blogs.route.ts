@@ -29,6 +29,7 @@ route.put('/add-review', authMiddleware, addReview);
 //api/blogs/add-review-reply
 route.put('/add-review-reply', authMiddleware, authorizeRoles("admin"), addReviewReply);
 //delete blog --- only for admin
+//api/blogs/delete-blog://id
 route.delete('/delete-blog:/id', authMiddleware, authorizeRoles("admin"), deleteBlog);
 //add tag --- only for admin
 route.put('/add-tag', authMiddleware, authorizeRoles("admin"), addTag);

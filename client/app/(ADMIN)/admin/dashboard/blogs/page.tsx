@@ -111,7 +111,7 @@ function BlogPage() {
               height={50}
               className="w-[50px] h-[50px] rounded-full border dark:shadow-none shadow-md"
             />
-            <p className="text-gray-500">Created By: {blog?.author.email}</p>
+            <p className="text-gray-500"><span className="max-500:hidden">Created By:</span> {blog?.author.email}</p>
           </div>
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{blog.title}</h2>
@@ -144,7 +144,7 @@ function BlogPage() {
                 {blog.comments.length}
               </button>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 overflow-x-auto">
               {blog.tags &&
                 blog.tags.length > 0 ?
                 blog.tags.map((tag, index) => (
@@ -152,7 +152,8 @@ function BlogPage() {
                     key={index}
                     className="px-2 py-1 text-sm bg-teal-500 rounded-md flex items-center gap-1"
                   >
-                    <TagIcon size={14} /> {tag}
+                    
+                    <TagIcon size={14} /> {tag.length > 10 ? tag.slice(0, 10) + "..." : tag}
                   </span>
                 )) : (<p className="dark:text-gray-600 text-gray-400">No Tags</p>
                 )}

@@ -96,20 +96,14 @@ export interface IBlog {
 }
 
 export interface IVideo {
-  title: {
-    type: String,
-    required: true,
+  title: string,
+  description: string,
+  videoUrl: string,
+  videoThumbnail: string | {
+    public_id: string,
+    url: string, 
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  videoUrl: String,
-  videoThumbnail: {
-    public_id: String,
-    url: String, 
-  },
-  links: [String],
+  links: string[],
 }
 
 export const AppContext = createContext<IContext | undefined>(undefined);
