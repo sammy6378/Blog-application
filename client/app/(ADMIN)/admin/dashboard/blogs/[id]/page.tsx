@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   MessageCircle,
@@ -21,6 +21,7 @@ import * as Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import Image from "next/image";
 import {
+  deleteBlog,
   ICreateVideo,
   IUpdateBlog,
   updateBlog,
@@ -94,12 +95,24 @@ export default function BlogDetails() {
     }
   }, [id, blogs]);
 
-  useEffect(() => {
-    console.log(thumbnail);
-  }, [thumbnail]);
-
   //delete entire blog
-  const handleDeleteBlog = async () => {};
+  const handleDeleteBlog = async (id: string) => {
+    if (confirm("Are you sure you want to delete this blog? This is permanent and cannot be undone :(")) {
+      try {
+        const response = await deleteBlog(id);
+        if (response.success) {
+          toast.success(response.message);
+          await getBlogsFunc();
+          router.push('/admin/dashboard/blogs');
+        } else {
+          toast.error(response.message);
+        }
+      } catch (error: any) {
+        toast.error(error.message);
+        console.error(error);
+      }
+    }
+  };
 
   if (blog === null) {
     return (
@@ -277,7 +290,7 @@ export default function BlogDetails() {
         </button>
         <button
           title="delete blog"
-          onClick={() => handleDeleteBlog()}
+          onClick={() => handleDeleteBlog(id as string)}
           className="flex items-center gap-1 border-[1.5px] p-2 rounded shadow-inner shadow-crimson bg-opacity-50 border-crimson hover:bg-red-500/50 transition-all group"
         >
           <span> Delete Blog </span>
@@ -507,28 +520,30 @@ export default function BlogDetails() {
             <h1 className="text-xl mb-3 font-semibold">Blog Videos</h1>
 
             <div>
-                {!videoModal && (
-                  <div className="mb-4">
-                    {/* Video Links */}
-                   {videos.length > 0 && <button
+              {!videoModal && (
+                <div className="mb-4">
+                  {/* Video Links */}
+                  {videos.length > 0 && (
+                    <button
                       onClick={() => setVideoModal(true)}
                       className="px-3 py-1 bg-blue-500 text-white rounded-md"
                     >
                       + Add Video
-                    </button>}
-                    
-                    <p>{videoTitle}</p>
-                    <ul className="mt-2">
-                      {videos.map((video, index) => (
-                        <li key={index} className="text-blue-500">
-                          {/* <video src={video.videoUrl}></video> */}
-                          {video.title}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+                    </button>
+                  )}
+
+                  <p>{videoTitle}</p>
+                  <ul className="mt-2">
+                    {videos.map((video, index) => (
+                      <li key={index} className="text-blue-500">
+                        {/* <video src={video.videoUrl}></video> */}
+                        {video.title}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             {videos && videos.length > 0 ? (
               <div>
                 {videos.map((video, index) => (

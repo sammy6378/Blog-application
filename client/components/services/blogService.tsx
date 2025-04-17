@@ -114,7 +114,7 @@ export const updateBlog = async (data: IUpdateBlog, id: string) => {
 //delete blog - //api/blogs/delete-blog:/id
 export const deleteBlog = async (id: string) => {
   try {
-    const response = await createApi.delete(`/api/blogs/delete-blog/${id}`, {
+    const response = await createApi.delete(`/blogs/delete-blog/${id}`, {
       withCredentials: true,
     });
     return response.data;
