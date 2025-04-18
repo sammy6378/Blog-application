@@ -1,23 +1,23 @@
 # Blogify - A Blogging Platform
 
 ## Overview
-Blogify is a dynamic and modern web application designed for publishing and managing blogs in various categories such as technology, medicine, and more. Built using the MERN stack (MongoDB, Express.js, React.js, Node.js), Blogify offers a seamless user experience for both content creators and readers.
+Blogify is a dynamic and modern web application designed for publishing and managing blogs in various categories such as technology, entertainment, education and more. Built using the MERN stack (MongoDB, Express.js, React.js(Next.js), Node.js), Blogify offers a seamless user experience for both content creators and readers.
 
 ## Features
 - **User Authentication:** Secure user registration and login functionality with JWT authentication.
 - **Blog Categories:** Organize blogs into categories like Tech, Medical, Lifestyle, etc.
 - **Rich Text Editor:** Create and format blogs with an intuitive editor.
 - **Responsive Design:** Optimized for desktop and mobile devices.
-- **Commenting System:** Allow readers to engage with blogs through comments.
+- **Commenting System:** Allow readers to engage with blogs through comments, likes and dislikes.
 - **Search and Filter:** Easily find blogs by category, keywords, or author.
 - **Admin Panel:** Manage users, categories, and blogs efficiently.
 
 ## Tech Stack
-- **Frontend:** React.js with Context API or Redux for state management.
+- **Frontend:** Next.js with Context API or Redux for state management.
 - **Backend:** Node.js with Express.js for API development.
 - **Database:** MongoDB for storing user data, blogs, and categories.
 - **Authentication:** JSON Web Tokens (JWT) for secure user sessions.
-- **Styling:** CSS frameworks like Tailwind CSS or Bootstrap.
+- **Styling:** Tailwind CSS 
 
 ## Installation
 Follow these steps to set up the application locally:
@@ -100,8 +100,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 For questions or suggestions, feel free to reach out:
+- **Email:** bildadsimiyu6@gmail.com
 - **Email:** samuel.developer202@gmail.com
-- **GitHub:** [sammy6378](https://github.com/sammy6378)
 
 ---
 
