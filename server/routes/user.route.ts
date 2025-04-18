@@ -31,7 +31,7 @@ route.put('/update-role', authMiddleware, authorizeRoles("admin"), UpdateUserRol
 //api/user/get-users
 route.get('/get-users', authMiddleware, authorizeRoles("admin"), GetAllUsers);
 //api/user/delete_user_by_admin
-route.put('/delete_user_by_admin', authMiddleware, authorizeRoles("admin"), DeleteUserAccount_Admin);
+route.put('/delete_user_by_admin', authMiddleware, DeleteUserAccount_Admin);
 //api/user/delete_my_account
 route.delete('/delete_my_account', authMiddleware, DeleteMyAccount);
 

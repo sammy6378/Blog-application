@@ -108,32 +108,3 @@ export const deleteUser = async (userId: string) => {
   }
 };
 
-/* //update user role
-//api/user/update-role
-export const UpdateRole = async(email: string, role: string) => {
-try {
-  const response = await createApi.put('/user/update-role', {role, email}, {withCredentials: true});
-  return response.data;
-} catch (error) {
-  if(error instanceof AxiosError) {
-    throw new Error(error.response?.data.message || "Axios error when updating user role")
-  } else {
-    throw new Error("Error occurred when updating role");
-  }
-}
-}
-
-//delete user
-//api/user/delete_user_by_admin
-export const DeleteUser = async(id: string) => {
-  try {
-    const response = await createApi.delete(`/user/delete_user_by_admin`, { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    if(error instanceof AxiosError) {
-      throw new Error(error.response?.data.message || "Axios error when deleting user")
-    } else {
-      throw new Error("Error occurred when deleting user");
-    }
-  }
-} */

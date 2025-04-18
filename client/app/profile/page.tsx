@@ -11,6 +11,7 @@ import { redirect, useRouter } from "next/navigation";
 import UpdateForm from "./UpdateForm";
 import UpdatePass from "./UpdatePass";
 import {
+  deleteUser,
   updateAvatar,
   updateInfo,
   updatePassword,
@@ -20,9 +21,10 @@ import { AxiosError } from "axios";
 import { getUserInfo } from "@/components/services/authService";
 import Protected from "@/components/utils/protected/Protected";
 import '@/app/app.css'
+import { toNamespacedPath } from "path";
 
 export default function Profile() {
-  const { userInfo, loadingContext, accessToken, handleLogout } =
+  const { userInfo, loadingContext, accessToken, handleLogout, } =
     useContextFunc();
   const [info, setInfo] = useState(false);
   const [showPassForm, setShowPassForm] = useState(false);
@@ -125,6 +127,33 @@ export default function Profile() {
     }
   };
 
+  const handleDeleteUser = async (id: string) => {
+    try {
+      const num1 = Math.floor(Math.random() * 100 + 1);
+      const num2 = Math.floor(Math.random() * 100 + 1);
+      const num3 = num1 + num2;
+      const userAnswer = prompt(`To confirm, please solve this: ${num1} + ${num2} = ?`);
+      if (parseInt(userAnswer || "") !== num3) {
+        toast.error("Incorrect answer. Account deletion canceled.");
+        return;
+      }
+      const response = await deleteUser(id);
+      if (response.success) {
+        router.push('/');
+        toast.success(response.message);
+        await handleLogout();
+        setTimeout(() => window.location.reload(), 500); 
+        
+        
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
+
   return (
     <Protected>
       <section className="w-full min-h-screen flex items-center max-500:items-start justify-center font-poppins mb-4">
@@ -209,7 +238,7 @@ export default function Profile() {
 
           {/* Delete Account */}
 
-          <button className="flex flex-row justify-center gap-2 dark:shadow border-2 border-crimson text-crimson rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 hover:bg-[crimson]/50 transition hover:text-white mt-4">
+          <button className="flex flex-row justify-center gap-2 dark:shadow border-2 border-crimson text-crimson rounded-md p-2 py-4 w-[90%] max-500:w-full items-center relative mb-4 hover:bg-[crimson]/50 transition hover:text-white mt-4" onClick={() => handleDeleteUser(userInfo?._id as string)}>
             <span className="place-self-center">Delete Account</span>
             <VscWarning className="absolute left-2" size={25} />
           </button>
