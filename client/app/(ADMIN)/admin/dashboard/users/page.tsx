@@ -11,7 +11,7 @@ import {
 import { updateUserRole } from "@/components/services/userService";
 
 const Page = () => {
-  const { allUsers } = useContextFunc();
+  const { allUsers, getUsers } = useContextFunc();
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [role, setRole] = useState("");
@@ -19,20 +19,28 @@ const Page = () => {
   const handleEditUser = (user: any) => {
     setSelectedUser(user);
     setRole(user.role);
-    setIsFormVisible(true); // Show the form
+    setIsFormVisible(true);
   };
 
-  // update selected user role
   const handleUpdateRole = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
     if (!selectedUser) return;
 
     try {
-      const response = await updateUserRole(role, selectedUser.email);
-      toast.success("User role updated successfully");
-      setIsFormVisible(false); // Close modal after success
-    } catch (error) {
-      toast.error("Failed to update user role");
+      if (confirm("Changing user role is a very risky move, are you sure?")) {
+        const response = await updateUserRole(role, selectedUser.email);
+        if (response.success) {
+          getUsers().then(() =>
+            toast.success("User role updated successfully")
+          );
+
+          setIsFormVisible(false);
+        } else {
+          toast.success(response.message);
+        }
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -113,7 +121,7 @@ const Page = () => {
                   type="submit"
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                 >
-                 Save role
+                  Save role
                 </button>
               </div>
             </form>
