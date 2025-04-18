@@ -8,7 +8,7 @@ import {
   IUserInfo,
   useContextFunc,
 } from "@/components/context/AppContext";
-import { updateUserRole } from "@/components/services/userService";
+import { deleteUser, updateUserRole } from "@/components/services/userService";
 
 const Page = () => {
   const { allUsers, getUsers } = useContextFunc();
@@ -44,6 +44,23 @@ const Page = () => {
     }
   };
 
+  const handleDeleteUser = async(id: string) => {
+    try {
+      if(confirm("Are you sure you want to delete this user? This is permanent and cannot be undone⚠️")) {
+        const response = await deleteUser(id);
+        if(response.success) {
+          getUsers().then(() => toast.success("User deleted Successfully"));
+        } else {
+          toast.success(response.message);
+          console.log(response.message);
+        }
+      }
+    } catch (error: any) {
+      toast.success(error.message)
+      console.log(error.message);
+    }
+  }
+
   return (
     <div className="p-8 mb-[80px] max-700:mb-[150px] overflow-x-auto">
       <table className="w-full rounded-lg">
@@ -77,7 +94,7 @@ const Page = () => {
                     >
                       <PencilIcon size={18} />
                     </button>
-                    <button className="text-red-500 hover:text-red-700">
+                    <button className="text-red-500 hover:text-red-700" onClick={() => handleDeleteUser(user._id)}>
                       <TrashIcon size={18} />
                     </button>
                   </div>

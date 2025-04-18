@@ -95,7 +95,7 @@ export const updateUserRole = async (role: string,email:string) => {
 // delete user
 export const deleteUser = async (userId: string) => {
   try {
-    const response = await createApi.delete(`/user/delete_user_by_admin/${userId}`, {
+    const response = await createApi.put(`/user/delete_user_by_admin`, {userId}, {
       withCredentials: true,
     });
     return response.data;
