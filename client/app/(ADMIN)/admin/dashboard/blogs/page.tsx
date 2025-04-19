@@ -77,7 +77,7 @@ function BlogPage() {
     router.push("/admin/dashboard/blogs/new"); // Navigate to blog creation page
   };
 
-    const handleViewBlog = (blog: IBlog) => {
+  const handleViewBlog = (blog: IBlog) => {
     router.push(`/admin/dashboard/blogs/${blog._id}`); // Navigate to the blog details page
   };
   /* 
@@ -111,7 +111,10 @@ function BlogPage() {
               height={50}
               className="w-[50px] h-[50px] rounded-full border dark:shadow-none shadow-md"
             />
-            <p className="text-gray-500"><span className="max-500:hidden">Created By:</span> {blog?.author.email}</p>
+            <p className="text-gray-500">
+              <span className="max-500:hidden">Created By:</span>{" "}
+              {blog?.author.email}
+            </p>
           </div>
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{blog.title}</h2>
@@ -122,7 +125,7 @@ function BlogPage() {
               >
                 View Blog
               </button>
-             {/*  <button
+              {/*  <button
                 onClick={() => handleDeleteBlog(blog.id)}
                 className="text-red-500 hover:text-red-700"
               >
@@ -145,18 +148,19 @@ function BlogPage() {
               </button>
             </div>
             <div className="flex gap-2 overflow-x-auto">
-              {blog.tags &&
-                blog.tags.length > 0 ?
+              {blog.tags && blog.tags.length > 0 ? (
                 blog.tags.map((tag, index) => (
                   <span
                     key={index}
                     className="px-2 py-1 text-sm bg-teal-500 rounded-md flex items-center gap-1"
                   >
-                    
-                    <TagIcon size={14} /> {tag.length > 10 ? tag.slice(0, 10) + "..." : tag}
+                    <TagIcon size={14} />{" "}
+                    {tag.length > 10 ? tag.slice(0, 10) + "..." : tag}
                   </span>
-                )) : (<p className="dark:text-gray-600 text-gray-400">No Tags</p>
-                )}
+                ))
+              ) : (
+                <p className="dark:text-gray-600 text-gray-400">No Tags</p>
+              )}
               {/* links */}
               {linksOpen === blog?._id ? (
                 <OutsideClickHandler onOutsideClick={() => setLinksOpen("")}>
@@ -175,7 +179,9 @@ function BlogPage() {
                         ))}
                       </div>
                     ) : (
-                      <div className="dark:text-gray-600 text-gray-400">No Links</div>
+                      <div className="dark:text-gray-600 text-gray-400">
+                        No Links
+                      </div>
                     )}
                   </div>
                 </OutsideClickHandler>

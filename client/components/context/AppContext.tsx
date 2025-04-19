@@ -26,7 +26,7 @@ interface IContext {
   setAccessToken: Dispatch<SetStateAction<string | null>>;
   activationToken: string | null;
   setActivationToken: Dispatch<SetStateAction<string | null>>;
-  handleLogout: () => void;
+  handleLogout: () => Promise<void>;
   userInfo: IUserInfo | null;
   setUserInfo: Dispatch<SetStateAction<IUserInfo | null>>;
   loadingContext: boolean;
@@ -37,15 +37,15 @@ interface IContext {
   userTotal: number | null;
   setUserTotal: Dispatch<SetStateAction<number | null>>;
   blogs: IBlog[] | null;
-  setBlogs: Dispatch<SetStateAction<IBlog[] | null>>,
-  blogCount: number | null,
-  setBlogCount:  Dispatch<SetStateAction<number | null>>,
+  setBlogs: Dispatch<SetStateAction<IBlog[] | null>>;
+  blogCount: number | null;
+  setBlogCount: Dispatch<SetStateAction<number | null>>;
   getBlogsFunc: () => Promise<void>;
-  getUsers: () => Promise<void>
+  getUsers: () => Promise<void>;
 }
 
 export interface IUserInfo {
-  _id: string,
+  _id: string;
   avatar: {
     public_id: string;
     url: string;
@@ -88,22 +88,24 @@ export interface IBlog {
   comments: any[]; // Adjust this type if you know the structure of comments
   tags: string[];
   thumbnail: {
-    public_id: string,
-    url: string,
-  }
+    public_id: string;
+    url: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
 
 export interface IVideo {
-  title: string,
-  description: string,
-  videoUrl: string,
-  videoThumbnail: string | {
-    public_id: string,
-    url: string, 
-  },
-  links: string[],
+  title: string;
+  description: string;
+  videoUrl: string;
+  videoThumbnail:
+    | string
+    | {
+        public_id: string;
+        url: string;
+      };
+  links: string[];
 }
 
 export const AppContext = createContext<IContext | undefined>(undefined);
@@ -129,11 +131,12 @@ export default function ProviderFunction({
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       setAccessToken(access_token);
-      updateAccessTokenFunc().then(() => fetchUserInfo().then(() => getBlogsFunc().then(() => getUsers())));
+      updateAccessTokenFunc().then(() =>
+        fetchUserInfo().then(() => getBlogsFunc().then(() => getUsers()))
+      );
     }
     setLoadingContext(false);
   }, []);
-
 
   //get all users
   const getUsers = async () => {
@@ -143,14 +146,17 @@ export default function ProviderFunction({
         setAllUsers(response.allUsers);
         setUserTotal(response.userCount);
         sessionStorage.setItem("all_users", JSON.stringify(response.allUsers));
-        sessionStorage.setItem("user_count", JSON.stringify(response.userCount));
+        sessionStorage.setItem(
+          "user_count",
+          JSON.stringify(response.userCount)
+        );
         //get
         const storeUsers = sessionStorage.getItem("all_users");
         const storeUserCount = sessionStorage.getItem("user_count");
         if (storeUsers) {
           const parsedUsers = JSON.parse(storeUsers);
           setAllUsers(parsedUsers);
-         // console.log(parsedUsers);
+          // console.log(parsedUsers);
         }
         if (storeUserCount) {
           const parsedUserCount = JSON.parse(storeUserCount);
@@ -169,18 +175,20 @@ export default function ProviderFunction({
     }
   };
 
-  
   //get all blogs
-  const getBlogsFunc = async() => {
+  const getBlogsFunc = async () => {
     try {
       const response = await getAllBlogs();
-      if(response.success) {
-        setBlogs(response.blogs)
+      if (response.success) {
+        setBlogs(response.blogs);
         setBlogCount(response.blogCount);
 
         //try session storage
         sessionStorage.setItem("all_blogs", JSON.stringify(response.blogs));
-        sessionStorage.setItem("blog_count", JSON.stringify(response.blogCount));
+        sessionStorage.setItem(
+          "blog_count",
+          JSON.stringify(response.blogCount)
+        );
         //get
         const storeBlogs = sessionStorage.getItem("all_blogs");
         const storeBlogCount = sessionStorage.getItem("blog_count");
@@ -194,18 +202,17 @@ export default function ProviderFunction({
           setBlogCount(parsedBlogCount);
           console.log(parsedBlogCount);
         }
-      }
-      else {
+      } else {
         console.log(response.message);
       }
     } catch (error) {
-      if(error instanceof AxiosError) {
+      if (error instanceof AxiosError) {
         console.log(error.response?.data.message);
       } else {
         console.log("Error fetching blogs");
       }
     }
-  }
+  };
 
   //call update access token service
   const updateAccessTokenFunc = async () => {
@@ -241,7 +248,7 @@ export default function ProviderFunction({
         const user_info = localStorage.getItem("user");
         if (user_info) {
           setUserInfo(JSON.parse(user_info));
-         // console.log(user_info);
+          // console.log(user_info);
         }
       } else {
         console.log(response.message);
@@ -276,11 +283,14 @@ export default function ProviderFunction({
         localStorage.removeItem("access_token");
         setUserInfo(null);
         localStorage.removeItem("user");
-        localStorage.removeItem("access_token");
         toast.success(response.message);
         //signout without redirecting to home page, which conflicts with redirectToLogin
         await signOut({ redirect: false });
+        sessionStorage.clear();
         redirectToLogin();
+        // Invalidate the session by making an API request to the route -- optional
+        await fetch("/api/logout", { method: "POST" });
+        return Promise.resolve();
       } else {
         toast.success(response.message);
         //redirectToLogin();
@@ -299,6 +309,7 @@ export default function ProviderFunction({
         toast.error("oops... error occurred on logout");
         console.log(error?.response?.status);
       }
+      return Promise.reject(error);
     }
   };
 
@@ -326,7 +337,7 @@ export default function ProviderFunction({
         blogs,
         setBlogs,
         getBlogsFunc,
-        getUsers
+        getUsers,
       }}
     >
       {children}

@@ -84,19 +84,18 @@ export const updateUserRole = async (role: string,email:string) => {
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      throw error;
+      throw new Error(error.response?.data.message || "Axios error when updating user role");
     } else {
-      throw new Error("Error occurred updating user role");
+      throw new Error("Error occurred when updating user role");
     }
   }
 };
 
 
 // delete user
-
 export const deleteUser = async (userId: string) => {
   try {
-    const response = await createApi.delete(`/user/delete_user_by_admin/${userId}`, {
+    const response = await createApi.put(`/user/delete_user_by_admin`, {userId}, {
       withCredentials: true,
     });
     return response.data;
@@ -108,3 +107,4 @@ export const deleteUser = async (userId: string) => {
     }
   }
 };
+
